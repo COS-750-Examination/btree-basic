@@ -1,0 +1,19 @@
+{
+  "name": "@btree/shared",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Zod schemas and types shared by client and server (API contracts and content files).",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "zod": "^4.6.7"
+  }
+}
