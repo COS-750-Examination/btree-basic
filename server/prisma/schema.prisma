@@ -1,0 +1,168 @@
+// Data model for B-Tree Basic. Only what FR10–FR11 and the grove features need (POPIA, NFR9).
+// Deleting a User cascades to every row that belongs to them (FR10 account deletion).
+
+generator client {
+  provider     = "prisma-client"
+  output       = "../src/generated/prisma"
+  moduleFormat = "esm"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  displayName  String
+  plantedAt    DateTime @default(now())
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  modules          ModuleProgress[]
+  attempts         QuizAttempt[]
+  mastery          Mastery[]
+  leaves           LeafTransaction[]
+  decorations      UserDecoration[]
+  lectureQuestions LectureQuestion[]
+  warmups          WarmupResult[]
+  friendsRequested Friendship[]      @relation("requester")
+  friendsReceived  Friendship[]      @relation("addressee")
+  cheersSent       Cheer[]           @relation("cheerFrom")
+  cheersReceived   Cheer[]           @relation("cheerTo")
+}
+
+model ModuleProgress {
+  id          String    @id @default(cuid())
+  userId      String
+  moduleId    Int
+  part        Int       @default(1)
+  completedAt DateTime?
+  updatedAt   DateTime  @updatedAt
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, moduleId])
+}
+
+model QuizAttempt {
+  id            String   @id @default(cuid())
+  userId        String
+  itemId        String
+  objective     String
+  correct       Boolean
+  firstAttempt  Boolean
+  hintsUsed     Int      @default(0)
+  confidence    String?
+  misconception String?
+  createdAt     DateTime @default(now())
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, objective])
+}
+
+/// Cached per-objective mastery, recomputed from QuizAttempt on each new attempt.
+model Mastery {
+  id        String   @id @default(cuid())
+  userId    String
+  objective String
+  score     Float
+  counted   Int
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, objective])
+}
+
+enum LeafReason {
+  lesson
+  firstTry
+  withHint
+  hintRead
+  streak
+  readyCheck
+  purchase
+}
+
+model LeafTransaction {
+  id        String     @id @default(cuid())
+  userId    String
+  amount    Int
+  reason    LeafReason
+  createdAt DateTime   @default(now())
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+/// Catalogue of grove decorations (seeded).
+model Decoration {
+  id     String           @id
+  name   String
+  cost   Int
+  owners UserDecoration[]
+}
+
+model UserDecoration {
+  id           String     @id @default(cuid())
+  userId       String
+  decorationId String
+  placed       Boolean    @default(true)
+  x            Float?
+  y            Float?
+  createdAt    DateTime   @default(now())
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  decoration   Decoration @relation(fields: [decorationId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, decorationId])
+}
+
+/// "Questions for the lecture" notes from the readiness screen.
+model LectureQuestion {
+  id        String   @id @default(cuid())
+  userId    String
+  text      String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model WarmupResult {
+  id        String   @id @default(cuid())
+  userId    String
+  correct   Int
+  total     Int
+  needsRecap Boolean
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+enum FriendshipStatus {
+  pending
+  accepted
+}
+
+model Friendship {
+  id          String           @id @default(cuid())
+  requesterId String
+  addresseeId String
+  status      FriendshipStatus @default(pending)
+  createdAt   DateTime         @default(now())
+  acceptedAt  DateTime?
+  requester   User             @relation("requester", fields: [requesterId], references: [id], onDelete: Cascade)
+  addressee   User             @relation("addressee", fields: [addresseeId], references: [id], onDelete: Cascade)
+
+  @@unique([requesterId, addresseeId])
+}
+
+model Cheer {
+  id        String   @id @default(cuid())
+  fromId    String
+  toId      String
+  message   String?
+  moduleId  Int?
+  createdAt DateTime @default(now())
+  from      User     @relation("cheerFrom", fields: [fromId], references: [id], onDelete: Cascade)
+  to        User     @relation("cheerTo", fields: [toId], references: [id], onDelete: Cascade)
+
+  @@index([toId])
+}
