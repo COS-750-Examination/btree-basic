@@ -1,0 +1,108 @@
+# Prompt Log
+
+This log records the generative AI prompts used during development of B-Tree Basic, in line with the module's GenAI acknowledgement requirements. Each entry gives the request as issued, the decisions made in response, and the resulting deliverables, so that AI-assisted work can be traced and reviewed.
+
+---
+
+## Entry 001: Project scaffold (front end and back end)
+
+| Field        | Detail                                                               |
+| ------------ | -------------------------------------------------------------------- |
+| Date         | 9 November 2026                                                      |
+| Requested by | Lonwabo Kwitshana, on behalf of the seven-member COS750 project team |
+| Tool         | Claude Code (Anthropic), model Claude Opus 5.5                       |
+| Scope        | Repository scaffold, documentation and onboarding material           |
+| Status       | Completed; changes left uncommitted for team review                  |
+
+### Request
+
+> Please plan, and then implement, the initial scaffold of the front end and back end for our COS750 group project, a pre-lecture B-tree tutor for COS212 students.
+>
+> Use the attached Instructional Design document and Software Engineering document as the authoritative specification for learners, objectives, screens, assessment strategy, functional and non-functional requirements, and system architecture. Use the team's Figma file (COS750_GroupProject) as the visual reference for the intended front end, and use it to inform the choice of frameworks, libraries and plug-ins.
+>
+> On completion, please provide:
+>
+> 1. a changelog;
+> 2. a local development guide; and
+> 3. a concise but comprehensive README,
+>
+> so that any team member on macOS or on Windows (via WSL) can onboard with minimal effort.
+>
+> Please record this instruction formally in a prompt log. Under no circumstances should any changes be committed to the repository.
+
+### Clarifications provided during planning
+
+| Question raised                                                                                                                     | Decision                                                                                                                                                      |
+| ----------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| The ID document limits the algorithm to insertion, while the SE document lists search, insertion and deletion. Which scope applies? | Implement **search, insertion and deletion**, as in SE document FR2.                                                                                          |
+| Which package manager and monorepo approach?                                                                                        | **npm workspaces**, since it needs no extra tooling for the team.                                                                                             |
+| Which styling approach?                                                                                                             | **Tailwind CSS v4**, with design tokens for the Day and Dusk themes.                                                                                          |
+| The Figma file could not be read through the Figma integration (no edit access). How should the work proceed?                       | Screenshots of all ten screens (Day and Dusk) were supplied and used as the visual reference. Exact Figma variables are to be applied once access is granted. |
+
+### Approach
+
+1. **Plan:** reviewed both documents and the screenshots, confirmed open questions with the requester, and agreed a written implementation plan before any code was written.
+2. **Implement:** built the shared contracts first, then the B-tree engine with tests, then the API and database, then the client screens. Faithfulness to the specification came first (SE doc §5 architecture, ID doc screens 01–10, objectives O1–O7, the assessment rules).
+3. **Verify:** ran linting, type checking, unit, property, API and end-to-end tests, ran automated WCAG 2.1 AA checks in both themes, checked for horizontal overflow at 360 px, and reviewed screenshots against the mockups.
+
+### Deliverables
+
+- npm-workspaces monorepo: `client` (React 18, Vite, Tailwind CSS), `server` (Express 5, Prisma 7, PostgreSQL 16), `packages/btree-engine`, `packages/shared`.
+- A B-tree engine producing step traces for search, insert and delete, with property-based tests.
+- A REST API covering accounts, progress, mastery, readiness, leaves, decorations, lecture questions and friends.
+- All ten screens from the design, in Day and Dusk themes, with guest mode and offline-tolerant behaviour.
+- A CI workflow, Docker Compose database, and a cross-platform setup script.
+- `README.md`, `docs/LOCAL_DEV.md`, `CHANGELOG.md` and this log.
+
+### Verification summary
+
+| Check                                                            | Result       |
+| ---------------------------------------------------------------- | ------------ |
+| ESLint, TypeScript (strict), Prettier                            | Pass         |
+| Engine tests (unit and property-based)                           | 19 / 19 pass |
+| Server tests (including database flow)                           | 11 / 11 pass |
+| Client unit tests                                                | 10 / 10 pass |
+| Playwright end-to-end and axe accessibility (desktop and mobile) | 22 / 22 pass |
+| Production build (client and server)                             | Pass         |
+
+### Human review required
+
+- The lesson copy and quiz items are first drafts, for the Instructional Design lead to review.
+- The design tokens are approximations from screenshots and must be reconciled with Figma.
+- Items listed under _Unreleased → To do_ in `CHANGELOG.md` remain open.
+
+---
+
+## Entry template
+
+```markdown
+## Entry NNN: <short title>
+
+| Field        | Detail                            |
+| ------------ | --------------------------------- |
+| Date         | <day month year>                  |
+| Requested by | <name / role>                     |
+| Tool         | <tool and model>                  |
+| Scope        | <files or features affected>      |
+| Status       | <completed / partial / abandoned> |
+
+### Request
+
+> <the prompt, written formally>
+
+### Clarifications provided
+
+<questions asked and decisions made>
+
+### Deliverables
+
+<what was produced>
+
+### Verification summary
+
+<tests and checks run, with results>
+
+### Human review required
+
+<what a team member must check before relying on the output>
+```
