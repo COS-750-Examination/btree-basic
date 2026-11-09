@@ -1,0 +1,72 @@
+[
+  {
+    "id": "leaf-overflows",
+    "label": "A leaf overflows",
+    "order": 3,
+    "operation": "insert",
+    "key": 25,
+    "tree": { "keys": [20], "children": [{ "keys": [8, 12] }, { "keys": [28, 30] }] }
+  },
+  {
+    "id": "simple-insert",
+    "label": "A leaf has room",
+    "order": 3,
+    "operation": "insert",
+    "key": 25,
+    "tree": { "keys": [20], "children": [{ "keys": [8] }, { "keys": [30] }] }
+  },
+  {
+    "id": "root-splits",
+    "label": "The root splits",
+    "order": 3,
+    "operation": "insert",
+    "key": 70,
+    "tree": {
+      "keys": [20, 40],
+      "children": [{ "keys": [10] }, { "keys": [30] }, { "keys": [50, 60] }]
+    }
+  },
+  {
+    "id": "search-path",
+    "label": "Follow a search",
+    "order": 3,
+    "operation": "search",
+    "key": 28,
+    "tree": { "keys": [20], "children": [{ "keys": [8, 12] }, { "keys": [28, 30] }] }
+  },
+  {
+    "id": "order-5",
+    "label": "Order 5 tree",
+    "order": 5,
+    "operation": "insert",
+    "key": 33,
+    "tree": {
+      "keys": [20, 40],
+      "children": [{ "keys": [5, 10, 15] }, { "keys": [25, 30, 35, 38] }, { "keys": [45, 50] }]
+    }
+  },
+  {
+    "id": "delete-borrow",
+    "label": "Delete: borrow",
+    "order": 3,
+    "operation": "delete",
+    "key": 8,
+    "tree": { "keys": [20], "children": [{ "keys": [8] }, { "keys": [28, 30] }] }
+  },
+  {
+    "id": "delete-merge",
+    "label": "Delete: merge",
+    "order": 3,
+    "operation": "delete",
+    "key": 8,
+    "tree": { "keys": [20], "children": [{ "keys": [8] }, { "keys": [30] }] }
+  },
+  {
+    "id": "empty",
+    "label": "Start empty",
+    "order": 3,
+    "operation": "insert",
+    "key": 10,
+    "tree": null
+  }
+]

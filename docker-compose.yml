@@ -1,0 +1,21 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: btree-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: btree
+      POSTGRES_PASSWORD: btree
+      POSTGRES_DB: btree
+    ports:
+      - '5432:5432'
+    volumes:
+      - btree-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U btree -d btree']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  btree-db-data:

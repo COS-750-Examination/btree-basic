@@ -1,0 +1,65 @@
+/*
+ * Design tokens for B-Tree Basic (Day / Dusk).
+ *
+ * Values are approximated from the Figma screenshots. When Figma access is granted, replace
+ * these with the exact variables from the file; every component reads colours from here only.
+ */
+
+:root,
+[data-theme='day'] {
+  color-scheme: light;
+  --bg: #dcebea;
+  --surface: #fff7e8;
+  --surface-sunken: #dcebea;
+  --shadow: #f0c9a0;
+  --border: #1c2a2a;
+  --text: #1c2a2a;
+  --muted: #4c5b5b;
+  --primary: #2f6b35;
+  --primary-shadow: #1e4a23;
+  --on-primary: #ffffff;
+  --accent: #fadf8a;
+  --accent-shadow: #e8c25c;
+  --on-accent: #1c2a2a;
+  --danger: #e8735a;
+  --danger-text: #b23a22;
+  --node-ring: #8b5e3c;
+  --node-fill: #ffffff;
+  --yarn: #e0a43a;
+  --sky: #cfe6e8;
+  --sun: #f7c948;
+  --hill-1: #a8d38a;
+  --hill-2: #7db962;
+  --hill-3: #4e9150;
+  --chip: #fff7e8;
+  --track: #dcebea;
+}
+
+[data-theme='dusk'] {
+  color-scheme: dark;
+  --bg: #14252c;
+  --surface: #1f333b;
+  --surface-sunken: #14252c;
+  --shadow: #2e4a52;
+  --border: #f2f2ea;
+  --text: #f2f2ea;
+  --muted: #a9b8b8;
+  --primary: #7ccb86;
+  --primary-shadow: #4f9a5a;
+  --on-primary: #14252c;
+  --accent: #f2e6a6;
+  --accent-shadow: #c9bb73;
+  --on-accent: #14252c;
+  --danger: #e8735a;
+  --danger-text: #f59b85;
+  --node-ring: #b98a5e;
+  --node-fill: #1f333b;
+  --yarn: #f2c75c;
+  --sky: #1b2f37;
+  --sun: #f2e6a6;
+  --hill-1: #2c5a44;
+  --hill-2: #24493a;
+  --hill-3: #3c7457;
+  --chip: #1f333b;
+  --track: #14252c;
+}
