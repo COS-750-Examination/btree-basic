@@ -1,0 +1,146 @@
+{
+  "moduleId": 6,
+  "title": "Module 6 check",
+  "items": [
+    {
+      "id": "m6-q1",
+      "objective": "O4",
+      "type": "mcq",
+      "order": 3,
+      "prompt": "This is an order-3 B-tree (2 keys per branch). You insert 10. Where does it go?",
+      "tree": { "keys": [20], "children": [{ "keys": [8] }, { "keys": [28, 30] }] },
+      "hints": [
+        "Start at the root. Is 10 smaller or larger than 20?",
+        "New keys always go into a leaf, in sorted order.",
+        "10 < 20, so go left to [8]. The leaf has room: it becomes [8, 10]."
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Into the left leaf, making [8, 10]",
+          "correct": true,
+          "feedback": "Right. 10 < 20 sends us left, and [8] has room for a second key."
+        },
+        {
+          "id": "b",
+          "text": "Into the root, making [10, 20]",
+          "misconception": "insert-at-root",
+          "feedback": "New keys always go into a leaf. Keys only reach the root by moving up during a split."
+        },
+        {
+          "id": "c",
+          "text": "Into the right leaf",
+          "misconception": "wrong-child",
+          "feedback": "10 < 20, so the search goes left at the root."
+        }
+      ]
+    },
+    {
+      "id": "m6-q2",
+      "objective": "O5",
+      "type": "pick-median",
+      "order": 3,
+      "prompt": "This is an order-3 B-tree (2 keys per branch). You insert 25. Which key moves up to the parent?",
+      "tree": { "keys": [20], "children": [{ "keys": [8, 12] }, { "keys": [28, 30] }] },
+      "insertKey": 25,
+      "answer": 28,
+      "hints": [
+        "Put 25 into the right leaf first. How many keys does that branch hold now?",
+        "An order-3 branch holds at most 2 keys. With 3 keys it snaps, and the middle key moves up.",
+        "The leaf becomes [25, 28, 30]. The middle key is 28, so 28 moves up next to 20."
+      ]
+    },
+    {
+      "id": "m6-q3",
+      "objective": "O5",
+      "type": "mcq",
+      "order": 3,
+      "prompt": "This is an order-3 B-tree (2 keys per branch). You insert 25. Which key moves up to the parent?",
+      "tree": { "keys": [20], "children": [{ "keys": [8, 12] }, { "keys": [28, 30] }] },
+      "hints": [
+        "Put 25 into the right leaf first. How many keys does that branch hold now?",
+        "An order-3 branch holds at most 2 keys. With 3 keys it snaps, and the middle key moves up.",
+        "The leaf becomes [25, 28, 30]. The middle key, 28, moves up next to 20."
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "25, the key you just inserted",
+          "misconception": "promote-new-key",
+          "feedback": "Not quite. The key that moves up is the middle one after insertion, not the new one."
+        },
+        {
+          "id": "b",
+          "text": "28, the middle of 25, 28 and 30",
+          "correct": true,
+          "feedback": "Yes. After 25 goes in, the branch holds 25, 28 and 30, and the middle key moves up."
+        },
+        {
+          "id": "c",
+          "text": "30, the largest key in the branch",
+          "misconception": "promote-largest",
+          "feedback": "Not quite. After 25 goes in, the branch holds 25, 28 and 30. The middle key moves up, not the largest."
+        },
+        {
+          "id": "d",
+          "text": "No key moves up, because the leaf has room",
+          "misconception": "ignore-overflow",
+          "feedback": "The leaf already holds 2 keys, the maximum for order 3. A third key makes it overflow."
+        }
+      ]
+    },
+    {
+      "id": "m6-q4",
+      "objective": "O6",
+      "type": "mcq",
+      "order": 3,
+      "prompt": "You insert 70 into this order-3 tree. What happens to its height?",
+      "tree": {
+        "keys": [20, 40],
+        "children": [{ "keys": [10] }, { "keys": [30] }, { "keys": [50, 60] }]
+      },
+      "hints": [
+        "Which leaf does 70 go into, and does it overflow?",
+        "When a key moves up into a full parent, the parent splits too.",
+        "[50, 60, 70] splits and 60 moves up. The root [20, 40, 60] splits and 40 becomes a new root: height 2 → 3."
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "It grows by one level, at the root",
+          "correct": true,
+          "feedback": "Yes. The split cascades to the root, a new root appears, and every leaf moves down together."
+        },
+        {
+          "id": "b",
+          "text": "It grows by one level, under the leaf",
+          "misconception": "grow-at-leaves",
+          "feedback": "That is how a binary search tree grows. A B-tree only grows at the top, so all leaves stay level."
+        },
+        {
+          "id": "c",
+          "text": "It stays the same",
+          "misconception": "single-split-only",
+          "feedback": "The leaf split pushes 60 into the root, which overflows and splits too."
+        }
+      ]
+    },
+    {
+      "id": "m6-q5",
+      "objective": "O2",
+      "type": "valid-or-not",
+      "order": 3,
+      "prompt": "Is this a valid order-3 B-tree?",
+      "tree": {
+        "keys": [20],
+        "children": [
+          { "keys": [10] },
+          { "keys": [30], "children": [{ "keys": [25] }, { "keys": [35] }] }
+        ]
+      },
+      "valid": false,
+      "brokenRule": "leaf-depth",
+      "hints": ["Look at where each leaf sits.", "In a B-tree every leaf is on the same level."]
+    }
+  ]
+}

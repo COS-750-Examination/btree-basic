@@ -1,0 +1,136 @@
+{
+  "intro": "This isn't graded. Your answers decide where your lessons start, and your seed gets planted either way.",
+  "items": [
+    {
+      "id": "w1",
+      "objective": "O3",
+      "type": "bst-mcq",
+      "prompt": "Smaller values go left and larger values go right. Where would 18 be inserted?",
+      "tree": {
+        "keys": [50],
+        "children": [
+          { "keys": [30], "children": [{ "keys": [20] }, { "keys": [40] }] },
+          { "keys": [70] }
+        ]
+      },
+      "options": [
+        {
+          "id": "a",
+          "text": "Left child of 20",
+          "correct": true,
+          "feedback": "18 < 50, 18 < 30, 18 < 20, so it becomes the left child of 20."
+        },
+        {
+          "id": "b",
+          "text": "Right child of 20",
+          "feedback": "18 is smaller than 20, so it goes left, not right."
+        },
+        {
+          "id": "c",
+          "text": "Left child of 70",
+          "feedback": "18 < 50, so the search goes left at the root and never reaches 70."
+        },
+        {
+          "id": "d",
+          "text": "Right child of 40",
+          "feedback": "18 < 30, so the search goes left at 30, away from 40."
+        }
+      ]
+    },
+    {
+      "id": "w2",
+      "objective": "O3",
+      "type": "bst-mcq",
+      "prompt": "Smaller values go left and larger values go right. Where would 42 be inserted?",
+      "tree": {
+        "keys": [50],
+        "children": [
+          { "keys": [30], "children": [{ "keys": [20] }, { "keys": [40] }] },
+          { "keys": [70] }
+        ]
+      },
+      "options": [
+        {
+          "id": "a",
+          "text": "Left child of 30",
+          "feedback": "42 > 30, so at 30 the search goes right, not left."
+        },
+        {
+          "id": "b",
+          "text": "Right child of 40",
+          "correct": true,
+          "feedback": "42 < 50, 42 > 30, 42 > 40, so it becomes the right child of 40."
+        },
+        {
+          "id": "c",
+          "text": "Left child of 70",
+          "feedback": "42 < 50, so the search goes left at the root. Checking only the parent misses this."
+        },
+        {
+          "id": "d",
+          "text": "Right child of 50",
+          "feedback": "42 < 50, so it belongs in the left subtree."
+        }
+      ]
+    },
+    {
+      "id": "w3",
+      "objective": "O1",
+      "type": "mcq",
+      "prompt": "In a tree, what is a leaf?",
+      "options": [
+        { "id": "a", "text": "The top node", "feedback": "The top node is the root." },
+        {
+          "id": "b",
+          "text": "A node with no children",
+          "correct": true,
+          "feedback": "Yes: a leaf has no children."
+        },
+        {
+          "id": "c",
+          "text": "A node with one child",
+          "feedback": "A node with children is internal, however many it has."
+        }
+      ]
+    },
+    {
+      "id": "w4",
+      "objective": "O7",
+      "type": "mcq",
+      "prompt": "What is the height of a tree with only a root?",
+      "options": [
+        {
+          "id": "a",
+          "text": "1 level",
+          "correct": true,
+          "feedback": "Counting levels, a lone root is one level. (Some books count edges and say 0.)"
+        },
+        { "id": "b", "text": "2 levels", "feedback": "There is only one node, so only one level." }
+      ]
+    },
+    {
+      "id": "w5",
+      "objective": "O7",
+      "type": "mcq",
+      "prompt": "Binary search halves the remaining items each step. Roughly how many steps for 1 000 000 items?",
+      "options": [
+        {
+          "id": "a",
+          "text": "About 20",
+          "correct": true,
+          "feedback": "log₂(1 000 000) ≈ 20. That is O(log n)."
+        },
+        {
+          "id": "b",
+          "text": "About 1 000",
+          "feedback": "That would be √n. Halving is much faster."
+        },
+        {
+          "id": "c",
+          "text": "About 500 000",
+          "feedback": "That is n/2, the cost of scanning half a list."
+        }
+      ]
+    }
+  ]
+}

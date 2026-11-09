@@ -1,0 +1,69 @@
+[
+  {
+    "moduleId": 1,
+    "headline": "Why do we need B-trees?",
+    "objectives": ["O7"],
+    "parts": [
+      { "id": "disk", "title": "Finding one record among millions", "file": "01-why-b-trees.md" }
+    ]
+  },
+  {
+    "moduleId": 2,
+    "headline": "Search trees, a quick recap",
+    "objectives": ["O3"],
+    "parts": [
+      { "id": "bst", "title": "Smaller left, larger right", "file": "02-search-trees-recap.md" }
+    ]
+  },
+  {
+    "moduleId": 3,
+    "headline": "From binary to multiway",
+    "objectives": ["O1", "O3"],
+    "parts": [
+      { "id": "multiway", "title": "Nodes with several keys", "file": "03-binary-to-multiway.md" }
+    ]
+  },
+  {
+    "moduleId": 4,
+    "headline": "The B-tree rules",
+    "objectives": ["O1", "O2"],
+    "parts": [{ "id": "rules", "title": "Four rules for order m", "file": "04-b-tree-rules.md" }]
+  },
+  {
+    "moduleId": 5,
+    "headline": "Searching a B-tree",
+    "objectives": ["O3"],
+    "parts": [{ "id": "search", "title": "Follow the yarn", "file": "05-searching.md" }]
+  },
+  {
+    "moduleId": 6,
+    "headline": "When a branch gets too full, it snaps",
+    "objectives": ["O4", "O5", "O6"],
+    "parts": [
+      { "id": "overflow", "title": "Overflow: too many keys", "file": "06-1-overflow.md" },
+      { "id": "split", "title": "Splitting around the middle", "file": "06-2-split.md" },
+      { "id": "cascade", "title": "When the parent fills up", "file": "06-3-cascade.md" },
+      { "id": "check", "title": "Check yourself", "file": "06-4-check.md" }
+    ]
+  },
+  {
+    "moduleId": 7,
+    "headline": "Why it stays short",
+    "objectives": ["O6", "O7"],
+    "parts": [
+      { "id": "height", "title": "B-tree vs BST height", "file": "07-why-it-stays-short.md" }
+    ]
+  },
+  {
+    "moduleId": 8,
+    "headline": "B-trees in the real world",
+    "objectives": ["O7"],
+    "parts": [{ "id": "real", "title": "Databases and file systems", "file": "08-real-world.md" }]
+  },
+  {
+    "moduleId": 9,
+    "headline": "Ready-for-lecture check",
+    "objectives": ["O1", "O2", "O3", "O4", "O5", "O6", "O7"],
+    "parts": [{ "id": "ready", "title": "Before you start", "file": "09-ready-check.md" }]
+  }
+]
