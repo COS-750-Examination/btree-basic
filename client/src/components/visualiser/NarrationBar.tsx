@@ -21,7 +21,7 @@ export function NarrationBar({
   return (
     <Card className="flex items-center gap-3 py-4">
       <LeafIcon className="h-6 w-6 shrink-0" />
-      <p className="flex-1 text-lg" aria-live="polite">
+      <p className="text-body flex-1" aria-live="polite">
         {text}
       </p>
       {speechSupported() && (
@@ -30,7 +30,7 @@ export function NarrationBar({
           onClick={() => onVoice(!voice)}
           aria-pressed={voice}
           aria-label={voice ? 'Turn narration voice off' : 'Read steps aloud'}
-          className="bg-sunken grid h-9 w-9 place-items-center rounded-full"
+          className="rounded-pill grid h-9 w-9 place-items-center bg-sky-100"
         >
           {voice ? <Volume2 className="h-4 w-4" /> : <VolumeX className="h-4 w-4" />}
         </button>

@@ -29,7 +29,7 @@ export function TracePlayer({ trace, autoPlay = false }: { trace: Trace; autoPla
   const step = trace.steps[index]!;
   return (
     <div className="space-y-4">
-      <div className="bg-sky rounded-xl p-2">
+      <div className="rounded-lg bg-sky-200 p-2">
         <BTreeView
           {...stepView(trace, index)}
           scene

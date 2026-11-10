@@ -72,7 +72,7 @@ export function BTreeView({
 
   if (!tree.root) {
     return (
-      <div className={cn('text-muted grid place-items-center rounded-xl p-10', className)}>
+      <div className={cn('text-ink-muted grid place-items-center rounded-lg p-10', className)}>
         The tree is empty. Insert a key to plant it.
       </div>
     );
@@ -105,7 +105,7 @@ export function BTreeView({
             animate={{ d: edgePath(e.from, e.to, e.childIndex) }}
             transition={spring}
             fill="none"
-            stroke={yarn.has(e.id) ? 'var(--yarn)' : 'var(--node-ring)'}
+            stroke={yarn.has(e.id) ? 'var(--yarn)' : 'var(--branch)'}
             strokeWidth={yarn.has(e.id) ? 4 : 2}
             strokeDasharray={yarn.has(e.id) ? undefined : '6 5'}
             strokeLinecap="round"
@@ -154,10 +154,10 @@ export function BTreeView({
                 width={p.width}
                 height={BEAD_R * 2 + 12}
                 rx={BEAD_R + 6}
-                fill={overflow ? 'var(--danger)' : 'var(--node-ring)'}
+                fill={overflow ? 'var(--danger)' : 'var(--branch)'}
                 stroke={highlighted ? 'var(--yarn)' : 'transparent'}
                 strokeWidth={4}
-                style={{ filter: 'drop-shadow(2px 3px 0 rgba(0,0,0,0.15))' }}
+                className="drop-shadow-lift"
               />
               <AnimatePresence initial={false}>
                 {node.keys.map((k, i) => (
@@ -189,14 +189,14 @@ export function BTreeView({
                 width={w}
                 height={24}
                 rx={4}
-                fill={c.tone === 'danger' ? 'var(--surface)' : 'var(--accent)'}
+                fill={c.tone === 'danger' ? 'var(--paper)' : 'var(--highlight)'}
               />
               <text
                 x={10}
                 y={16}
                 className="font-sans font-bold"
                 style={{ fontSize: 12 }}
-                fill={c.tone === 'danger' ? 'var(--danger-text)' : 'var(--on-accent)'}
+                fill={c.tone === 'danger' ? 'var(--danger-text)' : 'var(--on-highlight)'}
               >
                 {c.text}
               </text>

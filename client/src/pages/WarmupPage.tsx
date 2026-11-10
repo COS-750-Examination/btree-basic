@@ -35,8 +35,8 @@ export function WarmupPage() {
     const recap = score < Math.ceil(items.length * 0.6);
     return (
       <Card className="mx-auto max-w-xl text-center">
-        <h1 className="text-3xl">Your seed is planted!</h1>
-        <p className="text-muted mt-3">
+        <h1 className="text-display-l">Your seed is planted!</h1>
+        <p className="text-ink-muted mt-3">
           You got {score} of {items.length}.{' '}
           {recap
             ? "We've added a short search-trees recap (module 2) to your path."
@@ -52,7 +52,7 @@ export function WarmupPage() {
   return (
     <div>
       <div className="flex flex-wrap items-center gap-4">
-        <h1 className="text-xl">
+        <h1 className="text-heading">
           Warm-up · Question {index + 1} of {items.length}
         </h1>
         <ProgressSegments
@@ -66,11 +66,11 @@ export function WarmupPage() {
           Exit warm-up
         </Button>
       </div>
-      <p className="text-muted mt-3 text-sm">{warmup.intro}</p>
+      <p className="text-ink-muted text-small mt-3">{warmup.intro}</p>
 
       <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_320px]">
         <Card>
-          <span className="bg-accent text-on-accent mb-3 inline-block rounded-md px-2 py-1 text-xs font-bold">
+          <span className="bg-highlight text-on-highlight text-small mb-3 inline-block rounded-sm px-2 py-1 font-bold">
             Prerequisite · {item.objective === 'O7' ? 'Big-O' : 'Search trees'}
           </span>
           <QuestionCard
@@ -84,14 +84,14 @@ export function WarmupPage() {
         <div className="space-y-4">
           <Card tone="accent">
             <CardTitle>Why a warm-up?</CardTitle>
-            <p className="text-sm">
+            <p className="text-small">
               Five quick questions check search trees, tree words (root, leaf, height) and a little
               Big-O. If tree basics are new to you, we&apos;ll add a short recap to your path.
             </p>
           </Card>
           <Card>
             <CardTitle>Your seed</CardTitle>
-            <p className="text-muted text-sm">
+            <p className="text-ink-muted text-small">
               Finish the warm-up to plant it. It sprouts after module 1 and grows as you master each
               module.
             </p>

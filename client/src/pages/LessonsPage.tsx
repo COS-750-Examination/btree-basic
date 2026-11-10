@@ -47,12 +47,12 @@ export function LessonsPage() {
                   aria-disabled={status === 'locked'}
                   onClick={(e) => status === 'locked' && e.preventDefault()}
                   className={cn(
-                    'flex items-center gap-4 rounded-xl px-4 py-3 transition-transform',
+                    'flex items-center gap-4 rounded-lg px-4 py-3 transition-transform',
                     status === 'locked' &&
-                      'border-line/60 text-muted cursor-not-allowed border-2 border-dashed',
-                    status === 'current' && 'bg-accent text-on-accent shadow-accent',
+                      'border-ink/60 text-ink-muted cursor-not-allowed border-2 border-dashed',
+                    status === 'current' && 'bg-highlight text-on-highlight shadow-press-highlight',
                     (status === 'done' || status === 'available') &&
-                      'bg-surface shadow-offset hover:-translate-y-0.5',
+                      'bg-paper shadow-paper-stack hover:-translate-y-0.5',
                   )}
                 >
                   {status === 'done' ? (
@@ -60,9 +60,9 @@ export function LessonsPage() {
                   ) : (
                     <span
                       className={cn(
-                        'font-display grid h-8 w-8 shrink-0 place-items-center rounded-full border-2 text-sm',
+                        'font-display rounded-pill text-small grid h-8 w-8 shrink-0 place-items-center border-2',
                         status === 'current'
-                          ? 'bg-surface text-ink border-transparent'
+                          ? 'bg-paper text-ink border-transparent'
                           : 'border-current',
                       )}
                     >
@@ -73,16 +73,16 @@ export function LessonsPage() {
                     <span className="font-display block">
                       {m.id} · {m.title}
                     </span>
-                    <span className="block text-xs">
+                    <span className="text-small block">
                       {status === 'current' && part ? `Part ${part} · ` : ''}
                       {m.format} · {m.minutes} min{optional ? ' · optional' : ''}
                     </span>
                   </span>
-                  <span className="text-xs font-bold">
+                  <span className="text-small font-bold">
                     {status === 'locked' ? (
                       'Locked'
                     ) : status === 'current' ? (
-                      <span className="bg-primary font-display text-on-primary shadow-button rounded-lg px-4 py-2">
+                      <span className="bg-leaf font-display text-on-leaf shadow-press-leaf rounded-md px-4 py-2">
                         Continue
                       </span>
                     ) : (
@@ -113,12 +113,12 @@ export function LessonsPage() {
               current={GROWTH_STAGES.indexOf(stage)}
               label="Growth stage"
             />
-            <p className="text-muted mt-2 text-xs">{r.modulesDone} of 9 modules mastered</p>
+            <p className="text-ink-muted text-small mt-2">{r.modulesDone} of 9 modules mastered</p>
           </Card>
           {next && (
             <Card tone="accent">
               <CardTitle>Up next</CardTitle>
-              <p className="text-sm">
+              <p className="text-small">
                 Module {next.id}: {next.title}.
               </p>
               <ButtonLink to={`/lessons/${next.id}`} className="mt-3">

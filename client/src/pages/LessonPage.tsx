@@ -63,8 +63,8 @@ export function LessonPage() {
   if (moduleStatus(moduleId, store) === 'locked') {
     return (
       <Card className="mx-auto max-w-lg text-center">
-        <h1 className="text-2xl">This module is still locked</h1>
-        <p className="text-muted mt-2">
+        <h1 className="text-heading">This module is still locked</h1>
+        <p className="text-ink-muted mt-2">
           Finish the modules before it first. Each one builds on the last.
         </p>
         <ButtonLink to="/lessons" className="mt-4">
@@ -93,8 +93,8 @@ export function LessonPage() {
     <div className="grid gap-6 lg:grid-cols-[260px_1fr]">
       <aside className="space-y-3">
         <Card>
-          <p className="text-muted text-xs font-bold">Module {moduleId}</p>
-          <h2 className="mb-3 text-lg">{meta.title}</h2>
+          <p className="text-ink-muted text-small font-bold">Module {moduleId}</p>
+          <h2 className="text-body mb-3">{meta.title}</h2>
           <ol className="space-y-1">
             {lesson.parts.map((p, i) => (
               <li key={p.id}>
@@ -103,8 +103,8 @@ export function LessonPage() {
                   onClick={() => goPart(i)}
                   aria-current={i === partIndex ? 'step' : undefined}
                   className={cn(
-                    'flex w-full items-center gap-3 rounded-lg px-2 py-2 text-left text-sm',
-                    i === partIndex && 'bg-sunken font-bold',
+                    'text-small flex w-full items-center gap-3 rounded-md px-2 py-2 text-left',
+                    i === partIndex && 'bg-sky-100 font-bold',
                   )}
                 >
                   {i < partIndex ? (
@@ -112,8 +112,8 @@ export function LessonPage() {
                   ) : (
                     <span
                       className={cn(
-                        'border-line h-4 w-4 shrink-0 rounded-full border-2',
-                        i === partIndex && 'bg-accent',
+                        'border-ink rounded-pill h-4 w-4 shrink-0 border-2',
+                        i === partIndex && 'bg-highlight',
                       )}
                       aria-hidden
                     />
@@ -135,7 +135,7 @@ export function LessonPage() {
             { label: `Part ${partIndex + 1} of ${lesson.parts.length}` },
           ]}
         />
-        <h1 className="text-3xl sm:text-4xl">{lesson.headline}</h1>
+        <h1 className="text-display-l sm:text-display-l">{lesson.headline}</h1>
 
         <div role="tablist" aria-label="How to study this part" className="mt-4 flex gap-2">
           {(['read', 'watch', 'listen'] as const).map((m) => (
@@ -147,8 +147,8 @@ export function LessonPage() {
               disabled={(m === 'watch' && !trace) || (m === 'listen' && !speechSupported())}
               onClick={() => setMode(m)}
               className={cn(
-                'shadow-offset-sm rounded-md px-3 py-1 text-xs font-bold capitalize disabled:opacity-40',
-                mode === m ? 'bg-accent text-on-accent' : 'bg-surface',
+                'shadow-paper-stack-sm text-small rounded-sm px-3 py-1 font-bold capitalize disabled:opacity-40',
+                mode === m ? 'bg-highlight text-on-highlight' : 'bg-paper',
               )}
             >
               {m}
@@ -167,7 +167,7 @@ export function LessonPage() {
                   {speaking ? 'Stop' : 'Listen to this part'}
                 </Button>
               )}
-              <div className="prose-lesson [&_blockquote]:bg-sunken [&_td]:border-line/20 space-y-3 text-[17px] leading-relaxed [&_blockquote]:rounded-xl [&_blockquote]:p-4 [&_code]:font-mono [&_ol]:list-decimal [&_ol]:pl-6 [&_strong]:font-extrabold [&_table]:w-full [&_td]:border-b [&_td]:py-1 [&_th]:text-left [&_ul]:list-disc [&_ul]:pl-6">
+              <div className="prose-lesson [&_td]:border-ink/20 space-y-3 text-[17px] leading-relaxed [&_blockquote]:rounded-lg [&_blockquote]:bg-sky-100 [&_blockquote]:p-4 [&_code]:font-mono [&_ol]:list-decimal [&_ol]:pl-6 [&_strong]:font-extrabold [&_table]:w-full [&_td]:border-b [&_td]:py-1 [&_th]:text-left [&_ul]:list-disc [&_ul]:pl-6">
                 <Markdown>{md}</Markdown>
               </div>
             </>
@@ -195,7 +195,7 @@ export function LessonPage() {
             <Button onClick={() => goPart(partIndex + 1)}>Next part</Button>
           )}
         </div>
-        <p className="text-muted mt-4 text-sm">
+        <p className="text-ink-muted text-small mt-4">
           Want to try it yourself?{' '}
           <Link to="/visualiser" className="font-bold underline">
             Open the visualiser
@@ -212,7 +212,7 @@ function CheckYourself({ item }: { item: QuizItem }) {
   return (
     <section aria-labelledby="check-yourself" className="mt-6 grid gap-4 xl:grid-cols-[1fr_300px]">
       <Card>
-        <p id="check-yourself" className="text-muted mb-2 text-xs font-bold">
+        <p id="check-yourself" className="text-ink-muted text-small mb-2 font-bold">
           Check yourself
         </p>
         <QuestionCard

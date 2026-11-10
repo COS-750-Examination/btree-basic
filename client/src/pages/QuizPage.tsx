@@ -49,8 +49,10 @@ function Quiz({ quiz }: { quiz: QuizFile }) {
     const needsHelp = score < REMEDIATION_THRESHOLD;
     return (
       <Card className="mx-auto max-w-xl text-center">
-        <h1 className="text-3xl">{needsHelp ? 'Good effort, let’s firm this up' : 'Nice work!'}</h1>
-        <p className="text-muted mt-3">
+        <h1 className="text-display-l">
+          {needsHelp ? 'Good effort, let’s firm this up' : 'Nice work!'}
+        </h1>
+        <p className="text-ink-muted mt-3">
           {firstTryCorrect} of {quiz.items.length} right on the first try without hints.
         </p>
         {needsHelp ? (
@@ -78,7 +80,7 @@ function Quiz({ quiz }: { quiz: QuizFile }) {
         tag={`Module ${quiz.moduleId} check`}
         title="Quick check"
         actions={
-          <p className="text-muted text-sm">
+          <p className="text-ink-muted text-small">
             No time limit. Wrong answers unlock hints, not penalties.
           </p>
         }
@@ -117,7 +119,7 @@ function QuizQuestion({
     <div className="grid gap-6 lg:grid-cols-[1fr_340px]">
       <Card>
         <div className="mb-4 flex items-center gap-3">
-          <span className="shrink-0 text-sm font-bold">
+          <span className="text-label shrink-0 font-bold">
             Question {index + 1} of {total}
           </span>
           <ProgressSegments

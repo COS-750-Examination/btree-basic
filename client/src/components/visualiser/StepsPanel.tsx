@@ -29,9 +29,9 @@ export function StepsPanel({
     <Card>
       <CardTitle>Steps</CardTitle>
       {phases.length === 0 ? (
-        <p className="text-muted text-sm">Run an operation to see its steps.</p>
+        <p className="text-ink-muted text-small">Run an operation to see its steps.</p>
       ) : (
-        <ol className="space-y-2 text-sm">
+        <ol className="text-small space-y-2">
           {phases.map((p, i) => {
             const reached = index >= p.first;
             const active = reached && (phases[i + 1] === undefined || index < phases[i + 1]!.first);
@@ -40,14 +40,14 @@ export function StepsPanel({
                 key={`${p.phase}-${p.first}`}
                 className={cn(
                   'flex items-center gap-2',
-                  !reached && 'text-muted',
+                  !reached && 'text-ink-muted',
                   active && 'font-bold',
                 )}
               >
                 {reached ? (
                   <LeafIcon className="h-4 w-4" />
                 ) : (
-                  <span className="border-muted h-4 w-4 rounded-full border-2" aria-hidden />
+                  <span className="border-ink-muted rounded-pill h-4 w-4 border-2" aria-hidden />
                 )}
                 {PHASE_LABEL[p.phase](keyValue)}
                 {active && <span className="sr-only">(current)</span>}

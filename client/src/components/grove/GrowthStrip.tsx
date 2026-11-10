@@ -11,9 +11,9 @@ export function GrowthStrip({ stage }: { stage: GrowthStageId }) {
         <li
           key={s.id}
           className={cn(
-            'rounded-xl p-2 text-center text-xs font-bold',
-            i === current && 'bg-accent text-on-accent',
-            i > current && 'text-muted [&_svg]:opacity-40 [&_svg]:grayscale',
+            'text-small rounded-lg p-2 text-center font-bold',
+            i === current && 'bg-highlight text-on-highlight',
+            i > current && 'text-ink-muted [&_svg]:opacity-40 [&_svg]:grayscale',
           )}
           aria-current={i === current ? 'step' : undefined}
         >

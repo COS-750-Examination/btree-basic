@@ -55,10 +55,10 @@ export function FriendGrovePage() {
         ]}
       />
       <div className="mb-6 flex flex-wrap items-center gap-4">
-        <Avatar name={f.displayName} size="lg" className="bg-[#f4b6c2] text-[#1c2a2a]" />
+        <Avatar name={f.displayName} size="lg" className="text-on-highlight bg-[#f4b6c2]" />
         <div className="flex-1">
-          <h1 className="text-3xl">{first}&apos;s grove</h1>
-          <p className="text-muted">
+          <h1 className="text-display-l">{first}&apos;s grove</h1>
+          <p className="text-ink-muted">
             {stage}
             {f.currentModule ? ` · working on Module ${f.currentModule}` : ''} · friends since{' '}
             {dateFmt.format(new Date(f.since))}
@@ -81,7 +81,7 @@ export function FriendGrovePage() {
             <div className="px-6 pt-8 pb-4">
               <GroveTree stage={f.stage} decorations={f.decorations} />
             </div>
-            <span className="bg-surface shadow-offset-sm absolute bottom-4 left-4 rounded-md px-2 py-1 text-xs font-bold">
+            <span className="bg-paper shadow-paper-stack-sm text-small absolute bottom-4 left-4 rounded-sm px-2 py-1 font-bold">
               Planted {dateFmt.format(new Date(f.plantedAt))}
             </span>
           </SceneBackdrop>
@@ -97,15 +97,15 @@ export function FriendGrovePage() {
                   <li
                     key={m.id}
                     className={cn(
-                      'flex items-center gap-2 rounded-lg px-2 py-1 text-sm',
-                      m.id === f.currentModule && 'bg-sunken font-bold',
-                      !done && 'text-muted',
+                      'text-small flex items-center gap-2 rounded-md px-2 py-1',
+                      m.id === f.currentModule && 'bg-sky-100 font-bold',
+                      !done && 'text-ink-muted',
                     )}
                   >
                     {done ? (
                       <LeafIcon className="h-4 w-4" />
                     ) : (
-                      <span className="h-4 w-4 rounded-full border-2 border-current" aria-hidden />
+                      <span className="rounded-pill h-4 w-4 border-2 border-current" aria-hidden />
                     )}
                     {m.id} · {m.title}
                   </li>
@@ -123,8 +123,8 @@ export function FriendGrovePage() {
               [f.decorations.length, 'decorations'],
             ].map(([n, l]) => (
               <div key={String(l)}>
-                <p className="font-display text-primary text-2xl">{n}</p>
-                <p className="text-muted text-xs">{l}</p>
+                <p className="font-display text-leaf text-heading">{n}</p>
+                <p className="text-ink-muted text-small">{l}</p>
               </div>
             ))}
           </Card>
@@ -133,15 +133,15 @@ export function FriendGrovePage() {
             {f.decorations.length ? (
               <ul className="flex flex-wrap gap-2">
                 {f.decorations.map((id) => (
-                  <li key={id} className="bg-sunken rounded-full px-3 py-1 text-xs font-bold">
+                  <li key={id} className="rounded-pill text-small bg-sky-100 px-3 py-1 font-bold">
                     {DECORATIONS.find((d) => d.id === id)?.name ?? id}
                   </li>
                 ))}
               </ul>
             ) : (
-              <p className="text-muted text-sm">No decorations yet.</p>
+              <p className="text-ink-muted text-small">No decorations yet.</p>
             )}
-            <p className="text-muted mt-3 text-xs">
+            <p className="text-ink-muted text-small mt-3">
               Like what you see? The same items are in your{' '}
               <Link to="/grove" className="underline">
                 craft drawer
@@ -152,7 +152,7 @@ export function FriendGrovePage() {
           <Card>
             <CardTitle>Cheers</CardTitle>
             {theirCheers.length ? (
-              <ul className="space-y-2 text-sm">
+              <ul className="text-small space-y-2">
                 {theirCheers.map((c) => (
                   <li key={c.id} className="flex items-center gap-2">
                     <Avatar name={c.fromName} />
@@ -162,10 +162,10 @@ export function FriendGrovePage() {
                 ))}
               </ul>
             ) : (
-              <p className="text-muted text-sm">No cheers yet. Be the first!</p>
+              <p className="text-ink-muted text-small">No cheers yet. Be the first!</p>
             )}
           </Card>
-          <Card tone="accent" className="flex gap-2 text-xs font-bold">
+          <Card tone="accent" className="text-small flex gap-2 font-bold">
             <LeafIcon className="h-4 w-4 shrink-0" />
             You can see {first}&apos;s tree and finished modules. Quiz answers, scores and hints
             stay private.

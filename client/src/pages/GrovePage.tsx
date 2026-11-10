@@ -77,14 +77,14 @@ export function GrovePage() {
           {decorating && (
             <Card>
               <CardTitle>Craft drawer</CardTitle>
-              <p className="text-muted mb-3 text-sm">You have {leaves} leaves.</p>
+              <p className="text-ink-muted text-small mb-3">You have {leaves} leaves.</p>
               <ul className="grid gap-3 sm:grid-cols-3">
                 {DECORATIONS.map((d) => {
                   const owned = ownedDecorations.includes(d.id);
                   return (
                     <li
                       key={d.id}
-                      className="bg-sunken flex items-center justify-between rounded-xl p-3 text-sm font-bold"
+                      className="text-label flex items-center justify-between rounded-lg bg-sky-100 p-3 font-bold"
                     >
                       {d.name}
                       <Button
@@ -122,18 +122,20 @@ export function GrovePage() {
           <Card>
             <p className="flex items-baseline gap-2">
               <LeafIcon className="h-6 w-6 self-center" />
-              <span className="font-display text-3xl">{leaves}</span> leaves
+              <span className="font-display text-display-l">{leaves}</span> leaves
             </p>
-            <p className="mt-3 text-xs font-bold">How you earn them</p>
-            <dl className="mt-1 space-y-1.5 text-sm">
+            <p className="text-small mt-3 font-bold">How you earn them</p>
+            <dl className="text-small mt-1 space-y-1.5">
               {EARN.map(([label, n]) => (
                 <div key={label} className="flex justify-between">
                   <dt>{label}</dt>
-                  <dd className="font-display text-primary">+{n}</dd>
+                  <dd className="font-display text-leaf">+{n}</dd>
                 </div>
               ))}
             </dl>
-            <p className="text-muted mt-2 text-xs">Hints are free, and nothing ever wilts.</p>
+            <p className="text-ink-muted text-small mt-2">
+              Hints are free, and nothing ever wilts.
+            </p>
           </Card>
 
           <Card>
@@ -142,14 +144,14 @@ export function GrovePage() {
               {me.data && (
                 <Link
                   to="/account#friends"
-                  className="bg-surface shadow-offset-sm rounded-md px-2 py-1 text-xs font-bold"
+                  className="bg-paper shadow-paper-stack-sm text-small rounded-sm px-2 py-1 font-bold"
                 >
                   + Add a friend
                 </Link>
               )}
             </div>
             {!me.data ? (
-              <p className="text-sm">
+              <p className="text-small">
                 <Link to="/login" className="font-bold underline">
                   Sign in
                 </Link>{' '}
@@ -161,24 +163,24 @@ export function GrovePage() {
                   <li key={f.id} className="flex items-center gap-3">
                     <Avatar name={f.displayName} />
                     <div className="flex-1">
-                      <div className="flex justify-between text-sm">
+                      <div className="text-small flex justify-between">
                         <span className="font-bold">{f.displayName}</span>
-                        <span className="text-muted text-xs">
+                        <span className="text-ink-muted text-small">
                           {GROWTH_STAGES.find((s) => s.id === f.stage)?.label} · {f.modulesDone}/9
                         </span>
                       </div>
                       <ProgressBar value={f.modulesDone / 9} label={`${f.displayName}'s modules`} />
                     </div>
-                    <Link to={`/grove/${f.id}`} className="text-sm font-bold hover:underline">
+                    <Link to={`/grove/${f.id}`} className="text-label font-bold hover:underline">
                       Visit →
                     </Link>
                   </li>
                 ))}
               </ul>
             ) : (
-              <p className="text-muted text-sm">No friends yet. Add one by email.</p>
+              <p className="text-ink-muted text-small">No friends yet. Add one by email.</p>
             )}
-            <p className="text-muted mt-3 text-xs">
+            <p className="text-ink-muted text-small mt-3">
               Friends can see your tree and which modules you&apos;ve finished. Quiz answers, scores
               and hints stay private.
             </p>

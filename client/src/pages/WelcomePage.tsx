@@ -41,8 +41,10 @@ export function WelcomePage() {
       <section className="grid items-center gap-8 lg:grid-cols-2">
         <div>
           <Tag>COS212 · Pre-lecture prep</Tag>
-          <h1 className="mt-4 text-5xl sm:text-6xl">Learn B-trees one branch at a time.</h1>
-          <p className="text-muted mt-4 max-w-lg text-lg">
+          <h1 className="text-display-l sm:text-display-xl mt-4">
+            Learn B-trees one branch at a time.
+          </h1>
+          <p className="text-ink-muted text-body mt-4 max-w-lg">
             Meet the B-tree. Learn how it works, watch it grow, try it yourself, and grow your own
             tree as you go.
           </p>
@@ -54,7 +56,7 @@ export function WelcomePage() {
               I&apos;ve been here before
             </ButtonLink>
           </div>
-          <p className="text-muted mt-3 text-xs">
+          <p className="text-ink-muted text-small mt-3">
             No prior knowledge needed · about 45 minutes · progress saves automatically
           </p>
         </div>
@@ -66,16 +68,16 @@ export function WelcomePage() {
                 type="button"
                 onClick={toggleIntro}
                 aria-label={playing ? 'Stop the intro' : 'Play the 60-second intro'}
-                className="bg-primary text-on-primary shadow-button grid h-12 w-12 place-items-center rounded-full"
+                className="bg-leaf text-on-leaf shadow-press-leaf rounded-pill grid h-12 w-12 place-items-center"
               >
                 {playing ? <Square className="h-4 w-4" /> : <Play className="h-5 w-5" />}
               </button>
             )}
-            <span className="bg-surface font-display rounded-full px-3 py-1 text-sm">
+            <span className="bg-paper font-display rounded-pill text-small px-3 py-1">
               Intro · 60 s
             </span>
           </div>
-          <div className="bg-surface shadow-offset-sm mx-auto mt-2 w-fit -rotate-2 rounded-md px-3 py-1.5 text-sm font-bold">
+          <div className="bg-paper shadow-paper-stack-sm text-label mx-auto mt-2 w-fit -rotate-2 rounded-sm px-3 py-1.5 font-bold">
             Your seed is waiting. It sprouts after module 1.
           </div>
           <div className="mx-auto mt-2 w-56">
@@ -85,7 +87,7 @@ export function WelcomePage() {
       </section>
 
       <section aria-labelledby="what-youll-do">
-        <h2 id="what-youll-do" className="mb-4 text-xl">
+        <h2 id="what-youll-do" className="text-heading mb-4">
           What you&apos;ll do
         </h2>
         <ol className="grid gap-4 md:grid-cols-3">
@@ -93,12 +95,12 @@ export function WelcomePage() {
             <li key={s.n}>
               <Card className="h-full">
                 <span
-                  className={`font-display shadow-offset-sm grid h-10 w-10 place-items-center rounded-full ${s.n === 3 ? 'bg-accent text-on-accent' : 'bg-surface'}`}
+                  className={`font-display shadow-paper-stack-sm rounded-pill grid h-10 w-10 place-items-center ${s.n === 3 ? 'bg-highlight text-on-highlight' : 'bg-paper'}`}
                 >
                   {s.n}
                 </span>
-                <h3 className="mt-3 text-lg">{s.title}</h3>
-                <p className="text-muted mt-1">{s.text}</p>
+                <h3 className="text-body mt-3">{s.title}</h3>
+                <p className="text-ink-muted mt-1">{s.text}</p>
               </Card>
             </li>
           ))}

@@ -109,8 +109,8 @@ export function PracticePage() {
               setExercise(1);
             }}
             className={cn(
-              'shadow-offset-sm rounded-md px-3 py-1.5 text-xs font-bold',
-              a.id === activity ? 'bg-accent text-on-accent' : 'bg-surface',
+              'shadow-paper-stack-sm text-small rounded-sm px-3 py-1.5 font-bold',
+              a.id === activity ? 'bg-highlight text-on-highlight' : 'bg-paper',
             )}
           >
             {i + 1} · {a.label}
@@ -129,12 +129,12 @@ export function PracticePage() {
           <div
             aria-live="polite"
             className={cn(
-              'mt-6 rounded-xl border-2 border-dashed p-4 text-sm',
+              'text-small mt-6 rounded-lg border-2 border-dashed p-4',
               result
                 ? result.correct
-                  ? 'border-primary'
+                  ? 'border-leaf'
                   : 'border-danger'
-                : 'border-line/50 text-muted',
+                : 'border-ink/50 text-ink-muted',
             )}
           >
             {result ? (
@@ -164,7 +164,7 @@ export function PracticePage() {
             <p className="font-bold">
               Exercise {exercise} of {EXERCISES_PER_ACTIVITY}
             </p>
-            <p className="text-muted mb-3 text-xs">
+            <p className="text-ink-muted text-small mb-3">
               Objective {meta.objective.slice(1)}: {meta.label.toLowerCase()}
             </p>
             <ProgressSegments
@@ -176,7 +176,7 @@ export function PracticePage() {
           </Card>
           <Card>
             <CardTitle>Stuck?</CardTitle>
-            <ul className="space-y-3 text-sm font-bold">
+            <ul className="text-label space-y-3 font-bold">
               <li>
                 <Link to="/visualiser" className="flex gap-2 hover:underline">
                   <LeafIcon className="h-4 w-4 shrink-0" />
@@ -201,7 +201,7 @@ export function PracticePage() {
             <Apple className="text-danger h-6 w-6 shrink-0" aria-hidden />
             <div>
               <p className="font-bold">{streak} correct in a row</p>
-              <p className="text-xs">
+              <p className="text-small">
                 {streak >= 3
                   ? 'Splitter streak! Keep going.'
                   : `${3 - streak} more and you earn the Apples decoration for free.`}
@@ -232,9 +232,11 @@ function PredictPath({ seed, onResult, locked }: ActivityProps) {
 
   return (
     <>
-      <h2 className="text-xl">Predict the search path for {target}</h2>
-      <p className="mt-1 text-sm">Tap the nodes a search visits, from the root down, in order.</p>
-      <div className="bg-sky my-4 rounded-xl">
+      <h2 className="text-heading">Predict the search path for {target}</h2>
+      <p className="text-small mt-1">
+        Tap the nodes a search visits, from the root down, in order.
+      </p>
+      <div className="my-4 rounded-lg bg-sky-200">
         <BTreeView
           tree={tree}
           scene
@@ -285,9 +287,9 @@ function WhereDoesItGo({ seed, onResult, locked }: ActivityProps) {
 
   return (
     <>
-      <h2 className="text-xl">Where does {target} go?</h2>
-      <p className="mt-1 text-sm">Tap the leaf where {target} is inserted.</p>
-      <div className="bg-sky my-4 rounded-xl">
+      <h2 className="text-heading">Where does {target} go?</h2>
+      <p className="text-small mt-1">Tap the leaf where {target} is inserted.</p>
+      <div className="my-4 rounded-lg bg-sky-200">
         <BTreeView
           tree={tree}
           scene
@@ -346,8 +348,8 @@ function DraggableKey({
       aria-label={`Key ${value}${selected ? ', selected' : ''}`}
       style={transform ? { transform: `translate(${transform.x}px, ${transform.y}px)` } : undefined}
       className={cn(
-        'font-display shadow-offset-sm grid h-12 w-12 touch-none place-items-center rounded-full border-4',
-        selected ? 'border-yarn bg-accent text-on-accent' : 'border-node-ring bg-node-fill',
+        'font-display shadow-paper-stack-sm rounded-pill grid h-12 w-12 touch-none place-items-center border-4',
+        selected ? 'border-yarn bg-highlight text-on-highlight' : 'border-branch bg-node-fill',
       )}
     >
       {value}
@@ -369,21 +371,21 @@ function DropSlot({
   const { setNodeRef, isOver } = useDroppable({ id });
   return (
     <div className="flex flex-col items-center gap-2">
-      <span className="text-sm font-bold">{label}</span>
+      <span className="text-label font-bold">{label}</span>
       <button
         ref={setNodeRef}
         type="button"
         onClick={onTap}
         aria-label={`${label}: ${keys.length ? keys.join(', ') : 'empty'}. Tap to place the selected key.`}
         className={cn(
-          'border-line flex min-h-14 min-w-14 items-center justify-center gap-1 rounded-full border-2 border-dashed p-1',
-          isOver && 'bg-accent/40',
+          'border-ink rounded-pill flex min-h-14 min-w-14 items-center justify-center gap-1 border-2 border-dashed p-1',
+          isOver && 'bg-highlight/40',
         )}
       >
         {keys.map((k) => (
           <span
             key={k}
-            className="border-node-ring bg-node-fill font-display grid h-11 w-11 place-items-center rounded-full border-4"
+            className="border-branch bg-node-fill font-display rounded-pill grid h-11 w-11 place-items-center border-4"
           >
             {k}
           </span>
@@ -441,28 +443,28 @@ function SplitItYourself({ seed, onResult, locked }: ActivityProps) {
 
   return (
     <DndContext onDragEnd={onDragEnd}>
-      <h2 className="text-xl">Split the overflowing node</h2>
-      <p className="mt-1 text-sm">
+      <h2 className="text-heading">Split the overflowing node</h2>
+      <p className="text-small mt-1">
         Inserting {newKey} made this branch overflow (order {order}, room for {order - 1} keys).
         Drag each key to where it belongs after the split, or tap a key and then tap a spot.
       </p>
       <div className="my-5 flex flex-col items-center">
-        <div className="bg-danger flex gap-1 rounded-full p-1.5">
+        <div className="bg-danger rounded-pill flex gap-1 p-1.5">
           {overflow.map((k) => (
             <span
               key={k}
               className={cn(
-                'bg-node-fill font-display grid h-11 w-11 place-items-center rounded-full border-4',
-                k === newKey ? 'border-yarn' : 'border-node-ring',
+                'bg-node-fill font-display rounded-pill grid h-11 w-11 place-items-center border-4',
+                k === newKey ? 'border-yarn' : 'border-branch',
               )}
             >
               {k}
             </span>
           ))}
         </div>
-        <span className="text-danger-text mt-1 text-xs font-bold">Overflowing branch</span>
+        <span className="text-danger-text text-small mt-1 font-bold">Overflowing branch</span>
       </div>
-      <div className="border-line bg-sunken rounded-xl border-2 border-dashed p-5">
+      <div className="border-ink rounded-lg border-2 border-dashed bg-sky-100 p-5">
         <div className="flex justify-center">
           <DropSlot
             id="parent"
@@ -487,7 +489,7 @@ function SplitItYourself({ seed, onResult, locked }: ActivityProps) {
         </div>
       </div>
       <div className="mt-4 flex flex-wrap items-center gap-3">
-        <span className="text-sm font-bold">Keys to place:</span>
+        <span className="text-label font-bold">Keys to place:</span>
         {unplaced.map((k) => (
           <DraggableKey
             key={k}
@@ -512,8 +514,8 @@ function BuildTheTree() {
   // TODO(iteration 2): insert a short key sequence and ask the student to predict the final tree (objective O6).
   return (
     <>
-      <h2 className="text-xl">Build the tree</h2>
-      <p className="text-muted mt-2">
+      <h2 className="text-heading">Build the tree</h2>
+      <p className="text-ink-muted mt-2">
         Coming next iteration: insert a sequence of keys and predict the final tree, including
         whether it grows taller. Until then, try the{' '}
         <Link to="/visualiser" className="font-bold underline">

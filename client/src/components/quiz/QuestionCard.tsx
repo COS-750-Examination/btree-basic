@@ -63,9 +63,9 @@ export function QuestionCard({
           submit(id);
         }}
         className={cn(
-          'bg-surface shadow-offset w-full rounded-xl px-4 py-3 text-left font-bold transition-transform hover:-translate-y-0.5 disabled:hover:translate-y-0',
+          'bg-paper shadow-paper-stack w-full rounded-lg px-4 py-3 text-left font-bold transition-transform hover:-translate-y-0.5 disabled:hover:translate-y-0',
           wrong && 'border-danger border-2',
-          right && 'border-primary border-2',
+          right && 'border-leaf border-2',
         )}
       >
         {text}
@@ -73,8 +73,8 @@ export function QuestionCard({
           <span
             role="status"
             className={cn(
-              'mt-1 block text-xs',
-              answer.correct ? 'text-primary' : 'text-danger-text',
+              'text-small mt-1 block',
+              answer.correct ? 'text-leaf' : 'text-danger-text',
             )}
           >
             {answer.feedback}
@@ -86,13 +86,13 @@ export function QuestionCard({
 
   return (
     <div className="space-y-4">
-      <h2 className="text-xl sm:text-2xl">{item.prompt}</h2>
+      <h2 className="text-heading sm:text-heading">{item.prompt}</h2>
 
       {item.type === 'bst-mcq' && item.tree && (
         <BSTView spec={item.tree} label="Binary search tree for this question" />
       )}
       {item.type !== 'bst-mcq' && tree && (
-        <div className="bg-sky rounded-xl">
+        <div className="rounded-lg bg-sky-200">
           <BTreeView
             tree={tree}
             scene
@@ -115,11 +115,11 @@ export function QuestionCard({
 
       {item.type === 'pick-median' && (
         <div>
-          <p className="mb-2 text-sm font-bold">
+          <p className="text-label mb-2 font-bold">
             After {item.insertKey} goes in, the branch holds these keys. Tap the one that moves up:
           </p>
           <div
-            className="bg-danger inline-flex gap-2 rounded-full p-2"
+            className="bg-danger rounded-pill inline-flex gap-2 p-2"
             role="group"
             aria-label="Overflowing branch"
           >
@@ -134,10 +134,10 @@ export function QuestionCard({
                   submit(String(k));
                 }}
                 className={cn(
-                  'font-display grid h-12 w-12 place-items-center rounded-full border-4',
+                  'font-display rounded-pill grid h-12 w-12 place-items-center border-4',
                   choice === String(k)
-                    ? 'border-yarn bg-accent text-on-accent'
-                    : 'border-node-ring bg-node-fill',
+                    ? 'border-yarn bg-highlight text-on-highlight'
+                    : 'border-branch bg-node-fill',
                 )}
               >
                 {k}
@@ -148,8 +148,8 @@ export function QuestionCard({
             <p
               role="status"
               className={cn(
-                'mt-2 text-sm font-bold',
-                answer.correct ? 'text-primary' : 'text-danger-text',
+                'text-label mt-2 font-bold',
+                answer.correct ? 'text-leaf' : 'text-danger-text',
               )}
             >
               {answer.feedback}
@@ -172,8 +172,8 @@ export function QuestionCard({
               <label
                 key={v}
                 className={cn(
-                  'shadow-offset-sm cursor-pointer rounded-lg px-4 py-2 font-bold',
-                  choice === v ? 'bg-accent text-on-accent' : 'bg-surface',
+                  'shadow-paper-stack-sm cursor-pointer rounded-md px-4 py-2 font-bold',
+                  choice === v ? 'bg-highlight text-on-highlight' : 'bg-paper',
                 )}
               >
                 <input
@@ -188,12 +188,12 @@ export function QuestionCard({
             ))}
           </fieldset>
           {choice === 'invalid' && (
-            <label className="flex flex-col text-sm font-bold">
+            <label className="text-label flex flex-col font-bold">
               Which rule is broken?
               <select
                 value={rule}
                 onChange={(e) => setRule(e.target.value)}
-                className="border-line bg-surface mt-1 rounded-lg border-2 px-3 py-2"
+                className="border-ink bg-paper mt-1 rounded-md border-2 px-3 py-2"
               >
                 <option value="">Choose a rule…</option>
                 {Object.entries(RULE_LABELS).map(([id, label]) => (
@@ -211,8 +211,8 @@ export function QuestionCard({
             <p
               role="status"
               className={cn(
-                'w-full text-sm font-bold',
-                answer.correct ? 'text-primary' : 'text-danger-text',
+                'text-label w-full font-bold',
+                answer.correct ? 'text-leaf' : 'text-danger-text',
               )}
             >
               {answer.feedback}

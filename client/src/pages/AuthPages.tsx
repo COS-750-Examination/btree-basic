@@ -5,7 +5,7 @@ import { ApiRequestError } from '../api/client';
 import { useLogin, useRegister } from '../api/hooks';
 import { Button, Card } from '../components/ui';
 
-const input = 'mt-1 w-full rounded-xl border-2 border-line bg-surface px-3 py-2.5';
+const input = 'mt-1 w-full rounded-lg border-2 border-ink bg-paper px-3 py-2.5';
 
 function errorText(e: unknown): string {
   if (e instanceof ApiRequestError) return e.status === 0 ? 'Cannot reach the server.' : e.message;
@@ -29,16 +29,16 @@ export function LoginPage() {
 
   return (
     <Card className="mx-auto max-w-md">
-      <h1 className="text-3xl">Welcome back</h1>
-      <p className="text-muted mt-1 text-sm">
+      <h1 className="text-display-l">Welcome back</h1>
+      <p className="text-ink-muted text-small mt-1">
         Sign in to pick up where you left off on any device.
       </p>
       <form onSubmit={submit} className="mt-5 space-y-4" noValidate>
-        <label className="block text-sm font-bold">
+        <label className="text-label block font-bold">
           Email
           <input name="email" type="email" autoComplete="email" required className={input} />
         </label>
-        <label className="block text-sm font-bold">
+        <label className="text-label block font-bold">
           Password
           <input
             name="password"
@@ -49,7 +49,7 @@ export function LoginPage() {
           />
         </label>
         {error && (
-          <p role="alert" className="text-danger-text text-sm font-bold">
+          <p role="alert" className="text-danger-text text-label font-bold">
             {error}
           </p>
         )}
@@ -57,7 +57,7 @@ export function LoginPage() {
           {login.isPending ? 'Signing in…' : 'Sign in'}
         </Button>
       </form>
-      <p className="mt-4 text-sm">
+      <p className="text-small mt-4">
         New here?{' '}
         <Link to="/register" className="font-bold underline">
           Create an account
@@ -89,13 +89,13 @@ export function RegisterPage() {
 
   return (
     <Card className="mx-auto max-w-md">
-      <h1 className="text-3xl">Plant your seed</h1>
-      <p className="text-muted mt-1 text-sm">
+      <h1 className="text-display-l">Plant your seed</h1>
+      <p className="text-ink-muted text-small mt-1">
         An account saves your progress between sessions. We only store your name, email and learning
         progress.
       </p>
       <form onSubmit={submit} className="mt-5 space-y-4" noValidate>
-        <label className="block text-sm font-bold">
+        <label className="text-label block font-bold">
           Display name
           <input
             name="displayName"
@@ -105,11 +105,11 @@ export function RegisterPage() {
             className={input}
           />
         </label>
-        <label className="block text-sm font-bold">
+        <label className="text-label block font-bold">
           Email
           <input name="email" type="email" autoComplete="email" required className={input} />
         </label>
-        <label className="block text-sm font-bold">
+        <label className="text-label block font-bold">
           Password
           <input
             name="password"
@@ -121,11 +121,11 @@ export function RegisterPage() {
             aria-describedby="pw-help"
           />
         </label>
-        <p id="pw-help" className="text-muted text-xs">
+        <p id="pw-help" className="text-ink-muted text-small">
           At least 8 characters.
         </p>
         {error && (
-          <p role="alert" className="text-danger-text text-sm font-bold">
+          <p role="alert" className="text-danger-text text-label font-bold">
             {error}
           </p>
         )}
@@ -133,7 +133,7 @@ export function RegisterPage() {
           {register.isPending ? 'Creating…' : 'Create account'}
         </Button>
       </form>
-      <p className="mt-4 text-sm">
+      <p className="text-small mt-4">
         Already have one?{' '}
         <Link to="/login" className="font-bold underline">
           Sign in

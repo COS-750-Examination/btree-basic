@@ -2,7 +2,7 @@ import { Link } from 'react-router';
 
 export function Breadcrumbs({ items }: { items: { label: string; to?: string }[] }) {
   return (
-    <nav aria-label="Breadcrumb" className="text-muted mb-2 text-xs font-bold">
+    <nav aria-label="Breadcrumb" className="text-ink-muted text-small mb-2 font-bold">
       <ol className="flex flex-wrap items-center gap-1.5">
         {items.map((item, i) => (
           <li key={item.label} className="flex items-center gap-1.5">

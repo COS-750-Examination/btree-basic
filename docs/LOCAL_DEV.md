@@ -109,7 +109,7 @@ Open **http://localhost:5173**. The API runs on **http://localhost:4000**, and V
 | Add or fix a quiz question     | `client/src/content/quizzes/module-N.json` (schema: `packages/shared/src/content.ts`) |
 | Change narration sentences     | `client/src/content/narration.json`                                                   |
 | Add a visualiser example       | `client/src/content/presets.json`                                                     |
-| Change colours or fonts        | `client/src/styles/tokens.css`, `client/src/styles/index.css`                         |
+| Change colours, fonts, shadows | `client/src/styles/tokens.css` (names match the Figma variables)                      |
 | Change a screen                | `client/src/pages/*Page.tsx`                                                          |
 | Change the algorithm           | `packages/btree-engine/src/{search,insert,delete}.ts`                                 |
 | Change scoring or leaf rewards | `packages/shared/src/{scoring,constants}.ts`                                          |

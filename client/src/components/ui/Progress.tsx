@@ -27,8 +27,12 @@ export function ProgressSegments({
         <span
           key={i}
           className={cn(
-            'h-2 flex-1 rounded-full',
-            i < done ? 'bg-primary' : i === current ? 'border-line bg-accent border-2' : 'bg-track',
+            'rounded-pill h-2 flex-1',
+            i < done
+              ? 'bg-leaf'
+              : i === current
+                ? 'border-ink bg-highlight border-2'
+                : 'bg-sky-100',
           )}
         />
       ))}
@@ -55,10 +59,10 @@ export function ProgressBar({
       aria-valuemin={0}
       aria-valuemax={100}
       aria-valuenow={pct}
-      className={cn('bg-track h-2.5 w-full rounded-full', className)}
+      className={cn('rounded-pill h-2.5 w-full bg-sky-100', className)}
     >
       <div
-        className={cn('h-full rounded-full', tone === 'primary' ? 'bg-primary' : 'bg-yarn')}
+        className={cn('rounded-pill h-full', tone === 'primary' ? 'bg-leaf' : 'bg-yarn')}
         style={{ width: `${pct}%` }}
       />
     </div>
