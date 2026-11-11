@@ -1,0 +1,1 @@
+This 8-question check asks **one question per objective**. Hints are available and free, but only first-try answers without hints count toward your readiness score. Reach **80%** to earn the **Lecture Ready** layer for your tree.

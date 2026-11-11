@@ -25,12 +25,27 @@ All notable changes to this project are documented here. The format follows [Kee
 - **Decoration unlock stages** (`minStage` in `@btree/shared`). The tree swing needs a young tree, butterflies a sprout, and everything else a sapling. Locked decorations show as dashed tiles, and the swing's spot shows as a dashed outline with a "Swing spot · young tree" tag, as in the mockup. The API refuses to sell a decoration before its stage (409), with a test.
 - Illustration colour tokens `--apple`, `--blossom`, `--coral` and `--bunting-blue`, with Day and Dusk values from Figma.
 
+### Content
+
+- **Definitions follow Knuth's order m** (the largest number of children), as COS212 uses, aligned with the ACM/IEEE CS2023 curriculum's balanced-tree topics. The rules lesson now states the complete definition: the root's minimum, the child-count rule and the key ranges. It includes an order 3, 4 and 5 table and a note on the "minimum degree" definition some textbooks use instead.
+- **New module 7, "Deleting a key"** (objective O8, _Delete a key and repair an underflow_), in five parts: leaf, internal key (predecessor), borrow, merge with root shrink, and a check. It matches the engine exactly. Former modules 7–9 are now 8–10, so there are 10 modules. Full tree now needs all 10. Module counts in the UI come from `MODULES`.
+- **Quiz banks for every module** (1–10, 47 items; 42 new) with three-tier hints and misconception-tagged distractors. The ready check (module 10) asks one question per objective, O1–O8.
+- **Corrections to existing lessons**, only where needed:
+  - Search now covers keys before the first key and after the last.
+  - The split lesson says which middle key moves up when m is even.
+  - The height lesson gives the worst-case bound and corrects "3 levels" to about 4 for a million keys at m = 100.
+  - The BST depth claim now says "even perfectly balanced".
+  - The B+ tree is explained, and the file system examples are corrected.
+- **Watch tab** for every lesson part that has a tree, with new `delete-leaf`, `delete-internal` and `wide-order-7` presets.
+- `/quiz` opens the student's current module, and "Practise with new keys" after a low score now leads to the practice for that module.
+- **Content tests** (`client/src/content/content.test.ts`) recompute every tree-based answer with the engine: search paths, promoted keys, the broken rule, and insert and delete results. They also check that every module has a lesson and a quiz.
+- Narration and warm-up were reviewed and are accurate, so they are unchanged.
+
 ### To do (next iterations)
 
 - Pixel pass of each screen against its Figma frame (layout and spacing; tokens are done).
 - Practice activity 4, **Build the tree** (objective O6), is a stub.
-- Lesson text in `client/src/content/lessons` is first-draft copy, for the ID lead to review. A deletion lesson and its placement still need an ID decision (the engine and visualiser already support delete).
-- Quiz banks exist for module 6 only. Add `module-N.json` files for the other modules and the 8-question ready check (module 9).
+- The ID lead should review the new lessons and quiz items (see the prompt log, Entry 004).
 - Badges (Explorer, Splitter, Root Raiser, Lecture Ready) are not implemented yet. Leaf rewards and growth stages are.
 - Deployment (Vercel for the client, Render for the API and database) is not configured.
 
@@ -43,7 +58,7 @@ Initial scaffold of the full stack.
 - **Monorepo** on npm workspaces: `client`, `server`, `packages/btree-engine` and `packages/shared`. Strict TypeScript base config, ESLint 9 flat config (typescript-eslint, react-hooks, jsx-a11y), Prettier with the Tailwind plugin, EditorConfig, LF line endings enforced through `.gitattributes`, and recommended VS Code settings and extensions.
 - **B-tree engine** (`@btree/engine`): pure TypeScript search, bottom-up insertion (split at m keys, median promotion, root growth) and deletion (predecessor replacement, borrow, merge, root shrink) for orders 3 to 7. Each operation returns an immutable step trace with snapshots, pseudocode line numbers (Plain and Java, aligned) and narration keys. Also includes `validate()` for every B-tree rule, `fromSpec`/`toSpec` helpers, and a seeded random tree generator.
 - **Engine tests:** 16 worked-example unit tests and 3 fast-check property suites, which check that the tree stays valid and sorted after random insert and delete sequences for every order.
-- **Shared package** (`@btree/shared`): Zod 4 schemas for every API body and content file, learning objectives O1–O7, the 9 modules, leaf rewards, growth stages, the decoration catalogue, and the readiness and mastery scoring (only first-attempt, no-hint answers count; ready at 80%, remediation below 60%).
+- **Shared package** (`@btree/shared`): Zod 4 schemas for every API body and content file, learning objectives O1–O7, the 9 modules (now O1–O8 and 10 modules; see Unreleased), leaf rewards, growth stages, the decoration catalogue, and the readiness and mastery scoring (only first-attempt, no-hint answers count; ready at 80%, remediation below 60%).
 - **API server** (Express 5): register, login, logout, session, me and account deletion; progress, quiz attempts, hints, mastery, readiness and warm-up; leaves ledger, decorations shop, grove placement and lecture questions; friends, friend requests, friend grove (visit-only, private scores) and cheers. Security: bcrypt (bcryptjs, 12 rounds), JWT in an httpOnly SameSite=Lax cookie, helmet, CORS allow-list, rate limiting on auth routes, Zod validation on every body, and pino logs with cookies redacted.
 - **Database:** Prisma 7 schema for PostgreSQL 16 (users, module progress, attempts, mastery, leaf transactions, decorations, lecture questions, warm-up results, friendships, cheers), with cascade deletes for POPIA-compliant account removal, the initial migration, and an idempotent seed with demo users that match the mockups.
 - **Server tests:** Supertest for health, validation, auth guard, 404s, the guest session, and a full register → progress → attempts → login → delete flow against Postgres.

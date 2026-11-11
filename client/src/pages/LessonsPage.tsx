@@ -33,7 +33,10 @@ export function LessonsPage() {
 
   return (
     <div>
-      <PageHeader title="Your lessons" subtitle="9 short modules · each one grows your tree" />
+      <PageHeader
+        title="Your lessons"
+        subtitle={`${MODULES.length} short modules · each one grows your tree`}
+      />
       <div className="grid gap-6 lg:grid-cols-[1fr_340px]">
         <ol className="space-y-3">
           {MODULES.map((m) => {
@@ -113,7 +116,9 @@ export function LessonsPage() {
               current={GROWTH_STAGES.indexOf(stage)}
               label="Growth stage"
             />
-            <p className="text-ink-muted text-small mt-2">{r.modulesDone} of 9 modules mastered</p>
+            <p className="text-ink-muted text-small mt-2">
+              {r.modulesDone} of {MODULES.length} modules mastered
+            </p>
           </Card>
           {next && (
             <Card tone="accent">

@@ -1,0 +1,144 @@
+{
+  "moduleId": 5,
+  "title": "Module 5 check",
+  "items": [
+    {
+      "id": "m5-q1",
+      "objective": "O3",
+      "type": "trace-path",
+      "order": 5,
+      "prompt": "Tap the nodes a search for 38 visits, from the root down.",
+      "tree": {
+        "keys": [20, 40],
+        "children": [
+          {
+            "keys": [5, 10, 15]
+          },
+          {
+            "keys": [25, 30, 35, 38]
+          },
+          {
+            "keys": [45, 50]
+          }
+        ]
+      },
+      "searchKey": 38,
+      "answerPath": [
+        [20, 40],
+        [25, 30, 35, 38]
+      ],
+      "hints": [
+        "Start at the root.",
+        "Find where 38 fits among the root's keys.",
+        "20 < 38 < 40, so go to the middle child, where 38 is."
+      ]
+    },
+    {
+      "id": "m5-q2",
+      "objective": "O3",
+      "type": "trace-path",
+      "order": 3,
+      "prompt": "Tap the nodes a search for 55 visits, from the root down. (55 may not be in the tree.)",
+      "tree": {
+        "keys": [20, 40],
+        "children": [
+          {
+            "keys": [10]
+          },
+          {
+            "keys": [30]
+          },
+          {
+            "keys": [50, 60]
+          }
+        ]
+      },
+      "searchKey": 55,
+      "answerPath": [
+        [20, 40],
+        [50, 60]
+      ],
+      "hints": [
+        "Start at the root.",
+        "55 is larger than the last key, 40.",
+        "Go right to [50 | 60]. It is a leaf without 55, so the search stops there."
+      ]
+    },
+    {
+      "id": "m5-q3",
+      "objective": "O3",
+      "type": "mcq",
+      "order": 3,
+      "prompt": "You search this tree for 45. What happens?",
+      "tree": {
+        "keys": [20, 40],
+        "children": [
+          {
+            "keys": [10]
+          },
+          {
+            "keys": [30]
+          },
+          {
+            "keys": [50, 60]
+          }
+        ]
+      },
+      "hints": [
+        "Where does 45 fit among the root's keys?",
+        "Follow the child for that range; stop at a leaf.",
+        "45 > 40 → last child [50 | 60]. It is a leaf and 45 is not in it, so 45 is not in the tree."
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "It goes to [50 | 60], a leaf, and reports that 45 is not in the tree",
+          "correct": true,
+          "feedback": "Right. Reaching a leaf without the key means it is not there."
+        },
+        {
+          "id": "b",
+          "text": "It goes to the middle child, because 45 is close to 40",
+          "feedback": "Searches follow ranges, not nearness. 45 > 40, so the last child.",
+          "misconception": "nearest-key"
+        },
+        {
+          "id": "c",
+          "text": "It stops at the root, because 45 is not there",
+          "feedback": "A key can be in any node below. Only a leaf without the key ends the search.",
+          "misconception": "stop-at-root"
+        }
+      ]
+    },
+    {
+      "id": "m5-q4",
+      "objective": "O3",
+      "type": "mcq",
+      "prompt": "A B-tree is 3 levels tall. At most, how many nodes does a search visit?",
+      "hints": [
+        "A search moves down one level at a time.",
+        "It visits one node per level.",
+        "3 levels → at most 3 nodes."
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "3",
+          "correct": true,
+          "feedback": "Yes: one node per level."
+        },
+        {
+          "id": "b",
+          "text": "Every node in the tree",
+          "feedback": "Each comparison rules out all but one child, so most nodes are skipped.",
+          "misconception": "scan-all"
+        },
+        {
+          "id": "c",
+          "text": "3 × the order",
+          "feedback": "The order limits keys per node, not nodes visited."
+        }
+      ]
+    }
+  ]
+}

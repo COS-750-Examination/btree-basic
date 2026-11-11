@@ -178,6 +178,64 @@ This log records the generative AI prompts used during development of B-Tree Bas
 
 ---
 
+## Entry 004: Lesson and assessment content
+
+| Field        | Detail                                                                 |
+| ------------ | ---------------------------------------------------------------------- |
+| Date         | 11 November 2026                                                       |
+| Requested by | Lonwabo Kwitshana, on behalf of the COS750 project team                |
+| Tool         | Claude Code (Anthropic), model Claude Opus 5.5                         |
+| Scope        | `client/src/content`, `@btree/shared` (objectives, modules), Quiz page |
+| Status       | Completed; left uncommitted for team review                            |
+
+### Request
+
+> Please implement the outstanding content items in `docs/TODO.md`, revising the existing content only where necessary. All definitions should be consistent with the B-tree treatment in the ACM/IEEE CS2023 curriculum.
+
+### Clarifications provided
+
+| Question raised                                                                                                                        | Decision                                                                                                                                                                                          |
+| -------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| "CS2023" could mean the ACM/IEEE curriculum, the 2023 COS212 notes, or a textbook. Textbooks define the order of a B-tree differently. | The **ACM/IEEE CS2023 curriculum**. It lists B-trees as a topic without a formal definition, so the content keeps Knuth's order m (largest number of children), as used in COS212 and the engine. |
+| Where should the deletion lesson go?                                                                                                   | A **new module after module 6**, renumbering the later modules.                                                                                                                                   |
+
+### Approach
+
+1. **Review:** checked every lesson, the quiz, the narration and the warm-up against the definition and the engine's behaviour. Text was changed only where it was incomplete or inaccurate.
+2. **Restructure:** added module 7, "Deleting a key", and objective O8. The later modules moved to 8–10, and hard-coded module counts were replaced with values derived from the module list.
+3. **Write:** produced the deletion lesson, quiz banks for every module, and a ready check with one question per objective.
+4. **Verify:** added automated tests that recompute every tree-based answer with the B-tree engine.
+
+### Deliverables
+
+- Corrected lessons:
+  - **Rules:** now give the complete definition, with the root's minimum, the child-count rule and the key ranges.
+  - **Search:** now covers keys outside a node's range.
+  - **Split:** now states which middle key is promoted when m is even.
+  - **Height:** now gives the worst-case bound and corrects a level count.
+  - **Real world:** now explains the B+ tree.
+- The deletion module in five parts, following the engine: predecessor replacement, borrowing from the left sibling first, then merging, and shrinking the root.
+- 42 new quiz items across nine quiz files. Each has three tiered hints and misconception-tagged distractors.
+- Watch-tab presets for every lesson part that has a tree.
+
+### Verification summary
+
+| Check                                                            | Result             |
+| ---------------------------------------------------------------- | ------------------ |
+| Content tests (engine-checked answers, coverage, item integrity) | 18 / 18 pass       |
+| Engine, client and server unit tests                             | 19, 28 and 12 pass |
+| Playwright end-to-end and axe accessibility                      | 22 / 22 pass       |
+| ESLint, TypeScript (strict), Prettier, production build          | Pass               |
+
+### Human review required
+
+- **Assessment design (ID lead):** O8 now counts toward the 80% readiness threshold. Confirm that deletion should be assessed before the lecture.
+- **Full tree threshold:** the Full tree stage now needs 10 modules.
+- **Wording:** the lesson copy and quiz wording should be reviewed by the ID lead.
+- **Stored progress:** existing guest or seeded progress uses the old module numbers.
+
+---
+
 ## Entry template
 
 ```markdown

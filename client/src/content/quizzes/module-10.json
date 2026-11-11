@@ -1,0 +1,293 @@
+{
+  "moduleId": 10,
+  "title": "Ready-for-lecture check",
+  "items": [
+    {
+      "id": "r-o1",
+      "objective": "O1",
+      "type": "mcq",
+      "prompt": "In a B-tree of order 4, how many children can an internal node other than the root have?",
+      "hints": [
+        "The order is the most children a node may have.",
+        "An internal node other than the root has at least ⌈m/2⌉ children.",
+        "⌈4/2⌉ = 2, so 2 to 4 children."
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "2 to 4",
+          "correct": true,
+          "feedback": "Right: at least ⌈4/2⌉ = 2 and at most 4."
+        },
+        {
+          "id": "b",
+          "text": "Exactly 4",
+          "feedback": "4 is the maximum. A node may be anything from half full to full.",
+          "misconception": "always-full"
+        },
+        {
+          "id": "c",
+          "text": "1 to 4",
+          "feedback": "An internal node with one child would hold no keys. The minimum is ⌈m/2⌉ = 2.",
+          "misconception": "min-children"
+        }
+      ]
+    },
+    {
+      "id": "r-o2",
+      "objective": "O2",
+      "type": "valid-or-not",
+      "order": 3,
+      "prompt": "Is this a valid order-3 B-tree?",
+      "tree": {
+        "keys": [20, 40],
+        "children": [
+          {
+            "keys": [10]
+          },
+          {
+            "keys": [30]
+          }
+        ]
+      },
+      "valid": false,
+      "brokenRule": "child-count",
+      "hints": [
+        "Count the root's keys and children.",
+        "A node with k keys that is not a leaf has k + 1 children.",
+        "The root has 2 keys but only 2 children. It needs 3."
+      ]
+    },
+    {
+      "id": "r-o3",
+      "objective": "O3",
+      "type": "trace-path",
+      "order": 3,
+      "prompt": "Tap the nodes a search for 30 visits, from the root down.",
+      "tree": {
+        "keys": [40],
+        "children": [
+          {
+            "keys": [20],
+            "children": [
+              {
+                "keys": [10]
+              },
+              {
+                "keys": [30]
+              }
+            ]
+          },
+          {
+            "keys": [60],
+            "children": [
+              {
+                "keys": [50]
+              },
+              {
+                "keys": [70]
+              }
+            ]
+          }
+        ]
+      },
+      "searchKey": 30,
+      "answerPath": [[40], [20], [30]],
+      "hints": [
+        "Start at the root.",
+        "At each node, follow the child for 30's range.",
+        "30 < 40 → [20]. 30 > 20 → [30]. Visit [40], [20], [30]."
+      ]
+    },
+    {
+      "id": "r-o4",
+      "objective": "O4",
+      "type": "mcq",
+      "order": 4,
+      "prompt": "You insert 25 into this order-4 B-tree. What happens?",
+      "tree": {
+        "keys": [30],
+        "children": [
+          {
+            "keys": [10, 20]
+          },
+          {
+            "keys": [40, 50, 60]
+          }
+        ]
+      },
+      "hints": [
+        "Which leaf does 25 belong in?",
+        "An order-4 node holds up to 3 keys.",
+        "25 < 30 → left leaf [10 | 20], which has room: it becomes [10 | 20 | 25]."
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "The left leaf becomes [10 | 20 | 25], with no split",
+          "correct": true,
+          "feedback": "Right. An order-4 leaf holds up to 3 keys, so 25 fits."
+        },
+        {
+          "id": "b",
+          "text": "The left leaf splits and 20 moves up",
+          "feedback": "A node only splits when it has more than m − 1 = 3 keys.",
+          "misconception": "split-too-early"
+        },
+        {
+          "id": "c",
+          "text": "25 goes into the root, making [25 | 30]",
+          "feedback": "New keys always go into a leaf.",
+          "misconception": "insert-at-root"
+        }
+      ]
+    },
+    {
+      "id": "r-o5",
+      "objective": "O5",
+      "type": "pick-median",
+      "order": 3,
+      "prompt": "You insert 30 into this order-3 B-tree. Which key moves up to the parent?",
+      "tree": {
+        "keys": [50],
+        "children": [
+          {
+            "keys": [20, 40]
+          },
+          {
+            "keys": [60]
+          }
+        ]
+      },
+      "insertKey": 30,
+      "answer": 30,
+      "hints": [
+        "Put 30 into the leaf first.",
+        "The leaf now holds 3 keys, so it splits around its middle key.",
+        "The leaf becomes [20, 30, 40]. The middle key is 30, the key you just inserted, so 30 moves up."
+      ]
+    },
+    {
+      "id": "r-o6",
+      "objective": "O6",
+      "type": "mcq",
+      "order": 3,
+      "prompt": "You insert 55 into this order-3 B-tree. Which key ends up as the new root?",
+      "tree": {
+        "keys": [20, 40],
+        "children": [
+          {
+            "keys": [10]
+          },
+          {
+            "keys": [30]
+          },
+          {
+            "keys": [50, 60]
+          }
+        ]
+      },
+      "hints": [
+        "Which leaf gets 55, and does it overflow?",
+        "When the key that moves up overflows the root, the root splits too.",
+        "[50 | 55 | 60] splits and 55 moves up. The root [20 | 40 | 55] splits and 40 becomes the new root."
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "40",
+          "correct": true,
+          "feedback": "Right. The split reaches the root, and the root's middle key becomes a new root."
+        },
+        {
+          "id": "b",
+          "text": "55",
+          "feedback": "55 moves up into the root, but then the root holds [20 | 40 | 55] and its middle key, 40, moves up.",
+          "misconception": "promote-new-key"
+        },
+        {
+          "id": "c",
+          "text": "There is no new root: the root just becomes [20 | 40 | 55]",
+          "feedback": "An order-3 root holds at most 2 keys, so it must split.",
+          "misconception": "ignore-overflow"
+        }
+      ]
+    },
+    {
+      "id": "r-o7",
+      "objective": "O7",
+      "type": "mcq",
+      "prompt": "A B-tree of order 200 holds 1 000 000 keys. About how many levels does it have?",
+      "hints": [
+        "Each level multiplies the number of nodes by up to 200.",
+        "Even half-full nodes have at least 100 children.",
+        "200 × 200 = 40 000 and 200 × 200 × 200 = 8 000 000, so about 3 levels."
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "About 3",
+          "correct": true,
+          "feedback": "Right. That is about 3 disk reads to find any key."
+        },
+        {
+          "id": "b",
+          "text": "About 20",
+          "feedback": "That is the height of a balanced binary tree.",
+          "misconception": "binary-height"
+        },
+        {
+          "id": "c",
+          "text": "About 5 000",
+          "feedback": "The height grows logarithmically, not linearly."
+        }
+      ]
+    },
+    {
+      "id": "r-o8",
+      "objective": "O8",
+      "type": "mcq",
+      "order": 3,
+      "prompt": "You delete 30 from this order-3 B-tree. What is in the root afterwards?",
+      "tree": {
+        "keys": [20, 40],
+        "children": [
+          {
+            "keys": [10]
+          },
+          {
+            "keys": [30]
+          },
+          {
+            "keys": [50, 60]
+          }
+        ]
+      },
+      "hints": [
+        "Removing 30 empties its leaf. Look at both siblings.",
+        "The left sibling [10] has only the minimum. The right sibling [50 | 60] can spare a key.",
+        "Borrow from the right: 40 comes down, 50 goes up. The root becomes [20 | 50]."
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "[20 | 50]",
+          "correct": true,
+          "feedback": "Right. The right sibling spares 50 through the parent, and 40 comes down."
+        },
+        {
+          "id": "b",
+          "text": "[40]",
+          "feedback": "Merging is only needed when no sibling can spare a key. [50 | 60] can.",
+          "misconception": "merge-instead-of-borrow"
+        },
+        {
+          "id": "c",
+          "text": "[20 | 40]",
+          "feedback": "The empty leaf would break the minimum-keys rule. The underflow has to be fixed.",
+          "misconception": "ignore-underflow"
+        }
+      ]
+    }
+  ]
+}

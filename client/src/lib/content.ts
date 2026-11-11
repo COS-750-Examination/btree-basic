@@ -25,7 +25,9 @@ export function lessonMarkdown(file: string): string {
 export const lessonFor = (moduleId: number) => lessons.find((l) => l.moduleId === moduleId);
 
 const quizFiles = import.meta.glob('../content/quizzes/*.json', { import: 'default', eager: true });
-export const quizzes = Object.values(quizFiles).map((q) => QuizFile.parse(q));
+export const quizzes = Object.values(quizFiles)
+  .map((q) => QuizFile.parse(q))
+  .sort((a, b) => a.moduleId - b.moduleId);
 export const quizFor = (moduleId: number) => quizzes.find((q) => q.moduleId === moduleId);
 
 export const Preset = z.object({

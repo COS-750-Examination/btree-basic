@@ -1,4 +1,4 @@
-import { DECORATIONS, GROWTH_STAGES, LEAF_REWARDS, reachedStage } from '@btree/shared';
+import { DECORATIONS, GROWTH_STAGES, LEAF_REWARDS, MODULES, reachedStage } from '@btree/shared';
 import { toPng } from 'html-to-image';
 import { useRef, useState } from 'react';
 import { Link } from 'react-router';
@@ -176,10 +176,14 @@ export function GrovePage() {
                       <div className="text-small flex justify-between">
                         <span className="font-bold">{f.displayName}</span>
                         <span className="text-ink-muted text-small">
-                          {GROWTH_STAGES.find((s) => s.id === f.stage)?.label} · {f.modulesDone}/9
+                          {GROWTH_STAGES.find((s) => s.id === f.stage)?.label} · {f.modulesDone}/
+                          {MODULES.length}
                         </span>
                       </div>
-                      <ProgressBar value={f.modulesDone / 9} label={`${f.displayName}'s modules`} />
+                      <ProgressBar
+                        value={f.modulesDone / MODULES.length}
+                        label={`${f.displayName}'s modules`}
+                      />
                     </div>
                     <Link to={`/grove/${f.id}`} className="text-label font-bold hover:underline">
                       Visit →

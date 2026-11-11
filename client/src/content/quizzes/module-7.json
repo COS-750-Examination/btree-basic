@@ -1,0 +1,209 @@
+{
+  "moduleId": 7,
+  "title": "Module 7 check",
+  "items": [
+    {
+      "id": "m7-q1",
+      "objective": "O8",
+      "type": "mcq",
+      "order": 3,
+      "prompt": "You delete 30 from this order-3 B-tree. What does it look like afterwards?",
+      "tree": {
+        "keys": [20],
+        "children": [
+          {
+            "keys": [8]
+          },
+          {
+            "keys": [28, 30]
+          }
+        ]
+      },
+      "hints": [
+        "Is 30 in a leaf or an internal node?",
+        "After removing a key from a leaf, check it still has the minimum, ⌈m/2⌉ − 1 = 1 key for order 3.",
+        "[28 | 30] becomes [28], which still has 1 key, so nothing else changes."
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "[20] over [8] and [28]",
+          "correct": true,
+          "feedback": "Right. The leaf still has the minimum number of keys, so the deletion is done."
+        },
+        {
+          "id": "b",
+          "text": "[28] over [8] and [20]",
+          "feedback": "Borrowing is only needed when a node drops below the minimum. [28] still has 1 key.",
+          "misconception": "borrow-when-not-needed"
+        },
+        {
+          "id": "c",
+          "text": "One node, [8 | 20 | 28]",
+          "feedback": "Merging is only needed when a node underflows and no sibling can spare a key.",
+          "misconception": "merge-when-not-needed"
+        }
+      ]
+    },
+    {
+      "id": "m7-q2",
+      "objective": "O8",
+      "type": "mcq",
+      "order": 3,
+      "prompt": "You delete 20 from this order-3 B-tree, using the predecessor. Which key takes 20's place in the root?",
+      "tree": {
+        "keys": [20],
+        "children": [
+          {
+            "keys": [8, 12]
+          },
+          {
+            "keys": [28, 30]
+          }
+        ]
+      },
+      "hints": [
+        "20 is in an internal node, so it is replaced rather than removed.",
+        "The predecessor is the largest key in the left subtree.",
+        "Go left to [8 | 12]; the largest key there is 12. 12 moves up and the leaf becomes [8]."
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "12",
+          "correct": true,
+          "feedback": "Yes. 12 is the largest key smaller than 20, so the order still holds."
+        },
+        {
+          "id": "b",
+          "text": "28",
+          "feedback": "28 is the successor. That method also works, but this question uses the predecessor.",
+          "misconception": "successor-for-predecessor"
+        },
+        {
+          "id": "c",
+          "text": "8",
+          "feedback": "8 is the smallest key on the left. The predecessor is the largest.",
+          "misconception": "wrong-end-of-subtree"
+        }
+      ]
+    },
+    {
+      "id": "m7-q3",
+      "objective": "O8",
+      "type": "mcq",
+      "order": 3,
+      "prompt": "You delete 8 from this order-3 B-tree. What does it look like afterwards?",
+      "tree": {
+        "keys": [20],
+        "children": [
+          {
+            "keys": [8]
+          },
+          {
+            "keys": [28, 30]
+          }
+        ]
+      },
+      "hints": [
+        "Removing 8 empties the left leaf. Can a sibling spare a key?",
+        "Borrow through the parent: the separator comes down, and the sibling's nearest key goes up.",
+        "The right sibling [28 | 30] can spare one: 20 comes down, 28 goes up. Result: [28] over [20] and [30]."
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "[28] over [20] and [30]",
+          "correct": true,
+          "feedback": "Right. The key passes through the parent, so every key stays in its range."
+        },
+        {
+          "id": "b",
+          "text": "[20] over [28] and [30]",
+          "feedback": "28 cannot move straight across: it would sit left of 20 while being larger than 20.",
+          "misconception": "borrow-without-parent"
+        },
+        {
+          "id": "c",
+          "text": "One node, [20 | 28 | 30]",
+          "feedback": "Merge only when no sibling can spare a key. Here the right sibling can.",
+          "misconception": "merge-instead-of-borrow"
+        },
+        {
+          "id": "d",
+          "text": "[20] over an empty leaf and [28 | 30]",
+          "feedback": "An empty leaf breaks the minimum-keys rule. The underflow must be fixed.",
+          "misconception": "ignore-underflow"
+        }
+      ]
+    },
+    {
+      "id": "m7-q4",
+      "objective": "O8",
+      "type": "mcq",
+      "order": 3,
+      "prompt": "You delete 8 from this order-3 B-tree. What happens to its height?",
+      "tree": {
+        "keys": [20],
+        "children": [
+          {
+            "keys": [8]
+          },
+          {
+            "keys": [30]
+          }
+        ]
+      },
+      "hints": [
+        "Removing 8 empties the left leaf. Can its sibling spare a key?",
+        "If no sibling can spare a key, merge with one and pull the separator down.",
+        "The leaf, 20 and [30] merge into [20 | 30]. The root is now empty, so [20 | 30] becomes the root: one level shorter."
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "It shrinks by one level: [20 | 30] becomes the root",
+          "correct": true,
+          "feedback": "Yes. A B-tree only gets shorter at the root, so all leaves stay level."
+        },
+        {
+          "id": "b",
+          "text": "It stays the same: 30 moves into the empty leaf",
+          "feedback": "Then 30 would sit left of 20 while being larger, and the right leaf would be empty.",
+          "misconception": "borrow-without-parent"
+        },
+        {
+          "id": "c",
+          "text": "It stays the same, with an empty leaf on the left",
+          "feedback": "An empty leaf breaks the minimum-keys rule. The underflow must be fixed.",
+          "misconception": "ignore-underflow"
+        }
+      ]
+    },
+    {
+      "id": "m7-q5",
+      "objective": "O8",
+      "type": "valid-or-not",
+      "order": 5,
+      "prompt": "Someone deleted a key from an order-5 B-tree and drew this. Is it a valid order-5 B-tree?",
+      "tree": {
+        "keys": [20],
+        "children": [
+          {
+            "keys": [10]
+          },
+          {
+            "keys": [30, 40, 50]
+          }
+        ]
+      },
+      "valid": false,
+      "brokenRule": "min-keys",
+      "hints": [
+        "Count the keys in each non-root node.",
+        "In order 5, every node except the root needs at least 2 keys.",
+        "[10] underflowed and was not fixed. It should have borrowed from [30 | 40 | 50]."
+      ]
+    }
+  ]
+}

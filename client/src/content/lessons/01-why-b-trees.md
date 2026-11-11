@@ -1,6 +1,6 @@
 How does a database find **one record among millions** while reading from disk only three or four times?
 
-Reading from a disk is slow compared to memory, and a disk is always read in whole **blocks**. A binary search tree with a million keys is about 20 levels deep, so a search could need about 20 slow reads.
+Reading from a disk is slow compared to memory, and a disk is always read in whole **blocks**. Even a perfectly balanced binary search tree with a million keys is about 20 levels deep, so a search could need about 20 slow reads. An unbalanced one can be far deeper.
 
 A B-tree packs **many keys into each node**, sized to fill one disk block. Each node has many children, so the tree is very short and a search only reads a handful of nodes.
 

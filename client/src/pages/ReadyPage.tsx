@@ -1,5 +1,6 @@
 import {
   GROWTH_STAGES,
+  MODULES,
   OBJECTIVES,
   ReadinessSummary,
   READY_THRESHOLD,
@@ -35,7 +36,8 @@ const REVISIT: Record<ObjectiveId, { to: string; label: string; module: number }
   O4: { to: '/practice/where-does-it-go', label: 'Practice: where does it go?', module: 6 },
   O5: { to: '/practice/split-it-yourself', label: 'Practice: split it yourself', module: 6 },
   O6: { to: '/lessons/6?part=3', label: 'Module 6: when the root splits', module: 6 },
-  O7: { to: '/lessons/7', label: 'Module 7: why it stays short', module: 7 },
+  O7: { to: '/lessons/8', label: 'Module 8: why it stays short', module: 8 },
+  O8: { to: '/lessons/7', label: 'Module 7: deleting a key', module: 7 },
 };
 
 /** Screen 08: overall readiness, a breakdown per objective, what to revisit, and questions for the lecture. */
@@ -84,7 +86,9 @@ export function ReadyPage() {
                   <LeafIcon className="h-4 w-4" />
                   {r.leaves} leaves
                 </span>
-                <span>{r.modulesDone} of 9 modules done</span>
+                <span>
+                  {r.modulesDone} of {MODULES.length} modules done
+                </span>
                 <span className="text-ink-muted">Ready at {READY_THRESHOLD * 100}%</span>
               </p>
             </div>

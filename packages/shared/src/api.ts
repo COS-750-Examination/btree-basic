@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { CONFIDENCE_LEVELS, GROWTH_STAGE_IDS, OBJECTIVE_IDS } from './constants';
+import { CONFIDENCE_LEVELS, GROWTH_STAGE_IDS, MODULES, OBJECTIVE_IDS } from './constants';
 
 /* ---------- Auth (FR10) ---------- */
 
@@ -31,7 +31,7 @@ export const ConfidenceSchema = z.enum(CONFIDENCE_LEVELS);
 export const GrowthStageSchema = z.enum(GROWTH_STAGE_IDS);
 
 export const ModuleProgress = z.object({
-  moduleId: z.number().int().min(1).max(9),
+  moduleId: z.number().int().min(1).max(MODULES.length),
   /** Last part reached inside the module (module 6 has 4 parts). */
   part: z.number().int().min(1).default(1),
   completed: z.boolean(),
@@ -139,7 +139,7 @@ export type FriendGrove = z.infer<typeof FriendGrove>;
 
 export const CheerBody = z.object({
   message: z.string().trim().max(140).optional(),
-  moduleId: z.number().int().min(1).max(9).optional(),
+  moduleId: z.number().int().min(1).max(MODULES.length).optional(),
 });
 export type CheerBody = z.infer<typeof CheerBody>;
 

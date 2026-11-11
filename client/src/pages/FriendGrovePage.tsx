@@ -93,7 +93,9 @@ export function FriendGrovePage() {
           <Card>
             <div className="mb-3 flex justify-between">
               <CardTitle className="mb-0">Course progress</CardTitle>
-              <span className="font-bold">{f.modulesDone} of 9 modules</span>
+              <span className="font-bold">
+                {f.modulesDone} of {MODULES.length} modules
+              </span>
             </div>
             <ul className="grid gap-2 sm:grid-cols-2">
               {MODULES.map((m) => {
@@ -123,7 +125,7 @@ export function FriendGrovePage() {
         <aside className="space-y-4">
           <Card className="grid grid-cols-3 text-center">
             {[
-              [`${f.modulesDone}/9`, 'modules'],
+              [`${f.modulesDone}/${MODULES.length}`, 'modules'],
               [f.streakDays, 'day streak'],
               [f.decorations.length, 'decorations'],
             ].map(([n, l]) => (
