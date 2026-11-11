@@ -10,15 +10,15 @@ const systemTheme = (): Theme =>
 
 interface ThemeState {
   theme: Theme;
-  toggle: () => void;
+  setTheme: (theme: Theme) => void;
 }
 
 /** Day / Dusk theme (autonomy: the student picks). Persisted in localStorage. */
 export const useThemeStore = create<ThemeState>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       theme: systemTheme(),
-      toggle: () => set({ theme: get().theme === 'day' ? 'dusk' : 'day' }),
+      setTheme: (theme) => set({ theme }),
     }),
     { name: 'btree-theme' },
   ),
