@@ -23,23 +23,26 @@ export function HintLadder({
   return (
     <Card>
       <CardTitle>Hints</CardTitle>
-      <p className="text-muted mb-3 text-xs">
+      <p className="text-ink-muted text-small mb-3">
         Hints are free, and every hint you read still earns +5 leaves.
       </p>
       <ol className="space-y-3" aria-live="polite">
         {hints.map((hint, i) =>
           i < shown ? (
-            <li key={i} className="bg-accent text-on-accent shadow-accent rounded-xl p-4">
-              <p className="font-display text-sm">
+            <li
+              key={i}
+              className="bg-highlight text-on-highlight shadow-press-highlight rounded-lg p-4"
+            >
+              <p className="font-display text-small">
                 Hint {i + 1} · {TITLES[i] ?? 'Hint'}
               </p>
-              <p className="mt-1 text-sm">{hint}</p>
+              <p className="text-small mt-1">{hint}</p>
               {i === shown - 1 && onTryAgain && (
                 <div className="mt-3 flex flex-wrap gap-2">
                   <button
                     type="button"
                     onClick={onTryAgain}
-                    className="bg-primary font-display text-on-primary shadow-button rounded-lg px-4 py-2 text-sm"
+                    className="bg-leaf font-display text-on-leaf shadow-press-leaf text-small rounded-md px-4 py-2"
                   >
                     Try again
                   </button>
@@ -48,7 +51,7 @@ export function HintLadder({
                       type="button"
                       onClick={onReveal}
                       disabled={!canReveal}
-                      className="font-display rounded-lg border-2 border-current px-4 py-2 text-sm disabled:opacity-40"
+                      className="font-display text-small rounded-md border-2 border-current px-4 py-2 disabled:opacity-40"
                     >
                       Next hint
                     </button>
@@ -59,12 +62,12 @@ export function HintLadder({
           ) : (
             <li
               key={i}
-              className={cn('flex items-center gap-3 text-xs', i > shown && 'text-muted')}
+              className={cn('text-small flex items-center gap-3', i > shown && 'text-ink-muted')}
             >
               <span
                 className={cn(
-                  'rounded-md border-2 border-dashed px-2 py-1 font-bold',
-                  i > shown ? 'border-muted' : 'border-line',
+                  'rounded-sm border-2 border-dashed px-2 py-1 font-bold',
+                  i > shown ? 'border-ink-muted' : 'border-ink',
                 )}
               >
                 Hint {i + 1} · {TITLES[i] ?? 'Hint'}

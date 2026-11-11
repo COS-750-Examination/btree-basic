@@ -72,27 +72,27 @@ export function ReadyPage() {
         <div className="space-y-6">
           <Card className="flex flex-wrap items-center gap-6">
             <div>
-              <p className="font-display text-primary text-6xl">{pct}%</p>
+              <p className="font-display text-leaf text-display-xl">{pct}%</p>
               <p className="font-bold">ready</p>
             </div>
             <div className="min-w-60 flex-1">
-              <p className="text-lg">{summary}</p>
+              <p className="text-body">{summary}</p>
               <ProgressBar className="mt-3" value={r.overall} label="Overall readiness" />
-              <p className="mt-3 flex flex-wrap gap-4 text-sm font-bold">
+              <p className="text-label mt-3 flex flex-wrap gap-4 font-bold">
                 <span>{stage}</span>
                 <span className="flex items-center gap-1">
                   <LeafIcon className="h-4 w-4" />
                   {r.leaves} leaves
                 </span>
                 <span>{r.modulesDone} of 9 modules done</span>
-                <span className="text-muted">Ready at {READY_THRESHOLD * 100}%</span>
+                <span className="text-ink-muted">Ready at {READY_THRESHOLD * 100}%</span>
               </p>
             </div>
           </Card>
 
           <Card>
             <CardTitle>By learning objective</CardTitle>
-            <p className="text-muted mb-4 text-xs">
+            <p className="text-ink-muted text-small mb-4">
               Mastery comes from practice and quiz answers on the first try without hints, not from
               time spent.
             </p>
@@ -112,7 +112,7 @@ export function ReadyPage() {
                       tone={o.status === 'mastered' ? 'primary' : 'warn'}
                       label={`${meta.label} mastery`}
                     />
-                    <span className="col-start-2 text-xs font-bold sm:col-start-auto">
+                    <span className="text-small col-start-2 font-bold sm:col-start-auto">
                       {Math.round(o.score * 100)}%
                     </span>
                     <span className="col-start-2 sm:col-start-auto">
@@ -129,9 +129,9 @@ export function ReadyPage() {
           <Card>
             <CardTitle>Revisit before the lecture</CardTitle>
             {toRevisit.length === 0 ? (
-              <p className="text-sm">Everything is mastered. 🎉</p>
+              <p className="text-small">Everything is mastered. 🎉</p>
             ) : (
-              <ul className="space-y-2 text-sm font-bold">
+              <ul className="text-label space-y-2 font-bold">
                 {toRevisit.slice(0, 4).map((o) => (
                   <li key={o.objective}>
                     <Link to={REVISIT[o.objective].to} className="flex gap-2 hover:underline">
@@ -153,7 +153,7 @@ export function ReadyPage() {
           </Card>
           <LectureQuestions />
           {!r.ready && (
-            <Card tone="accent" className="flex gap-2 text-sm font-bold">
+            <Card tone="accent" className="text-label flex gap-2 font-bold">
               <LeafIcon className="h-5 w-5 shrink-0" />
               Finish the remaining modules and pass the check to grow your {stage} into a full tree.
             </Card>
@@ -176,19 +176,19 @@ function LectureQuestions() {
   return (
     <Card>
       <CardTitle>Questions for the lecture</CardTitle>
-      <p className="text-muted mb-3 text-xs">
+      <p className="text-ink-muted text-small mb-3">
         Notes you flagged while learning. Bring them to class.
       </p>
       <ul className="space-y-2">
         {lectureQuestions.map((q) => (
-          <li key={q.id} className="bg-sunken flex items-start gap-2 rounded-lg p-3 text-sm">
-            <HelpCircle className="text-primary mt-0.5 h-4 w-4 shrink-0" aria-hidden />
+          <li key={q.id} className="text-small flex items-start gap-2 rounded-md bg-sky-100 p-3">
+            <HelpCircle className="text-leaf mt-0.5 h-4 w-4 shrink-0" aria-hidden />
             <span className="flex-1">{q.text}</span>
             <button
               type="button"
               onClick={() => removeLectureQuestion(q.id)}
               aria-label={`Remove question: ${q.text}`}
-              className="no-print text-muted"
+              className="no-print text-ink-muted"
             >
               <Trash2 className="h-4 w-4" />
             </button>
@@ -205,7 +205,7 @@ function LectureQuestions() {
           onChange={(e) => setText(e.target.value)}
           maxLength={280}
           placeholder="Add a question…"
-          className="border-line bg-surface min-w-0 flex-1 rounded-xl border-2 px-3 py-2"
+          className="border-ink bg-paper min-w-0 flex-1 rounded-lg border-2 px-3 py-2"
         />
         <Button type="submit" variant="outline" size="sm">
           Add

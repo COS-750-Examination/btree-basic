@@ -16,14 +16,14 @@ export function ConfidencePicker({
   onChange: (c: Confidence) => void;
 }) {
   return (
-    <fieldset className="flex flex-wrap items-center gap-2 text-sm">
+    <fieldset className="text-small flex flex-wrap items-center gap-2">
       <legend className="float-left mr-2 font-bold">How sure are you?</legend>
       {(Object.keys(LABELS) as Confidence[]).map((c) => (
         <label
           key={c}
           className={cn(
-            'shadow-offset-sm has-[:focus-visible]:outline-yarn cursor-pointer rounded-md px-2.5 py-1 text-xs font-bold has-[:focus-visible]:outline-2',
-            value === c ? 'bg-accent text-on-accent' : 'bg-surface',
+            'shadow-paper-stack-sm has-[:focus-visible]:outline-yarn text-small cursor-pointer rounded-sm px-2.5 py-1 font-bold has-[:focus-visible]:outline-2',
+            value === c ? 'bg-highlight text-on-highlight' : 'bg-paper',
           )}
         >
           <input

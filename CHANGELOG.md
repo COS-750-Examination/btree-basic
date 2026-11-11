@@ -4,9 +4,19 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+### Changed
+
+- **Design tokens now match Figma exactly.** Read through the Figma integration once file access was granted (Screens page, Day and Dusk frames).
+  - Fonts: display text is **Sniglet ExtraBold** (H1 50px, H2 28px, H3 21px, buttons 18px). Body text is **Atkinson Hyperlegible** (body 17px, labels 15px, small 13.5px). Both are self-hosted through Fontsource. Bagel Fat One and Nunito are removed.
+  - Colours: tokens are renamed to the Figma variable names (`--paper`, `--paper-back`, `--leaf`, `--leaf-dark`, `--highlight`, `--branch`, `--ink`, `--ink-muted`, `--sky-100`, `--sky-200`, …) with exact Day and Dusk values. Tailwind classes follow the same names (`bg-surface` is now `bg-paper`, `bg-primary` is `bg-leaf`, `bg-accent` is `bg-highlight`, `text-muted` is `text-ink-muted`, and so on).
+  - Shadows: hard offset with no blur. `shadow-paper-stack` (6/7), `shadow-paper-stack-sm` (3/4), `shadow-press-leaf` (3/4), `shadow-lift` (2/3).
+  - Radius: `rounded-sm` 6px, `rounded-md` 10px, `rounded-lg` 12px, `rounded-pill` 999px.
+  - Everything lives in `client/src/styles/tokens.css`. Tailwind's default colour, type, radius and shadow scales are cleared, so only Figma values can be used.
+  - Hard-coded wood and cloud colours in the grove SVGs, and the favicon colours, now use the tokens.
+
 ### To do (next iterations)
 
-- Replace the approximate design tokens and placeholder fonts with the exact Figma variables once the team grants file access (`client/src/styles/tokens.css`).
+- Pixel pass of each screen against its Figma frame (layout and spacing; tokens are done).
 - Practice activity 4, **Build the tree** (objective O6), is a stub.
 - Lesson text in `client/src/content/lessons` is first-draft copy, for the ID lead to review. A deletion lesson and its placement still need an ID decision (the engine and visualiser already support delete).
 - Quiz banks exist for module 6 only. Add `module-N.json` files for the other modules and the 8-question ready check (module 9).

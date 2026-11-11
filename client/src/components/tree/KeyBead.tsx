@@ -16,9 +16,9 @@ export function KeyBead({
   x: number;
   state?: BeadState;
 }) {
-  const fill = state === 'median' || state === 'found' ? 'var(--accent)' : 'var(--node-fill)';
-  const ring = state === 'new' ? 'var(--yarn)' : 'var(--node-ring)';
-  const text = state === 'median' || state === 'found' ? 'var(--on-accent)' : 'var(--text)';
+  const fill = state === 'median' || state === 'found' ? 'var(--highlight)' : 'var(--node-fill)';
+  const ring = state === 'new' ? 'var(--yarn)' : 'var(--branch)';
+  const text = state === 'median' || state === 'found' ? 'var(--on-highlight)' : 'var(--ink)';
   return (
     <motion.g
       initial={{ scale: 0.6, opacity: 0 }}

@@ -10,8 +10,8 @@ export function Tag({
   return (
     <span
       className={cn(
-        'shadow-offset-sm inline-block -rotate-1 rounded-md px-2.5 py-1 text-xs font-bold',
-        tone === 'accent' ? 'bg-accent text-on-accent' : 'bg-surface text-ink',
+        'shadow-paper-stack-sm text-small inline-block -rotate-1 rounded-sm px-2.5 py-1 font-bold',
+        tone === 'accent' ? 'bg-highlight text-on-highlight' : 'bg-paper text-ink',
         className,
       )}
       {...rest}

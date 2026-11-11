@@ -28,8 +28,8 @@ export function PseudocodePanel({
               aria-pressed={language === l}
               onClick={() => onLanguage(l)}
               className={cn(
-                'shadow-offset-sm rounded-md px-2 py-1 text-xs font-bold',
-                language === l ? 'bg-accent text-on-accent' : 'bg-surface',
+                'shadow-paper-stack-sm text-small rounded-sm px-2 py-1 font-bold',
+                language === l ? 'bg-highlight text-on-highlight' : 'bg-paper',
               )}
             >
               {l === 'plain' ? 'Plain' : 'Java'}
@@ -45,11 +45,11 @@ export function PseudocodePanel({
               key={i}
               aria-current={active ? 'step' : undefined}
               className={cn(
-                'flex gap-3 rounded px-1 whitespace-pre-wrap',
-                active && 'bg-accent text-on-accent',
+                'flex gap-3 rounded-sm px-1 whitespace-pre-wrap',
+                active && 'bg-highlight text-on-highlight',
               )}
             >
-              <span className="text-muted w-5 shrink-0 text-right" aria-hidden>
+              <span className="text-ink-muted w-5 shrink-0 text-right" aria-hidden>
                 {active ? '▶' : i + 1}
               </span>
               <span>{text}</span>
@@ -57,7 +57,7 @@ export function PseudocodePanel({
           );
         })}
       </ol>
-      {note && <p className="text-muted mt-2 font-mono text-xs">{note}</p>}
+      {note && <p className="text-ink-muted text-small mt-2 font-mono">{note}</p>}
     </Card>
   );
 }

@@ -4,49 +4,13 @@
 /* Dusk theme is selected with <html data-theme="dusk">, not the OS media query. */
 @custom-variant dark (&:where([data-theme='dusk'], [data-theme='dusk'] *));
 
-@theme inline {
-  --color-bg: var(--bg);
-  --color-surface: var(--surface);
-  --color-sunken: var(--surface-sunken);
-  --color-shadow: var(--shadow);
-  --color-line: var(--border);
-  --color-ink: var(--text);
-  --color-muted: var(--muted);
-  --color-primary: var(--primary);
-  --color-primary-shadow: var(--primary-shadow);
-  --color-on-primary: var(--on-primary);
-  --color-accent: var(--accent);
-  --color-accent-shadow: var(--accent-shadow);
-  --color-on-accent: var(--on-accent);
-  --color-danger: var(--danger);
-  --color-danger-text: var(--danger-text);
-  --color-node-ring: var(--node-ring);
-  --color-node-fill: var(--node-fill);
-  --color-yarn: var(--yarn);
-  --color-sky: var(--sky);
-  --color-sun: var(--sun);
-  --color-hill-1: var(--hill-1);
-  --color-hill-2: var(--hill-2);
-  --color-hill-3: var(--hill-3);
-  --color-chip: var(--chip);
-  --color-track: var(--track);
-
-  --font-display: 'Bagel Fat One', 'Arial Rounded MT Bold', system-ui, sans-serif;
-  --font-sans: 'Nunito Variable', 'Nunito', system-ui, sans-serif;
-  --font-mono: 'JetBrains Mono Variable', ui-monospace, monospace;
-
-  /* Paper-cut look: hard offset shadow, no blur. */
-  --shadow-offset: 4px 5px 0 0 var(--shadow);
-  --shadow-offset-sm: 2px 3px 0 0 var(--shadow);
-  --shadow-button: 0 4px 0 0 var(--primary-shadow);
-  --shadow-accent: 0 4px 0 0 var(--accent-shadow);
-}
-
 @layer base {
   html {
-    background: var(--bg);
-    color: var(--text);
+    background: var(--sky-100);
+    color: var(--ink);
     font-family: var(--font-sans);
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
     -webkit-font-smoothing: antialiased;
   }
 
@@ -58,15 +22,25 @@
   h2,
   h3 {
     font-family: var(--font-display);
-    font-weight: 400;
-    letter-spacing: 0.01em;
-    line-height: 1.1;
+    font-weight: 800;
+  }
+  h1 {
+    font-size: var(--text-display-xl);
+    line-height: var(--text-display-xl--line-height);
+  }
+  h2 {
+    font-size: var(--text-display-l);
+    line-height: var(--text-display-l--line-height);
+  }
+  h3 {
+    font-size: var(--text-heading);
+    line-height: var(--text-heading--line-height);
   }
 
   :focus-visible {
     outline: 3px solid var(--yarn);
     outline-offset: 2px;
-    border-radius: 6px;
+    border-radius: var(--radius-sm);
   }
 
   @media (prefers-reduced-motion: reduce) {

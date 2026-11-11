@@ -26,7 +26,7 @@ export function App() {
   return (
     <Suspense
       fallback={
-        <p role="status" className="text-muted p-8 text-center">
+        <p role="status" className="text-ink-muted p-8 text-center">
           Growing…
         </p>
       }

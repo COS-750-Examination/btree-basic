@@ -24,7 +24,7 @@ export function PlaybackControls({
   onSpeed: (s: number) => void;
 }) {
   const round =
-    'grid h-11 w-11 place-items-center rounded-full bg-surface shadow-offset-sm disabled:opacity-40';
+    'grid h-11 w-11 place-items-center rounded-pill bg-paper shadow-paper-stack-sm disabled:opacity-40';
   return (
     <div className="flex flex-wrap items-center gap-3">
       <button
@@ -50,14 +50,14 @@ export function PlaybackControls({
         onClick={onTogglePlay}
         aria-label={playing ? 'Pause' : 'Play'}
         disabled={!canNext && !playing}
-        className="bg-primary text-on-primary shadow-button grid h-12 w-12 place-items-center rounded-full disabled:opacity-40"
+        className="bg-leaf text-on-leaf shadow-press-leaf rounded-pill grid h-12 w-12 place-items-center disabled:opacity-40"
       >
         {playing ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5" />}
       </button>
       <Button variant="accent" onClick={onNext} disabled={!canNext}>
         Next step
       </Button>
-      <label className="ml-auto flex items-center gap-3 text-sm font-bold">
+      <label className="text-label ml-auto flex items-center gap-3 font-bold">
         Speed
         <input
           type="range"
@@ -66,7 +66,7 @@ export function PlaybackControls({
           step={0.25}
           value={speed}
           onChange={(e) => onSpeed(Number(e.target.value))}
-          className="w-28 accent-[var(--primary)]"
+          className="w-28 accent-[var(--leaf)]"
           aria-valuetext={`${speed}x`}
         />
       </label>

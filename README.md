@@ -54,18 +54,19 @@ Step-by-step setup for macOS and Windows/WSL, plus troubleshooting, is in **[doc
 
 ## Tech stack
 
-| Layer       | Choice                                                                        |
-| ----------- | ----------------------------------------------------------------------------- |
-| Language    | TypeScript 6 (strict) everywhere                                              |
-| Client      | React 18, Vite 8, React Router 7, Tailwind CSS 4                              |
-| State/data  | Zustand 5 (guest progress in sessionStorage), TanStack Query 5                |
-| Animation   | SVG + Motion (honours _reduce motion_), Web Speech API for narration          |
-| Interaction | dnd-kit (drag-and-drop with keyboard support), html-to-image ("Snap a photo") |
-| Server      | Node 22, Express 5, Zod 4 validation, helmet, rate limiting, pino logging     |
-| Database    | PostgreSQL 16, Prisma 7 (pg driver adapter)                                   |
-| Auth        | bcrypt (bcryptjs) hashes, JWT in an httpOnly SameSite cookie                  |
-| Testing     | Vitest 5, fast-check, React Testing Library, Supertest, Playwright, axe       |
-| Tooling     | ESLint 9, Prettier, GitHub Actions CI                                         |
+| Layer       | Choice                                                                         |
+| ----------- | ------------------------------------------------------------------------------ |
+| Language    | TypeScript 6 (strict) everywhere                                               |
+| Client      | React 18, Vite 8, React Router 7, Tailwind CSS 4                               |
+| State/data  | Zustand 5 (guest progress in sessionStorage), TanStack Query 5                 |
+| Fonts       | Sniglet (display) and Atkinson Hyperlegible (body), self-hosted via Fontsource |
+| Animation   | SVG + Motion (honours _reduce motion_), Web Speech API for narration           |
+| Interaction | dnd-kit (drag-and-drop with keyboard support), html-to-image ("Snap a photo")  |
+| Server      | Node 22, Express 5, Zod 4 validation, helmet, rate limiting, pino logging      |
+| Database    | PostgreSQL 16, Prisma 7 (pg driver adapter)                                    |
+| Auth        | bcrypt (bcryptjs) hashes, JWT in an httpOnly SameSite cookie                   |
+| Testing     | Vitest 5, fast-check, React Testing Library, Supertest, Playwright, axe        |
+| Tooling     | ESLint 9, Prettier, GitHub Actions CI                                          |
 
 ---
 
@@ -88,7 +89,7 @@ Step-by-step setup for macOS and Windows/WSL, plus troubleshooting, is in **[doc
 ## Working on the project
 
 - **Content (ID team):** edit files in `client/src/content/`. Lessons are Markdown, quizzes are JSON validated against `packages/shared/src/content.ts`. A bad file fails loudly when the app starts.
-- **Design (Figma):** colours live only in `client/src/styles/tokens.css`. Fonts are set in `client/src/styles/index.css`. The current values are approximated from screenshots, so swap in the exact Figma variables when they are available.
+- **Design (Figma):** every colour, font, text size, shadow and radius lives in `client/src/styles/tokens.css`, named after the Figma variables (`--paper`, `--leaf`, `--highlight`, `--branch`, …). Use the matching Tailwind classes (`bg-paper`, `text-ink-muted`, `shadow-paper-stack`, `rounded-lg`, `text-label`) and never hard-code a hex value. Tailwind's default colour, size and radius scales are switched off, so only Figma values exist.
 - **Algorithms:** change `packages/btree-engine`, then run `npm run test:engine`. Property tests check every B-tree rule after thousands of random operations.
 - **API:** add a Zod schema to `packages/shared`, a route in `server/src/routes`, and a Supertest case in `server/test`.
 - **Branches and PRs:** branch from `main` (`feat/…`, `fix/…`, `content/…`), and open a PR. CI runs format, lint, typecheck, tests, build and e2e.

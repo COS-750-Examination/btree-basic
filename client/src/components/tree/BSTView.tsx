@@ -51,25 +51,20 @@ export function BSTView({
             y1={p.parent!.y}
             x2={p.x}
             y2={p.y}
-            stroke="var(--muted)"
+            stroke="var(--ink-muted)"
             strokeWidth={2}
             strokeDasharray="6 5"
           />
         ))}
       {placed.map((p) => (
         <g key={p.key} transform={`translate(${p.x} ${p.y})`}>
-          <circle
-            r={BEAD_R + 6}
-            fill="var(--node-fill)"
-            stroke="var(--node-ring)"
-            strokeWidth={6}
-          />
+          <circle r={BEAD_R + 6} fill="var(--node-fill)" stroke="var(--branch)" strokeWidth={6} />
           <text
             textAnchor="middle"
             dominantBaseline="central"
             className="font-display"
             style={{ fontSize: 15 }}
-            fill="var(--text)"
+            fill="var(--ink)"
           >
             {p.key}
           </text>

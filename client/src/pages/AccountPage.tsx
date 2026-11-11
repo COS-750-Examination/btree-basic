@@ -62,14 +62,14 @@ export function AccountPage() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="friend@tuks.co.za"
-            className="border-line bg-surface min-w-0 flex-1 rounded-xl border-2 px-3 py-2"
+            className="border-ink bg-paper min-w-0 flex-1 rounded-lg border-2 px-3 py-2"
           />
           <Button type="submit" size="sm" disabled={!email}>
             Send request
           </Button>
         </form>
         {addFriend.isSuccess && (
-          <p role="status" className="mt-2 text-sm">
+          <p role="status" className="text-small mt-2">
             If that email has an account, they&apos;ll see your request.
           </p>
         )}
@@ -78,7 +78,7 @@ export function AccountPage() {
             {friends.data.incoming.map((r) => (
               <li
                 key={r.id}
-                className="bg-sunken flex items-center justify-between rounded-lg p-3 text-sm"
+                className="text-small flex items-center justify-between rounded-md bg-sky-100 p-3"
               >
                 {r.fromName} wants to connect
                 <Button size="sm" onClick={() => accept.mutate(r.id)}>
@@ -107,7 +107,7 @@ export function AccountPage() {
       </Card>
       <Card>
         <CardTitle>Delete account</CardTitle>
-        <p className="text-muted mb-3 text-sm">
+        <p className="text-ink-muted text-small mb-3">
           This permanently deletes your account, progress, leaves, decorations and friendships. It
           cannot be undone.
         </p>
