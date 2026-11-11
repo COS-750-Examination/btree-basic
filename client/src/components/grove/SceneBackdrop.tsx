@@ -1,54 +1,82 @@
 import type { ReactNode } from 'react';
-import { useThemeStore } from '../../stores/themeStore';
 import { cn } from '../ui/cn';
 
-/** Sky, sun or moon, clouds/stars and three rolling hills. Children are drawn on top. */
+/**
+ * Shared frame for every grove scene: Figma's 832×480 "Grove scene", anchored to the bottom so
+ * the hills always meet the card edge. GroveTree draws in the same frame, so the two line up.
+ */
+export const SCENE_VIEWBOX = '0 0 832 480';
+export const SCENE_ASPECT = 'xMidYMax slice';
+
+/** Front hill, drawn by the backdrop and again by GroveTree so it covers the trunk's foot. */
+export function FrontHill() {
+  return (
+    <path
+      d="M0 420C208 392 416 412 599.04 398C782.08 384 782.08 394 832 406V480H0V420Z"
+      fill="var(--hill-3)"
+      className="drop-shadow-lift"
+    />
+  );
+}
+
+const FIREFLIES = [
+  [146, 150, 3],
+  [266, 90, 2.5],
+  [576, 190, 3],
+  [716, 220, 2.5],
+  [196, 260, 2.5],
+  [526, 70, 2],
+] as const;
+
+/**
+ * Sky, sun or moon, clouds, fireflies and three hills (Figma: 09 My grove → Grove scene).
+ * The moon's cut-out and the fireflies use tokens that are transparent in Day, exactly as in
+ * Figma, so no theme check is needed. `art` is drawn over the hills, and children go on top.
+ */
 export function SceneBackdrop({
+  art,
   children,
   className,
 }: {
+  art?: ReactNode;
   children?: ReactNode;
   className?: string;
 }) {
-  const dusk = useThemeStore((s) => s.theme) === 'dusk';
   return (
     <div
       className={cn('shadow-paper-stack relative overflow-hidden rounded-lg bg-sky-200', className)}
     >
       <svg
         aria-hidden
-        viewBox="0 0 800 450"
-        preserveAspectRatio="xMidYMax slice"
+        viewBox={SCENE_VIEWBOX}
+        preserveAspectRatio={SCENE_ASPECT}
         className="absolute inset-0 h-full w-full"
       >
-        {dusk ? (
-          <>
-            <circle cx="640" cy="90" r="48" fill="var(--sun)" />
-            <circle cx="662" cy="74" r="44" fill="var(--sky-200)" />
-            {[
-              [120, 80],
-              [260, 150],
-              [420, 60],
-              [560, 190],
-              [720, 220],
-              [80, 230],
-              [350, 210],
-            ].map(([x, y]) => (
-              <circle key={`${x}-${y}`} cx={x} cy={y} r="3" fill="var(--sun)" />
-            ))}
-          </>
-        ) : (
-          <circle cx="640" cy="90" r="46" fill="var(--sun)" />
-        )}
-        <g fill="var(--cloud)" opacity={dusk ? 0.8 : 0.95}>
-          <ellipse cx="160" cy="80" rx="70" ry="20" />
-          <ellipse cx="200" cy="66" rx="44" ry="20" />
-          <ellipse cx="520" cy="130" rx="54" ry="16" />
+        <g fill="var(--firefly)">
+          {FIREFLIES.map(([cx, cy, r]) => (
+            <circle key={`${cx}-${cy}`} cx={cx} cy={cy} r={r} />
+          ))}
         </g>
-        <path d="M0 300 C 200 250, 420 260, 800 280 V450 H0 Z" fill="var(--hill-1)" />
-        <path d="M0 350 C 260 310, 520 330, 800 320 V450 H0 Z" fill="var(--hill-2)" />
-        <path d="M0 400 C 300 380, 560 390, 800 385 V450 H0 Z" fill="var(--hill-3)" />
+        <circle cx="666" cy="96" r="40" fill="var(--sun)" className="drop-shadow-lift" />
+        <circle cx="684" cy="84" r="36" fill="var(--moon-cut)" />
+        <g fill="var(--cloud)" className="drop-shadow-lift">
+          <ellipse cx="176" cy="80" rx="60" ry="20" />
+          <ellipse cx="206" cy="68" rx="36" ry="18" />
+          <ellipse cx="576" cy="140" rx="46" ry="15" />
+        </g>
+        <path
+          d="M0 320C158.08 270 324.48 296 465.92 286C607.36 276 715.52 262 832 292V480H0V320Z"
+          fill="var(--hill-1)"
+          className="drop-shadow-lift"
+        />
+        <path
+          d="M0 370C183.04 336 349.44 356 515.84 344C682.24 332 748.8 334 832 352V480H0V370Z"
+          fill="var(--hill-2)"
+          className="drop-shadow-lift"
+        />
+        <FrontHill />
       </svg>
+      {art}
       <div className="relative">{children}</div>
     </div>
   );

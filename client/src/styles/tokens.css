@@ -67,6 +67,12 @@
   --hill-3: #4e9450;
   --shadow: #1e2b2a38; /* "lift" shadow colour */
 
+  /* Figma illustration colours (grove art; raw fills in Figma, not named variables) */
+  --apple: #d9412e;
+  --blossom: #ffc2d1;
+  --coral: #f2765b;
+  --bunting-blue: #8fd0e0;
+
   /* App tokens */
   --highlight-dark: #e8c25c; /* shadow under highlight buttons */
   --danger: #e8735a;
@@ -100,6 +106,11 @@
   --hill-2: #2b5e4b;
   --hill-3: #3b7457;
   --shadow: #00000073;
+
+  --apple: #e8584a;
+  --blossom: #f4b6c8;
+  --coral: #e06a50;
+  --bunting-blue: #5fa6b8;
 
   --highlight-dark: #c9bb73;
   --danger: #e8735a;

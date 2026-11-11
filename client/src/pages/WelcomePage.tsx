@@ -61,7 +61,10 @@ export function WelcomePage() {
           </p>
         </div>
 
-        <SceneBackdrop className="aspect-[16/10]">
+        <SceneBackdrop
+          className="aspect-[16/10]"
+          art={<GroveTree stage={r.stage === 'seed' ? 'sprout' : r.stage} />}
+        >
           <div className="flex items-center gap-3 p-5">
             {speechSupported() && (
               <button
@@ -79,9 +82,6 @@ export function WelcomePage() {
           </div>
           <div className="bg-paper shadow-paper-stack-sm text-label mx-auto mt-2 w-fit -rotate-2 rounded-sm px-3 py-1.5 font-bold">
             Your seed is waiting. It sprouts after module 1.
-          </div>
-          <div className="mx-auto mt-2 w-56">
-            <GroveTree stage={r.stage === 'seed' ? 'sprout' : r.stage} />
           </div>
         </SceneBackdrop>
       </section>

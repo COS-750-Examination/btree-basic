@@ -1,25 +1,29 @@
 import { GROWTH_STAGES, type GrowthStageId } from '@btree/shared';
 import { cn } from '../ui/cn';
-import { GroveTree } from './GroveTree';
+import { StageIcon } from './StageArt';
 
-/** "How it grows": every stage, current one highlighted, future ones dashed. */
+/** "How it grows": every stage, the current one highlighted, future ones as dashed outlines. */
 export function GrowthStrip({ stage }: { stage: GrowthStageId }) {
   const current = GROWTH_STAGES.findIndex((s) => s.id === stage);
   return (
-    <ol className="grid grid-cols-3 gap-3 sm:grid-cols-6">
+    <ol className="grid grid-cols-3 gap-2 sm:grid-cols-6">
       {GROWTH_STAGES.map((s, i) => (
         <li
           key={s.id}
           className={cn(
-            'text-small rounded-lg p-2 text-center font-bold',
+            'text-small rounded-lg px-2 pt-2.5 pb-3 text-center font-bold',
             i === current && 'bg-highlight text-on-highlight',
-            i > current && 'text-ink-muted [&_svg]:opacity-40 [&_svg]:grayscale',
+            i > current && 'text-ink-muted',
           )}
           aria-current={i === current ? 'step' : undefined}
         >
-          <GroveTree stage={s.id} />
-          <span>{s.label}</span>
-          <span className="block font-normal">{s.minModules} modules</span>
+          <StageIcon stage={s.id} outline={i > current} className="mx-auto mb-1 max-w-[60px]" />
+          <span className="block">{s.label}</span>
+          <span className="block font-normal">
+            {s.minModules === 0
+              ? 'Day one'
+              : `${s.minModules} module${s.minModules === 1 ? '' : 's'}`}
+          </span>
         </li>
       ))}
     </ol>

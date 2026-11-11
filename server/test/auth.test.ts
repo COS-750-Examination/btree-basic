@@ -52,6 +52,12 @@ describe.skipIf(!hasDb)('auth and progress (database)', async () => {
     expect(res.body.counted).toBe(1);
   });
 
+  it('refuses a decoration the tree is too small for', async () => {
+    const res = await agent.post('/api/decorations/tree-swing/purchase');
+    expect(res.status).toBe(409);
+    expect(res.body.error).toBe('This unlocks when your tree is a young tree');
+  });
+
   it('rejects a wrong password with a generic message', async () => {
     const res = await request(createApp())
       .post('/api/auth/login')

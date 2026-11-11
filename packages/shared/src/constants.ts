@@ -120,15 +120,20 @@ export const READY_THRESHOLD = 0.8;
 /** Per-lesson quiz score below which the student is routed to extra worked examples. */
 export const REMEDIATION_THRESHOLD = 0.6;
 
-/** Grove decorations bought with leaves. The server seeds this catalogue into the database. */
+/**
+ * Grove decorations bought with leaves. The server seeds this catalogue into the database.
+ * `minStage` is the smallest tree that can hold the decoration (Figma: "Swing spot · young tree").
+ */
 export const DECORATIONS = [
-  { id: 'apples', name: 'Apples', cost: 40 },
-  { id: 'blossoms', name: 'Blossoms', cost: 40 },
-  { id: 'bunting', name: 'Bunting', cost: 50 },
-  { id: 'songbird', name: 'Songbird', cost: 60 },
-  { id: 'butterflies', name: 'Butterflies', cost: 60 },
-  { id: 'lanterns', name: 'Lanterns', cost: 70 },
-  { id: 'fairy-lights', name: 'Fairy lights', cost: 80 },
-  { id: 'bird-box', name: 'Bird box', cost: 90 },
-  { id: 'tree-swing', name: 'Tree swing', cost: 120 },
-] as const;
+  { id: 'apples', name: 'Apples', cost: 40, minStage: 'sapling' },
+  { id: 'blossoms', name: 'Blossoms', cost: 40, minStage: 'sapling' },
+  { id: 'bunting', name: 'Bunting', cost: 50, minStage: 'sapling' },
+  { id: 'songbird', name: 'Songbird', cost: 60, minStage: 'sapling' },
+  { id: 'butterflies', name: 'Butterflies', cost: 60, minStage: 'sprout' },
+  { id: 'lanterns', name: 'Lanterns', cost: 70, minStage: 'sapling' },
+  { id: 'fairy-lights', name: 'Fairy lights', cost: 80, minStage: 'sapling' },
+  { id: 'bird-box', name: 'Bird box', cost: 90, minStage: 'sapling' },
+  { id: 'tree-swing', name: 'Tree swing', cost: 120, minStage: 'young-tree' },
+] as const satisfies readonly { id: string; name: string; cost: number; minStage: GrowthStageId }[];
+
+export type DecorationId = (typeof DECORATIONS)[number]['id'];

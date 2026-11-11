@@ -1,5 +1,11 @@
 import type { ObjectiveMastery, ReadinessSummary } from './api';
-import { GROWTH_STAGES, OBJECTIVES, READY_THRESHOLD } from './constants';
+import {
+  DECORATIONS,
+  GROWTH_STAGE_IDS,
+  GROWTH_STAGES,
+  OBJECTIVES,
+  READY_THRESHOLD,
+} from './constants';
 import type { GrowthStageId, ObjectiveId } from './constants';
 
 export interface AttemptLike {
@@ -34,6 +40,14 @@ export function stageFor(modulesDone: number): GrowthStageId {
   for (const s of GROWTH_STAGES) if (modulesDone >= s.minModules) stage = s.id;
   return stage;
 }
+
+/** True when a tree at `stage` has grown at least as far as `minStage`. */
+export const reachedStage = (stage: GrowthStageId, minStage: GrowthStageId): boolean =>
+  GROWTH_STAGE_IDS.indexOf(stage) >= GROWTH_STAGE_IDS.indexOf(minStage);
+
+/** The decoration's unlock stage, or undefined for an unknown id. */
+export const decorationMinStage = (id: string): GrowthStageId | undefined =>
+  DECORATIONS.find((d) => d.id === id)?.minStage;
 
 export function readiness(
   attempts: AttemptLike[],
