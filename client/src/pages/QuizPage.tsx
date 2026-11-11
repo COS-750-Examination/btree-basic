@@ -14,11 +14,25 @@ import {
   ProgressSegments,
 } from '../components/ui';
 import { quizFor, quizzes } from '../lib/content';
+import { moduleStatus, useProgressStore } from '../stores/progressStore';
+
+/** Where "Practise with new keys" leads after a low score, per module. */
+const PRACTICE_FOR: Record<number, string> = {
+  3: '/practice/predict-search-path',
+  4: '/practice/valid-or-not',
+  5: '/practice/predict-search-path',
+  6: '/practice/split-it-yourself',
+  7: '/visualiser',
+};
 
 /** Screen 07: module quick check with tiered hints and misconception-specific feedback (FR6, FR8). */
 export function QuizPage() {
   const param = Number(useParams().moduleId);
-  const quiz = quizFor(param) ?? quizzes[0];
+  const store = useProgressStore();
+  // Without a module in the URL, open the student's current module (or the ready check at the end).
+  const current =
+    MODULES.find((m) => moduleStatus(m.id, store) === 'current')?.id ?? MODULES.at(-1)!.id;
+  const quiz = quizFor(param) ?? quizFor(current) ?? quizzes[0];
   if (!quiz) {
     return (
       <Card>
@@ -60,9 +74,11 @@ function Quiz({ quiz }: { quiz: QuizFile }) {
             <p>Here is some extra support before the lecture:</p>
             <div className="flex flex-wrap justify-center gap-3">
               <ButtonLink to={`/lessons/${quiz.moduleId}`}>Re-watch the worked example</ButtonLink>
-              <ButtonLink to="/practice/split-it-yourself" variant="outline">
-                Practise with new keys
-              </ButtonLink>
+              {PRACTICE_FOR[quiz.moduleId] && (
+                <ButtonLink to={PRACTICE_FOR[quiz.moduleId]!} variant="outline">
+                  Practise with new keys
+                </ButtonLink>
+              )}
             </div>
           </div>
         ) : (

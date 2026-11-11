@@ -16,13 +16,19 @@ import { NotFoundPage } from './NotFoundPage';
 
 /** Worked example shown on the "Watch" tab for each module/part. Edit freely. */
 const WATCH_PRESET: Record<string, string> = {
+  '1': 'wide-order-7',
   '3': 'search-path',
   '4': 'leaf-overflows',
   '5': 'search-path',
   '6:overflow': 'leaf-overflows',
   '6:split': 'leaf-overflows',
   '6:cascade': 'root-splits',
-  '7': 'order-5',
+  '7:leaf': 'delete-leaf',
+  '7:internal': 'delete-internal',
+  '7:borrow': 'delete-borrow',
+  '7:merge': 'delete-merge',
+  '8': 'order-5',
+  '9': 'wide-order-7',
 };
 
 type Mode = 'read' | 'watch' | 'listen';

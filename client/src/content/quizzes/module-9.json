@@ -1,0 +1,97 @@
+{
+  "moduleId": 9,
+  "title": "Module 9 check",
+  "items": [
+    {
+      "id": "m9-q1",
+      "objective": "O7",
+      "type": "mcq",
+      "prompt": "Why do databases size each B-tree node to one disk page?",
+      "hints": [
+        "What is the cost of reading a node from disk?",
+        "A disk reads a whole page at a time.",
+        "One node = one page read, and filling the page with keys makes the tree as short as possible."
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Reading a node costs one page read, and a full page of keys keeps the tree short",
+          "correct": true,
+          "feedback": "Right. More keys per node means more children and fewer levels."
+        },
+        {
+          "id": "b",
+          "text": "So the tree only ever has one level",
+          "feedback": "A large table still needs a few levels, just far fewer than a binary tree.",
+          "misconception": "one-level"
+        },
+        {
+          "id": "c",
+          "text": "Because each page can hold only one key",
+          "feedback": "A page holds many keys. That is the point of a B-tree.",
+          "misconception": "one-key-per-node"
+        }
+      ]
+    },
+    {
+      "id": "m9-q2",
+      "objective": "O7",
+      "type": "mcq",
+      "prompt": "What does a B+ tree do differently from a B-tree?",
+      "hints": [
+        "Where are the records kept?",
+        "In a B+ tree, internal nodes only guide the search.",
+        "All records are in the leaves, and the leaves are linked in order."
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "It keeps every record in the leaves and links the leaves together",
+          "correct": true,
+          "feedback": "Yes. That is why most databases use B+ trees."
+        },
+        {
+          "id": "b",
+          "text": "It lets leaves sit on different levels",
+          "feedback": "B+ trees keep every leaf on the same level too.",
+          "misconception": "uneven-leaves"
+        },
+        {
+          "id": "c",
+          "text": "Its nodes have at most two children",
+          "feedback": "That would be a binary tree. B+ tree nodes have many children.",
+          "misconception": "binary"
+        }
+      ]
+    },
+    {
+      "id": "m9-q3",
+      "objective": "O7",
+      "type": "mcq",
+      "prompt": "Which query does a B+ tree handle especially well, thanks to its linked leaves?",
+      "hints": [
+        "What can you do once you are standing on one leaf?",
+        "The leaves are linked in sorted order.",
+        "Find the first key once, then walk along the leaves: a range query."
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "A range query, such as all marks from 50 to 60",
+          "correct": true,
+          "feedback": "Right. Search for 50 once, then follow the links until you pass 60."
+        },
+        {
+          "id": "b",
+          "text": "The average of all keys, without reading any of them",
+          "feedback": "Every key still has to be read to average them."
+        },
+        {
+          "id": "c",
+          "text": "Finding a key without reading any nodes",
+          "feedback": "Every search reads at least one node per level."
+        }
+      ]
+    }
+  ]
+}

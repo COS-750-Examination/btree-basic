@@ -10,6 +10,7 @@ export const OBJECTIVES = [
   { id: 'O5', label: 'Split an overflowing node', bloom: 'Apply' },
   { id: 'O6', label: 'Trace a split that reaches the root', bloom: 'Analyse' },
   { id: 'O7', label: 'Explain why B-trees stay short and fast', bloom: 'Understand' },
+  { id: 'O8', label: 'Delete a key and repair an underflow', bloom: 'Apply' },
 ] as const;
 
 export type ObjectiveId = (typeof OBJECTIVES)[number]['id'];
@@ -61,20 +62,27 @@ export const MODULES = [
   },
   {
     id: 7,
+    slug: 'deleting',
+    title: 'Deleting a key',
+    format: 'Visualiser + reading',
+    minutes: 8,
+  },
+  {
+    id: 8,
     slug: 'why-it-stays-short',
     title: 'Why it stays short',
     format: 'B-tree vs BST',
     minutes: 4,
   },
   {
-    id: 8,
+    id: 9,
     slug: 'real-world',
     title: 'B-trees in the real world',
     format: 'Databases and file systems',
     minutes: 3,
   },
   {
-    id: 9,
+    id: 10,
     slug: 'ready-check',
     title: 'Ready-for-lecture check',
     format: '8-question quiz with hints',
@@ -103,7 +111,7 @@ export const GROWTH_STAGES = [
   { id: 'shrub', label: 'Shrub', minModules: 3 },
   { id: 'sapling', label: 'Sapling', minModules: 5 },
   { id: 'young-tree', label: 'Young tree', minModules: 7 },
-  { id: 'full-tree', label: 'Full tree', minModules: 9 },
+  { id: 'full-tree', label: 'Full tree', minModules: 10 },
 ] as const;
 
 export type GrowthStageId = (typeof GROWTH_STAGES)[number]['id'];

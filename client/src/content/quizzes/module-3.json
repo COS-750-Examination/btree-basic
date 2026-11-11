@@ -1,0 +1,142 @@
+{
+  "moduleId": 3,
+  "title": "Module 3 check",
+  "items": [
+    {
+      "id": "m3-q1",
+      "objective": "O1",
+      "type": "mcq",
+      "prompt": "A B-tree node that is not a leaf holds 3 keys. How many children does it have?",
+      "hints": [
+        "Keys sit between children.",
+        "A node with k keys that is not a leaf has k + 1 children.",
+        "3 keys make 4 gaps: before, between and after them, so 4 children."
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "4",
+          "correct": true,
+          "feedback": "Right: k keys, k + 1 children."
+        },
+        {
+          "id": "b",
+          "text": "3",
+          "feedback": "There is one child before the first key and one after the last, so one more child than keys.",
+          "misconception": "children-equal-keys"
+        },
+        {
+          "id": "c",
+          "text": "6",
+          "feedback": "Each key does not have its own pair of children; neighbouring keys share the child between them.",
+          "misconception": "two-children-per-key"
+        }
+      ]
+    },
+    {
+      "id": "m3-q2",
+      "objective": "O3",
+      "type": "mcq",
+      "order": 4,
+      "prompt": "In this tree, which child of the root would hold 33?",
+      "tree": {
+        "keys": [20, 40],
+        "children": [
+          {
+            "keys": [5, 10]
+          },
+          {
+            "keys": [25, 35]
+          },
+          {
+            "keys": [45, 50]
+          }
+        ]
+      },
+      "hints": [
+        "Compare 33 with the root's keys.",
+        "Each child holds the keys between two neighbouring keys of its parent.",
+        "20 < 33 < 40, so 33 belongs in the middle child."
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "The middle child, between 20 and 40",
+          "correct": true,
+          "feedback": "Yes: 20 < 33 < 40."
+        },
+        {
+          "id": "b",
+          "text": "The first child",
+          "feedback": "The first child holds keys smaller than 20.",
+          "misconception": "wrong-child"
+        },
+        {
+          "id": "c",
+          "text": "The last child",
+          "feedback": "The last child holds keys larger than 40.",
+          "misconception": "wrong-child"
+        }
+      ]
+    },
+    {
+      "id": "m3-q3",
+      "objective": "O3",
+      "type": "trace-path",
+      "order": 3,
+      "prompt": "Tap the nodes a search for 30 visits, from the root down.",
+      "tree": {
+        "keys": [20, 40],
+        "children": [
+          {
+            "keys": [10]
+          },
+          {
+            "keys": [30]
+          },
+          {
+            "keys": [50, 60]
+          }
+        ]
+      },
+      "searchKey": 30,
+      "answerPath": [[20, 40], [30]],
+      "hints": [
+        "Start at the root.",
+        "30 is between 20 and 40.",
+        "Visit [20 | 40], then the middle child [30]."
+      ]
+    },
+    {
+      "id": "m3-q4",
+      "objective": "O1",
+      "type": "mcq",
+      "prompt": "Which statement about the keys inside one B-tree node is true?",
+      "hints": [
+        "Think about how a search decides which child to follow.",
+        "Keys in a node are kept in order.",
+        "They are sorted, so each key separates the ranges of the subtrees beside it."
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "They are kept in sorted order",
+          "correct": true,
+          "feedback": "Yes. Sorted keys are what let a search pick the right child."
+        },
+        {
+          "id": "b",
+          "text": "They can be in any order, because the children do the sorting",
+          "feedback": "Without sorted keys, a search could not tell which child to follow.",
+          "misconception": "unsorted-keys"
+        },
+        {
+          "id": "c",
+          "text": "Each node holds exactly one key",
+          "feedback": "That is a binary search tree. B-tree nodes hold several keys.",
+          "misconception": "one-key-per-node"
+        }
+      ]
+    }
+  ]
+}

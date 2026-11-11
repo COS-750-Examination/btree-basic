@@ -4,7 +4,11 @@
     "headline": "Why do we need B-trees?",
     "objectives": ["O7"],
     "parts": [
-      { "id": "disk", "title": "Finding one record among millions", "file": "01-why-b-trees.md" }
+      {
+        "id": "disk",
+        "title": "Finding one record among millions",
+        "file": "01-why-b-trees.md"
+      }
     ]
   },
   {
@@ -12,7 +16,11 @@
     "headline": "Search trees, a quick recap",
     "objectives": ["O3"],
     "parts": [
-      { "id": "bst", "title": "Smaller left, larger right", "file": "02-search-trees-recap.md" }
+      {
+        "id": "bst",
+        "title": "Smaller left, larger right",
+        "file": "02-search-trees-recap.md"
+      }
     ]
   },
   {
@@ -20,50 +28,130 @@
     "headline": "From binary to multiway",
     "objectives": ["O1", "O3"],
     "parts": [
-      { "id": "multiway", "title": "Nodes with several keys", "file": "03-binary-to-multiway.md" }
+      {
+        "id": "multiway",
+        "title": "Nodes with several keys",
+        "file": "03-binary-to-multiway.md"
+      }
     ]
   },
   {
     "moduleId": 4,
     "headline": "The B-tree rules",
     "objectives": ["O1", "O2"],
-    "parts": [{ "id": "rules", "title": "Four rules for order m", "file": "04-b-tree-rules.md" }]
+    "parts": [
+      {
+        "id": "rules",
+        "title": "The rules for order m",
+        "file": "04-b-tree-rules.md"
+      }
+    ]
   },
   {
     "moduleId": 5,
     "headline": "Searching a B-tree",
     "objectives": ["O3"],
-    "parts": [{ "id": "search", "title": "Follow the yarn", "file": "05-searching.md" }]
+    "parts": [
+      {
+        "id": "search",
+        "title": "Follow the yarn",
+        "file": "05-searching.md"
+      }
+    ]
   },
   {
     "moduleId": 6,
     "headline": "When a branch gets too full, it snaps",
     "objectives": ["O4", "O5", "O6"],
     "parts": [
-      { "id": "overflow", "title": "Overflow: too many keys", "file": "06-1-overflow.md" },
-      { "id": "split", "title": "Splitting around the middle", "file": "06-2-split.md" },
-      { "id": "cascade", "title": "When the parent fills up", "file": "06-3-cascade.md" },
-      { "id": "check", "title": "Check yourself", "file": "06-4-check.md" }
+      {
+        "id": "overflow",
+        "title": "Overflow: too many keys",
+        "file": "06-1-overflow.md"
+      },
+      {
+        "id": "split",
+        "title": "Splitting around the middle",
+        "file": "06-2-split.md"
+      },
+      {
+        "id": "cascade",
+        "title": "When the parent fills up",
+        "file": "06-3-cascade.md"
+      },
+      {
+        "id": "check",
+        "title": "Check yourself",
+        "file": "06-4-check.md"
+      }
     ]
   },
   {
     "moduleId": 7,
-    "headline": "Why it stays short",
-    "objectives": ["O6", "O7"],
+    "headline": "Deleting a key",
+    "objectives": ["O8"],
     "parts": [
-      { "id": "height", "title": "B-tree vs BST height", "file": "07-why-it-stays-short.md" }
+      {
+        "id": "leaf",
+        "title": "Taking a key out of a leaf",
+        "file": "07-1-leaf.md"
+      },
+      {
+        "id": "internal",
+        "title": "Keys in internal nodes",
+        "file": "07-2-internal.md"
+      },
+      {
+        "id": "borrow",
+        "title": "Underflow: borrow from a sibling",
+        "file": "07-3-borrow.md"
+      },
+      {
+        "id": "merge",
+        "title": "Merge, and when the root shrinks",
+        "file": "07-4-merge.md"
+      },
+      {
+        "id": "check",
+        "title": "Check yourself",
+        "file": "07-5-check.md"
+      }
     ]
   },
   {
     "moduleId": 8,
-    "headline": "B-trees in the real world",
-    "objectives": ["O7"],
-    "parts": [{ "id": "real", "title": "Databases and file systems", "file": "08-real-world.md" }]
+    "headline": "Why it stays short",
+    "objectives": ["O6", "O7"],
+    "parts": [
+      {
+        "id": "height",
+        "title": "B-tree vs BST height",
+        "file": "08-why-it-stays-short.md"
+      }
+    ]
   },
   {
     "moduleId": 9,
+    "headline": "B-trees in the real world",
+    "objectives": ["O7"],
+    "parts": [
+      {
+        "id": "real",
+        "title": "Databases and file systems",
+        "file": "09-real-world.md"
+      }
+    ]
+  },
+  {
+    "moduleId": 10,
     "headline": "Ready-for-lecture check",
-    "objectives": ["O1", "O2", "O3", "O4", "O5", "O6", "O7"],
-    "parts": [{ "id": "ready", "title": "Before you start", "file": "09-ready-check.md" }]
+    "objectives": ["O1", "O2", "O3", "O4", "O5", "O6", "O7", "O8"],
+    "parts": [
+      {
+        "id": "ready",
+        "title": "Before you start",
+        "file": "10-ready-check.md"
+      }
+    ]
   }
 ]

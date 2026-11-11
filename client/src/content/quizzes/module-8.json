@@ -1,0 +1,128 @@
+{
+  "moduleId": 8,
+  "title": "Module 8 check",
+  "items": [
+    {
+      "id": "m8-q1",
+      "objective": "O7",
+      "type": "mcq",
+      "prompt": "Where does a B-tree grow taller?",
+      "hints": [
+        "Think about what happens when a split reaches the top.",
+        "New levels are only ever added above the root.",
+        "When the root splits, its middle key becomes a new root, so the tree grows at the top."
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "At the root, when the root splits",
+          "correct": true,
+          "feedback": "Right. Growing at the top keeps every leaf on the same level."
+        },
+        {
+          "id": "b",
+          "text": "At the leaves, like a binary search tree",
+          "feedback": "That is how a BST grows. A B-tree never adds a level below its leaves.",
+          "misconception": "grow-at-leaves"
+        },
+        {
+          "id": "c",
+          "text": "Anywhere, wherever a node overflows",
+          "feedback": "An overflow splits a node and pushes a key up, but a new level appears only when the root splits.",
+          "misconception": "grow-anywhere"
+        }
+      ]
+    },
+    {
+      "id": "m8-q2",
+      "objective": "O7",
+      "type": "mcq",
+      "prompt": "Why are all the leaves of a B-tree always on the same level?",
+      "hints": [
+        "Where can the height change?",
+        "Height changes only at the root: a root split adds a level, a root merge removes one.",
+        "Every leaf moves down or up together, so they always stay level."
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "The height only ever changes at the root, so every leaf moves together",
+          "correct": true,
+          "feedback": "Yes. That is balance without any extra work."
+        },
+        {
+          "id": "b",
+          "text": "After every insert, rotations rebalance the tree",
+          "feedback": "Rotations are how AVL and red-black trees stay balanced. B-trees split and merge instead.",
+          "misconception": "rotations"
+        },
+        {
+          "id": "c",
+          "text": "New leaves are never created",
+          "feedback": "Splitting a leaf creates a new leaf, on the same level as the old one."
+        }
+      ]
+    },
+    {
+      "id": "m8-q3",
+      "objective": "O7",
+      "type": "mcq",
+      "prompt": "What is the time complexity of searching a B-tree that holds n keys?",
+      "hints": [
+        "How does the height grow as n grows?",
+        "Each node has at least ⌈m/2⌉ children, so the height is logarithmic in n.",
+        "A search visits one node per level, and there are O(log n) levels: O(log n)."
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "O(log n)",
+          "correct": true,
+          "feedback": "Right. The height grows logarithmically, and a search visits one node per level."
+        },
+        {
+          "id": "b",
+          "text": "O(n)",
+          "feedback": "That is scanning every key. A B-tree skips whole subtrees at each level.",
+          "misconception": "linear"
+        },
+        {
+          "id": "c",
+          "text": "O(1)",
+          "feedback": "The cost does grow with n, just very slowly."
+        }
+      ]
+    },
+    {
+      "id": "m8-q4",
+      "objective": "O6",
+      "type": "mcq",
+      "prompt": "You insert 1, 2, 3, 4, 5 in that order into an empty order-3 B-tree. How tall is the tree?",
+      "hints": [
+        "Insert one key at a time and split whenever a node reaches 3 keys.",
+        "A split pushes the middle key up. A root split makes a new root.",
+        "[1|2] → 3 splits: [2] over [1],[3] → 4: [3|4] → 5 splits, 4 moves up: [2|4] over [1],[3],[5]. Height 2."
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "2 levels",
+          "correct": true,
+          "feedback": "Yes. A BST built from the same sorted keys would be a 5-level chain."
+        },
+        {
+          "id": "b",
+          "text": "5 levels",
+          "feedback": "That is the BST built from sorted keys. A B-tree splits instead of growing a chain.",
+          "misconception": "bst-height"
+        },
+        {
+          "id": "c",
+          "text": "3 levels",
+          "feedback": "The second split adds 4 to the root, which still has room, so no new level.",
+          "misconception": "single-split-only"
+        }
+      ]
+    }
+  ]
+}

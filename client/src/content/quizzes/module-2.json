@@ -1,0 +1,212 @@
+{
+  "moduleId": 2,
+  "title": "Module 2 check",
+  "items": [
+    {
+      "id": "m2-q1",
+      "objective": "O3",
+      "type": "bst-mcq",
+      "prompt": "Where would 55 be inserted into this binary search tree?",
+      "tree": {
+        "keys": [40],
+        "children": [
+          {
+            "keys": [20],
+            "children": [
+              {
+                "keys": [10]
+              },
+              {
+                "keys": [30]
+              }
+            ]
+          },
+          {
+            "keys": [60],
+            "children": [
+              {
+                "keys": [50]
+              },
+              {
+                "keys": [70]
+              }
+            ]
+          }
+        ]
+      },
+      "hints": [
+        "Start at the root and compare 55 with each node on the way down.",
+        "Go left if the key is smaller and right if it is larger, until there is no child to follow.",
+        "55 > 40 → right to 60. 55 < 60 → left to 50. 55 > 50 → it becomes the right child of 50."
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Right child of 50",
+          "correct": true,
+          "feedback": "Right: 55 > 40, 55 < 60, 55 > 50."
+        },
+        {
+          "id": "b",
+          "text": "Left child of 60",
+          "feedback": "60 already has a left child, 50. Keep comparing until you reach an empty spot.",
+          "misconception": "stop-early"
+        },
+        {
+          "id": "c",
+          "text": "Right child of 70",
+          "feedback": "55 < 60, so the search goes left at 60 and never reaches 70.",
+          "misconception": "wrong-child"
+        },
+        {
+          "id": "d",
+          "text": "Left child of 20",
+          "feedback": "55 > 40, so the search goes right at the root.",
+          "misconception": "wrong-child"
+        }
+      ]
+    },
+    {
+      "id": "m2-q2",
+      "objective": "O3",
+      "type": "bst-mcq",
+      "prompt": "Searching for 30, which nodes do you visit, in order?",
+      "tree": {
+        "keys": [40],
+        "children": [
+          {
+            "keys": [20],
+            "children": [
+              {
+                "keys": [10]
+              },
+              {
+                "keys": [30]
+              }
+            ]
+          },
+          {
+            "keys": [60],
+            "children": [
+              {
+                "keys": [50]
+              },
+              {
+                "keys": [70]
+              }
+            ]
+          }
+        ]
+      },
+      "hints": [
+        "Every search starts at the root.",
+        "Compare at each node and move to one child.",
+        "30 < 40 → left to 20. 30 > 20 → right to 30. Found: 40, 20, 30."
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "40, 20, 30",
+          "correct": true,
+          "feedback": "Yes: one node per level, from the root down."
+        },
+        {
+          "id": "b",
+          "text": "20, 30",
+          "feedback": "A search always starts at the root, 40.",
+          "misconception": "skip-root"
+        },
+        {
+          "id": "c",
+          "text": "40, 60, 30",
+          "feedback": "30 < 40, so the search goes left, not right.",
+          "misconception": "wrong-child"
+        },
+        {
+          "id": "d",
+          "text": "10, 20, 30",
+          "feedback": "Searches go from the root down, not along the leaves."
+        }
+      ]
+    },
+    {
+      "id": "m2-q3",
+      "objective": "O3",
+      "type": "bst-mcq",
+      "prompt": "Is this a valid binary search tree?",
+      "tree": {
+        "keys": [40],
+        "children": [
+          {
+            "keys": [20],
+            "children": [
+              {
+                "keys": [10]
+              },
+              {
+                "keys": [45]
+              }
+            ]
+          },
+          {
+            "keys": [60]
+          }
+        ]
+      },
+      "hints": [
+        "Check each key against every ancestor, not only its parent.",
+        "Every key in the left subtree of a node must be smaller than that node.",
+        "45 is in the left subtree of 40 but 45 > 40, so the tree is not a valid BST."
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "No: 45 is in the left subtree of 40 but larger than 40",
+          "correct": true,
+          "feedback": "Right. The rule holds across the whole subtree, not just between parent and child."
+        },
+        {
+          "id": "b",
+          "text": "Yes: each node is larger than its left child and smaller than its right child",
+          "feedback": "Checking only parent and child misses 45, which is larger than its ancestor 40.",
+          "misconception": "check-parent-only"
+        },
+        {
+          "id": "c",
+          "text": "No: 10 should be the right child of 20",
+          "feedback": "10 < 20, so the left child is the right place for it."
+        }
+      ]
+    },
+    {
+      "id": "m2-q4",
+      "objective": "O3",
+      "type": "mcq",
+      "prompt": "At most, how many nodes does a search visit in a binary search tree?",
+      "hints": [
+        "Each comparison moves you down one level.",
+        "A search never moves back up or sideways.",
+        "It visits at most one node per level, so at most the height of the tree."
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "One per level, so at most the tree's height",
+          "correct": true,
+          "feedback": "Yes. That is why short trees search fast."
+        },
+        {
+          "id": "b",
+          "text": "Every node in the tree",
+          "feedback": "That is a linear scan. A search tree lets you skip whole subtrees.",
+          "misconception": "scan-all"
+        },
+        {
+          "id": "c",
+          "text": "Always exactly two",
+          "feedback": "It depends on how deep the key is."
+        }
+      ]
+    }
+  ]
+}

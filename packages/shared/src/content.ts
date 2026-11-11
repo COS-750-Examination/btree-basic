@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { ObjectiveIdSchema } from './api';
+import { MODULES } from './constants';
 
 /**
  * Schemas for the content files in client/src/content (owned by the ID lead).
@@ -62,7 +63,7 @@ export const QuizItem = z.discriminatedUnion('type', [
 export type QuizItem = z.infer<typeof QuizItem>;
 
 export const QuizFile = z.object({
-  moduleId: z.number().int().min(1).max(9),
+  moduleId: z.number().int().min(1).max(MODULES.length),
   title: z.string(),
   items: z.array(QuizItem).min(1),
 });
@@ -76,7 +77,7 @@ export const LessonPart = z.object({
 });
 
 export const LessonMeta = z.object({
-  moduleId: z.number().int().min(1).max(9),
+  moduleId: z.number().int().min(1).max(MODULES.length),
   headline: z.string(),
   objectives: z.array(ObjectiveIdSchema),
   parts: z.array(LessonPart).min(1),
