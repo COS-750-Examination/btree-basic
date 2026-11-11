@@ -1,9 +1,14 @@
-import { LectureQuestionBody } from '@btree/shared';
+import {
+  GROWTH_STAGES,
+  LectureQuestionBody,
+  decorationMinStage,
+  reachedStage,
+} from '@btree/shared';
 import { Router } from 'express';
 import { z } from 'zod';
 import { HttpError, notFound, param } from '../lib/http';
 import { prisma } from '../lib/prisma';
-import { leafBalance } from '../lib/progress';
+import { leafBalance, stageOf } from '../lib/progress';
 import { requireAuth, uid } from '../middleware/auth';
 import { validateBody } from '../middleware/validate';
 
@@ -45,6 +50,11 @@ groveRouter.post('/decorations/:id/purchase', requireAuth, async (req, res) => {
     })
   ) {
     throw new HttpError(409, 'You already own this decoration');
+  }
+  const minStage = decorationMinStage(decoration.id);
+  if (minStage && !reachedStage(await stageOf(userId), minStage)) {
+    const label = GROWTH_STAGES.find((s) => s.id === minStage)!.label.toLowerCase();
+    throw new HttpError(409, `This unlocks when your tree is a ${label}`);
   }
   if ((await leafBalance(userId)) < decoration.cost)
     throw new HttpError(400, 'Not enough leaves yet');

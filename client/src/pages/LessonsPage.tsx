@@ -1,6 +1,6 @@
 import { GROWTH_STAGES, MODULES } from '@btree/shared';
 import { Link } from 'react-router';
-import { GroveTree } from '../components/grove/GroveTree';
+import { StageIcon } from '../components/grove/StageArt';
 import {
   ButtonLink,
   Card,
@@ -99,7 +99,7 @@ export function LessonsPage() {
           <Card>
             <div className="flex items-center gap-3">
               <div className="w-16">
-                <GroveTree stage={r.stage} />
+                <StageIcon stage={r.stage} />
               </div>
               <div>
                 <CardTitle className="mb-0">{stage.label}</CardTitle>

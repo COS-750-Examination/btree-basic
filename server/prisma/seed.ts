@@ -30,8 +30,9 @@ const PEOPLE = [
 ];
 
 async function main() {
-  for (const d of DECORATIONS) {
-    await prisma.decoration.upsert({ where: { id: d.id }, create: { ...d }, update: { ...d } });
+  for (const { id, name, cost } of DECORATIONS) {
+    const row = { id, name, cost };
+    await prisma.decoration.upsert({ where: { id }, create: row, update: row });
   }
 
   const passwordHash = await bcrypt.hash('btree-demo-123', 12);

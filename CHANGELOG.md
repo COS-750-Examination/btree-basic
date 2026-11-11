@@ -14,13 +14,23 @@ All notable changes to this project are documented here. The format follows [Kee
   - Everything lives in `client/src/styles/tokens.css`. Tailwind's default colour, type, radius and shadow scales are cleared, so only Figma values can be used.
   - Hard-coded wood and cloud colours in the grove SVGs, and the favicon colours, now use the tokens.
 
+### Added
+
+- **Grove art from Figma** (09 My grove, the Components page and the Dusk frames), replacing the placeholder SVG.
+  - Scene: sky, sun, clouds and three hills redrawn from the Figma "Grove scene". In Dusk the sun becomes a moon and fireflies appear, using Figma's own tokens (transparent in Day), so no theme check is needed.
+  - Tree: Seed, Sprout and Shrub are the Figma stage icons, scaled up on a soil mound. Sapling is the Figma scene tree exactly. Young tree and Full tree are the same tree, grown larger with extra canopy.
+  - "How it grows": the six Figma stage icons. Past stages are filled, the current one is highlighted, and future ones are dashed outlines, as in Figma.
+  - Decorations: the nine Figma `DecoIcon` icons in the craft drawer and on a friend's grove. In the scene, apples, blossoms, bunting, songbird and swing hang where Figma places them; lanterns, fairy lights, bird box and butterflies use the Figma icons in new positions.
+  - Craft drawer tiles follow the Figma `DecorationTile` states (owned, buy, locked).
+- **Decoration unlock stages** (`minStage` in `@btree/shared`). The tree swing needs a young tree, butterflies a sprout, and everything else a sapling. Locked decorations show as dashed tiles, and the swing's spot shows as a dashed outline with a "Swing spot · young tree" tag, as in the mockup. The API refuses to sell a decoration before its stage (409), with a test.
+- Illustration colour tokens `--apple`, `--blossom`, `--coral` and `--bunting-blue`, with Day and Dusk values from Figma.
+
 ### To do (next iterations)
 
 - Pixel pass of each screen against its Figma frame (layout and spacing; tokens are done).
 - Practice activity 4, **Build the tree** (objective O6), is a stub.
 - Lesson text in `client/src/content/lessons` is first-draft copy, for the ID lead to review. A deletion lesson and its placement still need an ID decision (the engine and visualiser already support delete).
 - Quiz banks exist for module 6 only. Add `module-N.json` files for the other modules and the 8-question ready check (module 9).
-- Grove art (tree stages and decorations) is placeholder SVG.
 - Badges (Explorer, Splitter, Root Raiser, Lecture Ready) are not implemented yet. Leaf rewards and growth stages are.
 - Deployment (Vercel for the client, Render for the API and database) is not configured.
 

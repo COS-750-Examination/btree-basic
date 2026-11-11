@@ -1,8 +1,9 @@
-import { DECORATIONS, GROWTH_STAGES, LEAF_REWARDS } from '@btree/shared';
+import { DECORATIONS, GROWTH_STAGES, LEAF_REWARDS, reachedStage } from '@btree/shared';
 import { toPng } from 'html-to-image';
 import { useRef, useState } from 'react';
 import { Link } from 'react-router';
 import { useFriends, useMe } from '../api/hooks';
+import { DecoIcon } from '../components/grove/DecoIcon';
 import { GroveTree } from '../components/grove/GroveTree';
 import { GrowthStrip } from '../components/grove/GrowthStrip';
 import { SceneBackdrop } from '../components/grove/SceneBackdrop';
@@ -16,6 +17,7 @@ import {
   PageHeader,
   ProgressBar,
   Tag,
+  cn,
 } from '../components/ui';
 import { useLocalReadiness, useProgressStore } from '../stores/progressStore';
 
@@ -67,41 +69,49 @@ export function GrovePage() {
       <div className="grid gap-6 lg:grid-cols-[1fr_340px]">
         <div className="space-y-6">
           <div ref={sceneRef}>
-            <SceneBackdrop className="min-h-80">
-              <div className="px-6 pt-8 pb-4">
-                <GroveTree stage={r.stage} decorations={ownedDecorations} />
-              </div>
-            </SceneBackdrop>
+            <SceneBackdrop
+              className="aspect-[832/480]"
+              art={<GroveTree stage={r.stage} decorations={ownedDecorations} showSpots />}
+            />
           </div>
 
           {decorating && (
             <Card>
               <CardTitle>Craft drawer</CardTitle>
               <p className="text-ink-muted text-small mb-3">You have {leaves} leaves.</p>
-              <ul className="grid gap-3 sm:grid-cols-3">
+              <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-6">
                 {DECORATIONS.map((d) => {
                   const owned = ownedDecorations.includes(d.id);
+                  const unlocked = reachedStage(r.stage, d.minStage);
                   return (
                     <li
                       key={d.id}
-                      className="text-label flex items-center justify-between rounded-lg bg-sky-100 p-3 font-bold"
+                      className={cn(
+                        'flex flex-col items-center gap-1 rounded-lg px-2 pt-3 pb-3 text-center',
+                        unlocked
+                          ? 'bg-paper shadow-paper-stack-sm'
+                          : 'border-ink-muted text-ink-muted border-2 border-dashed',
+                      )}
                     >
-                      {d.name}
-                      <Button
-                        size="sm"
-                        variant={owned ? 'ghost' : 'accent'}
-                        disabled={owned || leaves < d.cost}
-                        onClick={() => buyDecoration(d.id, d.cost)}
-                      >
-                        {owned ? (
-                          'Owned'
-                        ) : (
-                          <>
-                            <LeafIcon className="h-3.5 w-3.5" />
-                            {d.cost}
-                          </>
-                        )}
-                      </Button>
+                      <DecoIcon id={d.id} />
+                      <span className="text-label font-bold">{d.name}</span>
+                      {!unlocked ? (
+                        <span className="text-small">
+                          {GROWTH_STAGES.find((s) => s.id === d.minStage)?.label}
+                        </span>
+                      ) : owned ? (
+                        <span className="text-small text-ink-muted">in your tree</span>
+                      ) : (
+                        <Button
+                          size="sm"
+                          disabled={leaves < d.cost}
+                          onClick={() => buyDecoration(d.id, d.cost)}
+                          aria-label={`Buy ${d.name} for ${d.cost} leaves`}
+                        >
+                          <LeafIcon className="h-3.5 w-3.5" color="currentColor" />
+                          {d.cost}
+                        </Button>
+                      )}
                     </li>
                   );
                 })}

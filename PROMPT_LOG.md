@@ -132,6 +132,52 @@ This log records the generative AI prompts used during development of B-Tree Bas
 
 ---
 
+## Entry 003: Grove illustrations from the Figma design
+
+| Field        | Detail                                                                 |
+| ------------ | ---------------------------------------------------------------------- |
+| Date         | 11 November 2026                                                       |
+| Requested by | Lonwabo Kwitshana, on behalf of the COS750 project team                |
+| Tool         | Claude Code (Anthropic), model Claude Opus 5.5, with the Figma MCP     |
+| Scope        | `client/src/components/grove`, grove pages, `@btree/shared`, grove API |
+| Status       | Completed; left uncommitted for team review                            |
+
+### Request
+
+> Please complete the outstanding item in `docs/TODO.md`: replace the placeholder grove art (the six growth stages and the nine decorations) with the artwork from the team's Figma design.
+
+### Approach
+
+1. **Source:** exported the vector artwork from Figma as SVG: the grove scene in Day and Dusk, the "How it grows" stage icons, and the nine decoration icon components. Every colour was then mapped to a design token, so the art follows the Day and Dusk themes.
+2. **Interpretation:** the mockup shows a sapling with the full scene tree, and a dashed "Swing spot · young tree". This was read as the rule that decorations unlock by growth stage.
+3. **Build:** the scene backdrop and the tree share Figma's 832×480 frame, so they line up at any size. The stage icons, decoration icons and the craft drawer tiles follow the Figma components.
+4. **Rule enforcement:** added decoration unlock stages to the shared package, used them in the client, and enforced them in the API.
+
+### Design decisions
+
+| Item                                                 | Decision                                                                                                                                  |
+| ---------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| Young tree and Full tree have no filled art in Figma | Filled versions reuse the exact Figma outline geometry with the Sapling's colours. In the scene, the tree grows larger with extra canopy. |
+| Decorations not placed in the Figma scene            | Lanterns, fairy lights, bird box and butterflies use the Figma icons, positioned to suit the tree.                                        |
+| Unlock stages                                        | Swing at Young tree (from the mockup), butterflies at Sprout, all others at Sapling (the mockup shows four of them owned at Sapling).     |
+| Illustration colours                                 | Added `--apple`, `--blossom`, `--coral` and `--bunting-blue`, taking the Day and Dusk values from the Figma frames.                       |
+
+### Verification summary
+
+| Check                                          | Result                                    |
+| ---------------------------------------------- | ----------------------------------------- |
+| ESLint, TypeScript (strict), Prettier          | Pass                                      |
+| Engine, client and server unit tests           | 19, 10 and 12 pass (new unlock-rule test) |
+| Playwright end-to-end and axe accessibility    | 22 / 22 pass                              |
+| Visual check of all six stages in Day and Dusk | Matches the Figma scene and stage strip   |
+
+### Human review required
+
+- The design lead should confirm the art for Young tree and Full tree, and the positions of the four decorations Figma does not place.
+- The team should confirm the unlock stage for each decoration.
+
+---
+
 ## Entry template
 
 ```markdown

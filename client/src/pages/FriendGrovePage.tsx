@@ -1,6 +1,7 @@
 import { DECORATIONS, GROWTH_STAGES, MODULES } from '@btree/shared';
 import { Link, useParams } from 'react-router';
 import { useCheers, useFriendGrove, useMe, useSendCheer } from '../api/hooks';
+import { DecoIcon } from '../components/grove/DecoIcon';
 import { GroveTree } from '../components/grove/GroveTree';
 import { SceneBackdrop } from '../components/grove/SceneBackdrop';
 import {
@@ -11,6 +12,7 @@ import {
   Card,
   CardTitle,
   LeafIcon,
+  Tag,
   cn,
 } from '../components/ui';
 
@@ -55,7 +57,7 @@ export function FriendGrovePage() {
         ]}
       />
       <div className="mb-6 flex flex-wrap items-center gap-4">
-        <Avatar name={f.displayName} size="lg" className="text-on-highlight bg-[#f4b6c2]" />
+        <Avatar name={f.displayName} size="lg" className="text-on-highlight bg-[var(--blossom)]" />
         <div className="flex-1">
           <h1 className="text-display-l">{first}&apos;s grove</h1>
           <p className="text-ink-muted">
@@ -77,14 +79,17 @@ export function FriendGrovePage() {
 
       <div className="grid gap-6 lg:grid-cols-[1fr_340px]">
         <div className="space-y-6">
-          <SceneBackdrop className="min-h-80">
-            <div className="px-6 pt-8 pb-4">
-              <GroveTree stage={f.stage} decorations={f.decorations} />
-            </div>
-            <span className="bg-paper shadow-paper-stack-sm text-small absolute bottom-4 left-4 rounded-sm px-2 py-1 font-bold">
-              Planted {dateFmt.format(new Date(f.plantedAt))}
-            </span>
-          </SceneBackdrop>
+          <SceneBackdrop
+            className="aspect-[832/480]"
+            art={
+              <>
+                <GroveTree stage={f.stage} decorations={f.decorations} />
+                <Tag tone="surface" className="absolute top-[87.5%] left-[3%]">
+                  Planted {dateFmt.format(new Date(f.plantedAt))}
+                </Tag>
+              </>
+            }
+          />
           <Card>
             <div className="mb-3 flex justify-between">
               <CardTitle className="mb-0">Course progress</CardTitle>
@@ -132,9 +137,13 @@ export function FriendGrovePage() {
             <CardTitle>In {first}&apos;s tree</CardTitle>
             {f.decorations.length ? (
               <ul className="flex flex-wrap gap-2">
-                {f.decorations.map((id) => (
-                  <li key={id} className="rounded-pill text-small bg-sky-100 px-3 py-1 font-bold">
-                    {DECORATIONS.find((d) => d.id === id)?.name ?? id}
+                {DECORATIONS.filter((d) => f.decorations.includes(d.id)).map((d) => (
+                  <li
+                    key={d.id}
+                    className="rounded-pill text-small flex items-center gap-1.5 bg-sky-100 py-1 pr-3 pl-1.5 font-bold"
+                  >
+                    <DecoIcon id={d.id} className="h-5 w-5" />
+                    {d.name}
                   </li>
                 ))}
               </ul>
