@@ -1,12 +1,55 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { Moon, Sun } from 'lucide-react';
 import { useState, type FormEvent } from 'react';
 import { useNavigate } from 'react-router';
 import { api } from '../api/client';
 import { useFriends, useLogout, useMe } from '../api/hooks';
-import { Button, ButtonLink, Card, CardTitle, PageHeader } from '../components/ui';
+import { Button, ButtonLink, Card, CardTitle, PageHeader, cn } from '../components/ui';
 import { useProgressStore } from '../stores/progressStore';
+import { useThemeStore, type Theme } from '../stores/themeStore';
 
-/** Account settings: sign out, friends, and account deletion (FR10, POPIA). */
+const THEMES: { id: Theme; label: string; Icon: typeof Sun }[] = [
+  { id: 'day', label: 'Day', Icon: Sun },
+  { id: 'dusk', label: 'Dusk', Icon: Moon },
+];
+
+/** Day / Dusk theme picker. Saved on this device, so guests can use it too. */
+function AppearanceCard() {
+  const { theme, setTheme } = useThemeStore();
+  return (
+    <Card>
+      <CardTitle>Appearance</CardTitle>
+      <fieldset>
+        <legend className="text-ink-muted text-small mb-3">
+          Pick a theme. It is saved on this device.
+        </legend>
+        <div className="flex gap-2">
+          {THEMES.map(({ id, label, Icon }) => (
+            <label
+              key={id}
+              className={cn(
+                'shadow-paper-stack-sm has-[:focus-visible]:outline-yarn flex cursor-pointer items-center gap-2 rounded-md px-4 py-2 font-bold has-[:focus-visible]:outline-2',
+                theme === id ? 'bg-highlight text-on-highlight' : 'bg-paper',
+              )}
+            >
+              <input
+                type="radio"
+                name="theme"
+                className="sr-only"
+                checked={theme === id}
+                onChange={() => setTheme(id)}
+              />
+              <Icon className="h-4 w-4" aria-hidden />
+              {label}
+            </label>
+          ))}
+        </div>
+      </fieldset>
+    </Card>
+  );
+}
+
+/** Account settings: appearance, friends, sign out and account deletion (FR10, POPIA). */
 export function AccountPage() {
   const me = useMe();
   const logout = useLogout();
@@ -33,12 +76,19 @@ export function AccountPage() {
 
   if (!me.data) {
     return (
-      <Card className="mx-auto max-w-md text-center">
-        <p>You are learning as a guest. Progress lasts until you close this browser tab.</p>
-        <ButtonLink to="/login" className="mt-4">
-          Sign in
-        </ButtonLink>
-      </Card>
+      <div className="mx-auto max-w-2xl space-y-6">
+        <PageHeader title="Your account" subtitle="Learning as a guest" />
+        <Card className="text-center">
+          <p>You are learning as a guest. Progress lasts until you close this browser tab.</p>
+          <div className="mt-4 flex flex-wrap justify-center gap-3">
+            <ButtonLink to="/login">Sign in</ButtonLink>
+            <ButtonLink to="/register" variant="outline">
+              Create an account
+            </ButtonLink>
+          </div>
+        </Card>
+        <AppearanceCard />
+      </div>
     );
   }
 
@@ -50,6 +100,7 @@ export function AccountPage() {
   return (
     <div className="mx-auto max-w-2xl space-y-6">
       <PageHeader title="Your account" subtitle={`${me.data.displayName} · ${me.data.email}`} />
+      <AppearanceCard />
       <Card id="friends">
         <CardTitle>Friends</CardTitle>
         <form onSubmit={submitFriend} className="flex gap-2">

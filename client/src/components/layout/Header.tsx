@@ -1,13 +1,13 @@
 import { GROWTH_STAGES } from '@btree/shared';
-import { Menu, Sprout, X } from 'lucide-react';
+import { Menu, Sprout, UserRound, X } from 'lucide-react';
 import { useState } from 'react';
 import { Link, NavLink } from 'react-router';
 import { useMe } from '../../api/hooks';
 import { useLocalReadiness } from '../../stores/progressStore';
+import { Avatar } from '../ui/Avatar';
 import { cn } from '../ui/cn';
 import { LeafIcon } from '../ui/LeafIcon';
 import { HillBand } from './HillBand';
-import { ThemeToggle } from './ThemeToggle';
 
 const NAV = [
   { to: '/lessons', label: 'Lessons' },
@@ -61,7 +61,23 @@ export function Header() {
             <LeafIcon className="h-4 w-4" />
             {r.leaves}
           </Link>
-          <ThemeToggle />
+          <NavLink
+            to="/account"
+            aria-label={me.data ? `Account: ${me.data.displayName}` : 'Account'}
+            title="Account"
+            className={({ isActive }) =>
+              cn(
+                'shadow-paper-stack-sm rounded-pill grid h-10 w-10 place-items-center',
+                isActive ? 'bg-highlight text-on-highlight' : 'bg-paper',
+              )
+            }
+          >
+            {me.data ? (
+              <Avatar name={me.data.displayName} />
+            ) : (
+              <UserRound className="h-4 w-4" aria-hidden />
+            )}
+          </NavLink>
           {!me.data && (
             <Link
               to="/login"

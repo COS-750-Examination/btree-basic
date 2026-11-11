@@ -1,7 +1,7 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test } from '@playwright/test';
 
-/** Screens 01–09 load, and have no serious accessibility violations (NFR4: WCAG 2.1 AA). */
+/** Screens 01–09 and the account page load, and have no serious accessibility violations (NFR4: WCAG 2.1 AA). */
 const SCREENS = [
   '/',
   '/warm-up',
@@ -12,6 +12,7 @@ const SCREENS = [
   '/quiz/6',
   '/ready',
   '/grove',
+  '/account',
 ];
 
 for (const path of SCREENS) {
@@ -38,8 +39,14 @@ test('visualiser steps through a root split', async ({ page }) => {
   await expect(page.getByText(/Every leaf is still on the same level/)).toBeVisible();
 });
 
-test('theme toggle switches to Dusk', async ({ page }) => {
+test('account button opens the account page, where the theme can be changed', async ({ page }) => {
   await page.goto('/');
-  await page.getByRole('button', { name: /switch to dusk theme/i }).click();
+  await page.getByRole('link', { name: /^account/i }).click();
+  await expect(page).toHaveURL(/\/account$/);
+  await page.getByText('Dusk', { exact: true }).click();
+  await expect(page.getByRole('radio', { name: 'Dusk' })).toBeChecked();
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'dusk');
+  await page.getByText('Day', { exact: true }).click();
+  await expect(page.getByRole('radio', { name: 'Day' })).toBeChecked();
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'day');
 });
