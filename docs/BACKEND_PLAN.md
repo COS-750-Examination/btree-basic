@@ -76,6 +76,8 @@ With the demo on 16–17 November, Tasks 1–3 show best in the demo (bonuses an
 
 **Branch:** `test/backend-coverage`
 
+**Status:** done. Merged into `main` on 13 November 2026 (PR #10).
+
 These tests describe existing behaviour, so they should pass straight away. Any failure is a real bug: fix it on this branch and note it in the CHANGELOG.
 
 ### 1.1 Test helpers
@@ -91,13 +93,13 @@ These tests describe existing behaviour, so they should pass straight away. Any 
 - `ensureCatalogue(): Promise<void>`: upserts every `DECORATIONS` row.
 - `giveLeaves(userId, amount)` and `completeModules(userId, n)`
 
-- [ ] Commit `test(server): shared helpers for database tests`
+- [x] Commit `test(server): shared helpers for database tests`
 
 ### 1.2 Grove, decorations and lecture questions
 
 **Files:** Create `server/test/grove.test.ts`
 
-- [ ] Write these tests:
+- [x] Write these tests:
   - `GET /leaves returns balance and newest-first transactions`
   - `GET /decorations lists the catalogue with owned flags`
   - Purchase:
@@ -112,14 +114,14 @@ These tests describe existing behaviour, so they should pass straight away. Any 
     - delete your own → 204
     - delete someone else's → 404
     - more than 280 characters → 400
-- [ ] Run `npm test -w server -- test/grove.test.ts`. Expected: PASS.
-- [ ] Commit `test(server): cover grove, decorations and lecture questions`
+- [x] Run `npm test -w server -- test/grove.test.ts`. Expected: PASS.
+- [x] Commit `test(server): cover grove, decorations and lecture questions`
 
 ### 1.3 Friends, cheers and privacy
 
 **Files:** Create `server/test/friends.test.ts`
 
-- [ ] Write these tests:
+- [x] Write these tests:
   - Friend requests:
     - to an unknown email → 202, no row created
     - to yourself → 202, no row created
@@ -137,8 +139,8 @@ These tests describe existing behaviour, so they should pass straight away. Any 
     expect(JSON.stringify(res.body)).not.toMatch(/score|mastery|correct|hint|leaves|answer|email/i);
     ```
     Run the same key check on each entry of `GET /friends`.
-- [ ] Run `npm test -w server -- test/friends.test.ts`. Expected: PASS.
-- [ ] Commit `test(server): cover friends and cheers; friends never see scores`
+- [x] Run `npm test -w server -- test/friends.test.ts`. Expected: PASS.
+- [x] Commit `test(server): cover friends and cheers; friends never see scores`
 
 **Before merging:** TODO, CHANGELOG, PROMPT_LOG entry (content from Kyle).
 

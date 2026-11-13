@@ -1,8 +1,6 @@
 import { z } from 'zod';
 import { CONFIDENCE_LEVELS, GROWTH_STAGE_IDS, MODULES, OBJECTIVE_IDS } from './constants';
 
-/* ---------- Auth (FR10) ---------- */
-
 export const RegisterBody = z.object({
   email: z.string().trim().toLowerCase().max(254).pipe(z.email()),
   password: z.string().min(8, 'Use at least 8 characters').max(128),
@@ -24,15 +22,12 @@ export const PublicUser = z.object({
 });
 export type PublicUser = z.infer<typeof PublicUser>;
 
-/* ---------- Progress (FR11) ---------- */
-
 export const ObjectiveIdSchema = z.enum(OBJECTIVE_IDS);
 export const ConfidenceSchema = z.enum(CONFIDENCE_LEVELS);
 export const GrowthStageSchema = z.enum(GROWTH_STAGE_IDS);
 
 export const ModuleProgress = z.object({
   moduleId: z.number().int().min(1).max(MODULES.length),
-  /** Last part reached inside the module (module 6 has 4 parts). */
   part: z.number().int().min(1).default(1),
   completed: z.boolean(),
 });
@@ -45,18 +40,15 @@ export const QuizAttemptBody = z.object({
   itemId: z.string().min(1).max(100),
   objective: ObjectiveIdSchema,
   correct: z.boolean(),
-  /** Only first-attempt, no-hint answers count toward mastery (Assessment Strategy). */
   firstAttempt: z.boolean(),
   hintsUsed: z.number().int().min(0).max(3),
   confidence: ConfidenceSchema.optional(),
-  /** Misconception tag of the chosen distractor, if any (for feedback analytics). */
   misconception: z.string().max(60).optional(),
 });
 export type QuizAttemptBody = z.infer<typeof QuizAttemptBody>;
 
 export const ObjectiveMastery = z.object({
   objective: ObjectiveIdSchema,
-  /** 0..1 share of counted (first-try, no-hint) answers that were correct. */
   score: z.number().min(0).max(1),
   counted: z.number().int().min(0),
   status: z.enum(['mastered', 'getting-there', 'not-started']),
@@ -64,7 +56,6 @@ export const ObjectiveMastery = z.object({
 export type ObjectiveMastery = z.infer<typeof ObjectiveMastery>;
 
 export const ReadinessSummary = z.object({
-  /** 0..1 overall readiness. */
   overall: z.number().min(0).max(1),
   ready: z.boolean(),
   objectives: z.array(ObjectiveMastery),
@@ -74,6 +65,24 @@ export const ReadinessSummary = z.object({
 });
 export type ReadinessSummary = z.infer<typeof ReadinessSummary>;
 
+export const HintBody = z.object({
+  itemId: z.string().min(1).max(100),
+  hint: z.number().int().min(1).max(3),
+});
+export type HintBody = z.infer<typeof HintBody>;
+
+export const LeafBonus = z.object({
+  reason: z.enum(['streak', 'readyCheck']),
+  amount: z.number().int(),
+});
+export type LeafBonus = z.infer<typeof LeafBonus>;
+
+export const AttemptResult = ObjectiveMastery.extend({ bonuses: z.array(LeafBonus) });
+export type AttemptResult = z.infer<typeof AttemptResult>;
+
+export const StreakSummary = z.object({ days: z.number().int().min(0) });
+export type StreakSummary = z.infer<typeof StreakSummary>;
+
 export const WarmupBody = z.object({
   answers: z
     .array(
@@ -82,8 +91,6 @@ export const WarmupBody = z.object({
     .max(10),
 });
 export type WarmupBody = z.infer<typeof WarmupBody>;
-
-/* ---------- Leaves, decorations, notes ---------- */
 
 export const LeafTransaction = z.object({
   id: z.string(),
@@ -111,14 +118,11 @@ export const LectureQuestion = z.object({
 });
 export type LectureQuestion = z.infer<typeof LectureQuestion>;
 
-/* ---------- Friends (relatedness, visit-only, no rankings) ---------- */
-
 export const FriendRequestBody = z.object({
   email: z.string().trim().toLowerCase().pipe(z.email()),
 });
 export type FriendRequestBody = z.infer<typeof FriendRequestBody>;
 
-/** What a friend may see. Quiz answers, scores and hints stay private. */
 export const FriendSummary = z.object({
   id: z.string(),
   displayName: z.string(),
@@ -152,8 +156,6 @@ export const Cheer = z.object({
   createdAt: z.string(),
 });
 export type Cheer = z.infer<typeof Cheer>;
-
-/* ---------- Errors ---------- */
 
 export const ApiError = z.object({
   error: z.string(),

@@ -13,6 +13,14 @@ All notable changes to this project are documented here. The format follows [Kee
   - Radius: `rounded-sm` 6px, `rounded-md` 10px, `rounded-lg` 12px, `rounded-pill` 999px.
   - Everything lives in `client/src/styles/tokens.css`. Tailwind's default colour, type, radius and shadow scales are cleared, so only Figma values can be used.
   - Hard-coded wood and cloud colours in the grove SVGs, and the favicon colours, now use the tokens.
+- **Each question pays leaves only once**, for its first correct answer (+10 on the first try, +5 after a retry or hint). Retakes pay nothing, but they still count toward mastery. Each hint pays +5 once per question and hint. The client's leaf count follows the same rules.
+- **The server checks `firstAttempt` and `hintsUsed` itself** instead of trusting the client:
+  - A new answer to a question still counts as a retry if the last answer to it was wrong and less than 30 minutes ago.
+  - Any hint the server recorded for the question counts, even if the client reports none.
+  - `POST /api/hints` now requires `{ itemId, hint }` and records each hint shown (new `HintView` table).
+  - Limit: the server holds no answer keys, so a student who writes their own API requests can still fake a correct answer. The check only stops replaying an answer after a hint or a wrong try.
+- **Streak days follow South African time** (`Africa/Johannesburg`) instead of UTC, so practice just after midnight counts for the right day.
+- **Multiple-choice options are shuffled** once per page load. Before, 33 of the 34 questions had the correct answer first. The order stays fixed during a retry.
 
 ### Added
 
@@ -29,6 +37,18 @@ All notable changes to this project are documented here. The format follows [Kee
   - Friends: friend requests, the friends list, friend groves and cheers.
   - Privacy: a friend's grove and the friends list expose only the `FriendGrove` and `FriendSummary` fields. No scores, hints, leaves, answers or email addresses appear, even when the friend has all of them.
 - Shared test helpers (`server/test/helpers.ts`). Students are created directly in the database with a session cookie, so the tests never hit the login rate limit.
+- **3-day streak bonus (+15)**, paid once per streak. A streak that breaks and is rebuilt pays again.
+- **Ready-check bonus (+60)**, paid once when 7 of the 8 ready-check questions (80%) are right on the first try without hints.
+- `GET /api/streak` returns the student's current streak as `{ days }`.
+- `POST /api/attempts` also returns `bonuses`, the streak and ready-check bonuses that answer earned.
+- Payouts can be made once-only: a nullable `dedupeKey` on `LeafTransaction`, unique per user (migration `leaf_dedupe_key`).
+- Tests: `days.test.ts`, `rewards.test.ts` and `attempts.test.ts` on the server; `progressStore.test.ts`, `QuestionCard.test.tsx` and `shuffle.test.ts` on the client; a check that the ready-check question ids match `READY_CHECK_ITEM_IDS`.
+
+### Fixed
+
+- **"Tap the nodes" questions can now be answered.** `QuestionCard` had no answer controls for `trace-path` questions, so tapping did nothing and Next stayed disabled. This blocked the module 3 and 5 quizzes and the ready check. Students now tap the path, then press Check or Clear.
+- Completing a module in two requests at the same moment paid the +30 lesson leaves twice.
+- `POST /api/hints` paid +5 on every call, so leaves could be farmed without limit.
 
 ### Content
 
@@ -52,6 +72,7 @@ All notable changes to this project are documented here. The format follows [Kee
 - Practice activity 4, **Build the tree** (objective O6), is a stub.
 - The ID lead should review the new lessons and quiz items (see the prompt log, Entry 004).
 - Badges (Explorer, Splitter, Root Raiser, Lecture Ready) are not implemented yet. Leaf rewards and growth stages are.
+- The client doesn't show reward bonuses (streak +15, ready check +60) until the page reloads, and the streak card doesn't use `GET /api/streak` yet.
 - Deployment (Vercel for the client, Render for the API and database) is not configured.
 
 ## [0.1.0] - 2026-11-09

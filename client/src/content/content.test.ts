@@ -1,16 +1,16 @@
 import { fromSpec, insert, remove, toSpec, validate, type NodeSpec } from '@btree/engine';
-import { MODULES, OBJECTIVE_IDS, type QuizItem, type TreeSpec } from '@btree/shared';
+import {
+  MODULES,
+  OBJECTIVE_IDS,
+  READY_CHECK_ITEM_IDS,
+  type QuizItem,
+  type TreeSpec,
+} from '@btree/shared';
 import { describe, expect, it } from 'vitest';
 import { lessonMarkdown, lessons, presets, quizFor, quizzes } from '../lib/content';
 
-/*
- * Checks the content against the B-tree engine, so a quiz answer can never disagree with what
- * the visualiser shows. If you edit a quiz tree, these tests tell you when an answer changed.
- */
-
 const items = quizzes.flatMap((q) => q.items);
 
-/** Nodes a search for `key` visits, as key lists, from the root down. */
 function searchPath(spec: TreeSpec, key: number): number[][] {
   const path: number[][] = [];
   let node: TreeSpec | undefined = spec;
@@ -23,7 +23,6 @@ function searchPath(spec: TreeSpec, key: number): number[][] {
   return path;
 }
 
-/** Tree-based multiple-choice answers, recomputed with the engine. */
 const ENGINE_ANSWERS: Record<string, { op: 'insert' | 'delete'; key: number; result: NodeSpec }> = {
   'm6-q1': {
     op: 'insert',
@@ -112,6 +111,11 @@ describe('quiz content', () => {
   it('asks one ready-check question per objective', () => {
     const ready = quizFor(MODULES.at(-1)!.id)!;
     expect(ready.items.map((i) => i.objective).sort()).toEqual([...OBJECTIVE_IDS].sort());
+  });
+
+  it('uses the ready-check item ids the server expects (READY_CHECK_ITEM_IDS)', () => {
+    const ready = quizFor(MODULES.at(-1)!.id)!;
+    expect(ready.items.map((i) => i.id).sort()).toEqual([...READY_CHECK_ITEM_IDS].sort());
   });
 
   it('shows valid trees, except where validity is the question', () => {

@@ -33,13 +33,14 @@ interface ProgressState {
   needsRecap: boolean | null;
   lectureQuestions: { id: string; text: string }[];
   ownedDecorations: string[];
+  hintsRead: string[];
 
   setSignedIn: (v: boolean) => void;
   hydrateFromServer: () => Promise<void>;
   setPart: (moduleId: number, part: number) => void;
   completeModule: (moduleId: number) => void;
   recordAttempt: (a: Omit<LocalAttempt, 'at'>) => void;
-  readHint: () => void;
+  readHint: (itemId: string, hint: number) => void;
   finishWarmup: (
     correct: number,
     total: number,
@@ -59,6 +60,7 @@ const initial = {
   needsRecap: null,
   lectureQuestions: [],
   ownedDecorations: [],
+  hintsRead: [],
 };
 
 /** Fire-and-forget save; the app keeps working if the API is down (NFR7). */
@@ -135,8 +137,10 @@ export const useProgressStore = create<ProgressState>()(
         },
 
         recordAttempt: (a) => {
+          const answeredBefore = get().attempts.some((x) => x.itemId === a.itemId && x.correct);
           set((s) => ({ attempts: [...s.attempts, { ...a, at: Date.now() }] }));
-          if (a.correct) earn(a.firstAttempt && a.hintsUsed === 0 ? 'firstTry' : 'withHint');
+          if (a.correct && !answeredBefore)
+            earn(a.firstAttempt && a.hintsUsed === 0 ? 'firstTry' : 'withHint');
           if (get().signedIn) {
             const {
               itemId,
@@ -161,9 +165,13 @@ export const useProgressStore = create<ProgressState>()(
           }
         },
 
-        readHint: () => {
-          earn('hintRead');
-          if (get().signedIn) save(() => api.post('/hints'));
+        readHint: (itemId, hint) => {
+          const key = `${itemId}:${hint}`;
+          if (!get().hintsRead.includes(key)) {
+            set((s) => ({ hintsRead: [...s.hintsRead, key] }));
+            earn('hintRead');
+          }
+          if (get().signedIn) save(() => api.post('/hints', { itemId, hint }));
         },
 
         finishWarmup: (correct, total, answers) => {

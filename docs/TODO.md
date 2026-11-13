@@ -29,7 +29,8 @@ Tick items off as they land, and move finished work into the CHANGELOG.
 - [ ] Badges (Explorer, Splitter, Root Raiser, Lecture Ready): show them on the Ready and Grove screens.
 - [ ] Drag decorations into place on the grove. The server has `PUT /api/grove/placement`, but nothing on the client calls it.
 - [ ] Friend requests: add decline and unfriend buttons, and show pending requests outside the Account page.
-- [ ] Streak card: show the real streak from the server. It's currently computed on the client only.
+- [ ] Streak card: show the real streak from the server. It's currently computed on the client only. The server side is ready: `GET /api/streak` returns `{ days }`.
+- [ ] Show reward bonuses as soon as they're earned. `POST /api/attempts` now returns `bonuses` (streak +15, ready check +60), but the client ignores them, so they only appear in the leaf count after a reload.
 - [ ] Profile settings: change display name and password, and remember the Day/Dusk choice per account.
 - [ ] Turn the mastery mini-lessons behind "Need more?" into real content. For now they just send the student back to the lesson.
 - [ ] Add an error boundary and an offline banner, so a failed save is shown to the student instead of failing silently.
@@ -46,10 +47,10 @@ Tick items off as they land, and move finished work into the CHANGELOG.
 
 ### Rewards
 
-- [ ] Award the **3-day streak** bonus (+15). The streak is calculated (`streakDays` in `server/src/lib/progress.ts`) but never pays out.
-- [ ] Award the **ready-check** bonus (+60) when module 10, the ready check, is passed.
+- [x] Award the **3-day streak** bonus (+15), once per streak. Days are counted in South African time. Done 14 November 2026.
+- [x] Award the **ready-check** bonus (+60) once, when 7 of the 8 ready-check questions are right on the first try without hints. Done 14 November 2026.
 - [ ] Badge model and award rules (needs a Prisma migration).
-- [ ] Check that `firstAttempt` and `hintsUsed` agree on the server, not only on the client, so a student can't fake a first-try answer.
+- [x] Check that `firstAttempt` and `hintsUsed` agree on the server, not only on the client, so a student can't fake a first-try answer. Done 14 November 2026.
 
 ### Friends and privacy
 

@@ -14,7 +14,7 @@ import type * as Prisma from "../internal/prismaNamespace"
 
 /**
  * Model LectureQuestion
- * "Questions for the lecture" notes from the readiness screen.
+ * 
  */
 export type LectureQuestionModel = runtime.Types.Result.DefaultSelection<Prisma.$LectureQuestionPayload>
 

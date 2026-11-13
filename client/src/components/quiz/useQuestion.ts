@@ -40,8 +40,8 @@ export function useQuestion(item: QuizItem, { record = true }: { record?: boolea
     setHintsShown((h) => Math.min(h + 1, item.hints.length));
     // Hint 3 (worked example) unlocks only after another try.
     setHintUnlocked(hintsShown + 1 < 2);
-    if (record) readHint();
-  }, [item.hints.length, hintsShown, record, readHint]);
+    if (record) readHint(item.id, hintsShown + 1);
+  }, [item.id, item.hints.length, hintsShown, record, readHint]);
 
   const tryAgain = useCallback(() => {
     setAnswer(null);

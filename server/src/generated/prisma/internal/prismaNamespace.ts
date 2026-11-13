@@ -405,6 +405,7 @@ export const ModelName = {
   Decoration: 'Decoration',
   UserDecoration: 'UserDecoration',
   LectureQuestion: 'LectureQuestion',
+  HintView: 'HintView',
   WarmupResult: 'WarmupResult',
   Friendship: 'Friendship',
   Cheer: 'Cheer'
@@ -423,7 +424,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "moduleProgress" | "quizAttempt" | "mastery" | "leafTransaction" | "decoration" | "userDecoration" | "lectureQuestion" | "warmupResult" | "friendship" | "cheer"
+    modelProps: "user" | "moduleProgress" | "quizAttempt" | "mastery" | "leafTransaction" | "decoration" | "userDecoration" | "lectureQuestion" | "hintView" | "warmupResult" | "friendship" | "cheer"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1019,6 +1020,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    HintView: {
+      payload: Prisma.$HintViewPayload<ExtArgs>
+      fields: Prisma.HintViewFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.HintViewFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HintViewPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.HintViewFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HintViewPayload>
+        }
+        findFirst: {
+          args: Prisma.HintViewFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HintViewPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.HintViewFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HintViewPayload>
+        }
+        findMany: {
+          args: Prisma.HintViewFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HintViewPayload>[]
+        }
+        create: {
+          args: Prisma.HintViewCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HintViewPayload>
+        }
+        createMany: {
+          args: Prisma.HintViewCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.HintViewCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HintViewPayload>[]
+        }
+        delete: {
+          args: Prisma.HintViewDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HintViewPayload>
+        }
+        update: {
+          args: Prisma.HintViewUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HintViewPayload>
+        }
+        deleteMany: {
+          args: Prisma.HintViewDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.HintViewUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.HintViewUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HintViewPayload>[]
+        }
+        upsert: {
+          args: Prisma.HintViewUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HintViewPayload>
+        }
+        aggregate: {
+          args: Prisma.HintViewAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateHintView>
+        }
+        groupBy: {
+          args: Prisma.HintViewGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.HintViewGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.HintViewCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.HintViewCountAggregateOutputType> | number
+        }
+      }
+    }
     WarmupResult: {
       payload: Prisma.$WarmupResultPayload<ExtArgs>
       fields: Prisma.WarmupResultFieldRefs
@@ -1338,6 +1413,7 @@ export const LeafTransactionScalarFieldEnum = {
   userId: 'userId',
   amount: 'amount',
   reason: 'reason',
+  dedupeKey: 'dedupeKey',
   createdAt: 'createdAt'
 } as const
 
@@ -1374,6 +1450,17 @@ export const LectureQuestionScalarFieldEnum = {
 } as const
 
 export type LectureQuestionScalarFieldEnum = (typeof LectureQuestionScalarFieldEnum)[keyof typeof LectureQuestionScalarFieldEnum]
+
+
+export const HintViewScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  itemId: 'itemId',
+  hint: 'hint',
+  createdAt: 'createdAt'
+} as const
+
+export type HintViewScalarFieldEnum = (typeof HintViewScalarFieldEnum)[keyof typeof HintViewScalarFieldEnum]
 
 
 export const WarmupResultScalarFieldEnum = {
@@ -1691,6 +1778,7 @@ export type GlobalOmitConfig = {
   decoration?: Prisma.DecorationOmit
   userDecoration?: Prisma.UserDecorationOmit
   lectureQuestion?: Prisma.LectureQuestionOmit
+  hintView?: Prisma.HintViewOmit
   warmupResult?: Prisma.WarmupResultOmit
   friendship?: Prisma.FriendshipOmit
   cheer?: Prisma.CheerOmit

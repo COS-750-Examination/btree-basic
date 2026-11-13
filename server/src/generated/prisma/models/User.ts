@@ -205,6 +205,7 @@ export type UserWhereInput = {
   decorations?: Prisma.UserDecorationListRelationFilter
   lectureQuestions?: Prisma.LectureQuestionListRelationFilter
   warmups?: Prisma.WarmupResultListRelationFilter
+  hintViews?: Prisma.HintViewListRelationFilter
   friendsRequested?: Prisma.FriendshipListRelationFilter
   friendsReceived?: Prisma.FriendshipListRelationFilter
   cheersSent?: Prisma.CheerListRelationFilter
@@ -226,6 +227,7 @@ export type UserOrderByWithRelationInput = {
   decorations?: Prisma.UserDecorationOrderByRelationAggregateInput
   lectureQuestions?: Prisma.LectureQuestionOrderByRelationAggregateInput
   warmups?: Prisma.WarmupResultOrderByRelationAggregateInput
+  hintViews?: Prisma.HintViewOrderByRelationAggregateInput
   friendsRequested?: Prisma.FriendshipOrderByRelationAggregateInput
   friendsReceived?: Prisma.FriendshipOrderByRelationAggregateInput
   cheersSent?: Prisma.CheerOrderByRelationAggregateInput
@@ -250,6 +252,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   decorations?: Prisma.UserDecorationListRelationFilter
   lectureQuestions?: Prisma.LectureQuestionListRelationFilter
   warmups?: Prisma.WarmupResultListRelationFilter
+  hintViews?: Prisma.HintViewListRelationFilter
   friendsRequested?: Prisma.FriendshipListRelationFilter
   friendsReceived?: Prisma.FriendshipListRelationFilter
   cheersSent?: Prisma.CheerListRelationFilter
@@ -297,6 +300,7 @@ export type UserCreateInput = {
   decorations?: Prisma.UserDecorationCreateNestedManyWithoutUserInput
   lectureQuestions?: Prisma.LectureQuestionCreateNestedManyWithoutUserInput
   warmups?: Prisma.WarmupResultCreateNestedManyWithoutUserInput
+  hintViews?: Prisma.HintViewCreateNestedManyWithoutUserInput
   friendsRequested?: Prisma.FriendshipCreateNestedManyWithoutRequesterInput
   friendsReceived?: Prisma.FriendshipCreateNestedManyWithoutAddresseeInput
   cheersSent?: Prisma.CheerCreateNestedManyWithoutFromInput
@@ -318,6 +322,7 @@ export type UserUncheckedCreateInput = {
   decorations?: Prisma.UserDecorationUncheckedCreateNestedManyWithoutUserInput
   lectureQuestions?: Prisma.LectureQuestionUncheckedCreateNestedManyWithoutUserInput
   warmups?: Prisma.WarmupResultUncheckedCreateNestedManyWithoutUserInput
+  hintViews?: Prisma.HintViewUncheckedCreateNestedManyWithoutUserInput
   friendsRequested?: Prisma.FriendshipUncheckedCreateNestedManyWithoutRequesterInput
   friendsReceived?: Prisma.FriendshipUncheckedCreateNestedManyWithoutAddresseeInput
   cheersSent?: Prisma.CheerUncheckedCreateNestedManyWithoutFromInput
@@ -339,6 +344,7 @@ export type UserUpdateInput = {
   decorations?: Prisma.UserDecorationUpdateManyWithoutUserNestedInput
   lectureQuestions?: Prisma.LectureQuestionUpdateManyWithoutUserNestedInput
   warmups?: Prisma.WarmupResultUpdateManyWithoutUserNestedInput
+  hintViews?: Prisma.HintViewUpdateManyWithoutUserNestedInput
   friendsRequested?: Prisma.FriendshipUpdateManyWithoutRequesterNestedInput
   friendsReceived?: Prisma.FriendshipUpdateManyWithoutAddresseeNestedInput
   cheersSent?: Prisma.CheerUpdateManyWithoutFromNestedInput
@@ -360,6 +366,7 @@ export type UserUncheckedUpdateInput = {
   decorations?: Prisma.UserDecorationUncheckedUpdateManyWithoutUserNestedInput
   lectureQuestions?: Prisma.LectureQuestionUncheckedUpdateManyWithoutUserNestedInput
   warmups?: Prisma.WarmupResultUncheckedUpdateManyWithoutUserNestedInput
+  hintViews?: Prisma.HintViewUncheckedUpdateManyWithoutUserNestedInput
   friendsRequested?: Prisma.FriendshipUncheckedUpdateManyWithoutRequesterNestedInput
   friendsReceived?: Prisma.FriendshipUncheckedUpdateManyWithoutAddresseeNestedInput
   cheersSent?: Prisma.CheerUncheckedUpdateManyWithoutFromNestedInput
@@ -523,6 +530,20 @@ export type UserUpdateOneRequiredWithoutLectureQuestionsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutLectureQuestionsInput, Prisma.UserUpdateWithoutLectureQuestionsInput>, Prisma.UserUncheckedUpdateWithoutLectureQuestionsInput>
 }
 
+export type UserCreateNestedOneWithoutHintViewsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutHintViewsInput, Prisma.UserUncheckedCreateWithoutHintViewsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutHintViewsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutHintViewsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutHintViewsInput, Prisma.UserUncheckedCreateWithoutHintViewsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutHintViewsInput
+  upsert?: Prisma.UserUpsertWithoutHintViewsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutHintViewsInput, Prisma.UserUpdateWithoutHintViewsInput>, Prisma.UserUncheckedUpdateWithoutHintViewsInput>
+}
+
 export type UserCreateNestedOneWithoutWarmupsInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutWarmupsInput, Prisma.UserUncheckedCreateWithoutWarmupsInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutWarmupsInput
@@ -607,6 +628,7 @@ export type UserCreateWithoutModulesInput = {
   decorations?: Prisma.UserDecorationCreateNestedManyWithoutUserInput
   lectureQuestions?: Prisma.LectureQuestionCreateNestedManyWithoutUserInput
   warmups?: Prisma.WarmupResultCreateNestedManyWithoutUserInput
+  hintViews?: Prisma.HintViewCreateNestedManyWithoutUserInput
   friendsRequested?: Prisma.FriendshipCreateNestedManyWithoutRequesterInput
   friendsReceived?: Prisma.FriendshipCreateNestedManyWithoutAddresseeInput
   cheersSent?: Prisma.CheerCreateNestedManyWithoutFromInput
@@ -627,6 +649,7 @@ export type UserUncheckedCreateWithoutModulesInput = {
   decorations?: Prisma.UserDecorationUncheckedCreateNestedManyWithoutUserInput
   lectureQuestions?: Prisma.LectureQuestionUncheckedCreateNestedManyWithoutUserInput
   warmups?: Prisma.WarmupResultUncheckedCreateNestedManyWithoutUserInput
+  hintViews?: Prisma.HintViewUncheckedCreateNestedManyWithoutUserInput
   friendsRequested?: Prisma.FriendshipUncheckedCreateNestedManyWithoutRequesterInput
   friendsReceived?: Prisma.FriendshipUncheckedCreateNestedManyWithoutAddresseeInput
   cheersSent?: Prisma.CheerUncheckedCreateNestedManyWithoutFromInput
@@ -663,6 +686,7 @@ export type UserUpdateWithoutModulesInput = {
   decorations?: Prisma.UserDecorationUpdateManyWithoutUserNestedInput
   lectureQuestions?: Prisma.LectureQuestionUpdateManyWithoutUserNestedInput
   warmups?: Prisma.WarmupResultUpdateManyWithoutUserNestedInput
+  hintViews?: Prisma.HintViewUpdateManyWithoutUserNestedInput
   friendsRequested?: Prisma.FriendshipUpdateManyWithoutRequesterNestedInput
   friendsReceived?: Prisma.FriendshipUpdateManyWithoutAddresseeNestedInput
   cheersSent?: Prisma.CheerUpdateManyWithoutFromNestedInput
@@ -683,6 +707,7 @@ export type UserUncheckedUpdateWithoutModulesInput = {
   decorations?: Prisma.UserDecorationUncheckedUpdateManyWithoutUserNestedInput
   lectureQuestions?: Prisma.LectureQuestionUncheckedUpdateManyWithoutUserNestedInput
   warmups?: Prisma.WarmupResultUncheckedUpdateManyWithoutUserNestedInput
+  hintViews?: Prisma.HintViewUncheckedUpdateManyWithoutUserNestedInput
   friendsRequested?: Prisma.FriendshipUncheckedUpdateManyWithoutRequesterNestedInput
   friendsReceived?: Prisma.FriendshipUncheckedUpdateManyWithoutAddresseeNestedInput
   cheersSent?: Prisma.CheerUncheckedUpdateManyWithoutFromNestedInput
@@ -703,6 +728,7 @@ export type UserCreateWithoutAttemptsInput = {
   decorations?: Prisma.UserDecorationCreateNestedManyWithoutUserInput
   lectureQuestions?: Prisma.LectureQuestionCreateNestedManyWithoutUserInput
   warmups?: Prisma.WarmupResultCreateNestedManyWithoutUserInput
+  hintViews?: Prisma.HintViewCreateNestedManyWithoutUserInput
   friendsRequested?: Prisma.FriendshipCreateNestedManyWithoutRequesterInput
   friendsReceived?: Prisma.FriendshipCreateNestedManyWithoutAddresseeInput
   cheersSent?: Prisma.CheerCreateNestedManyWithoutFromInput
@@ -723,6 +749,7 @@ export type UserUncheckedCreateWithoutAttemptsInput = {
   decorations?: Prisma.UserDecorationUncheckedCreateNestedManyWithoutUserInput
   lectureQuestions?: Prisma.LectureQuestionUncheckedCreateNestedManyWithoutUserInput
   warmups?: Prisma.WarmupResultUncheckedCreateNestedManyWithoutUserInput
+  hintViews?: Prisma.HintViewUncheckedCreateNestedManyWithoutUserInput
   friendsRequested?: Prisma.FriendshipUncheckedCreateNestedManyWithoutRequesterInput
   friendsReceived?: Prisma.FriendshipUncheckedCreateNestedManyWithoutAddresseeInput
   cheersSent?: Prisma.CheerUncheckedCreateNestedManyWithoutFromInput
@@ -759,6 +786,7 @@ export type UserUpdateWithoutAttemptsInput = {
   decorations?: Prisma.UserDecorationUpdateManyWithoutUserNestedInput
   lectureQuestions?: Prisma.LectureQuestionUpdateManyWithoutUserNestedInput
   warmups?: Prisma.WarmupResultUpdateManyWithoutUserNestedInput
+  hintViews?: Prisma.HintViewUpdateManyWithoutUserNestedInput
   friendsRequested?: Prisma.FriendshipUpdateManyWithoutRequesterNestedInput
   friendsReceived?: Prisma.FriendshipUpdateManyWithoutAddresseeNestedInput
   cheersSent?: Prisma.CheerUpdateManyWithoutFromNestedInput
@@ -779,6 +807,7 @@ export type UserUncheckedUpdateWithoutAttemptsInput = {
   decorations?: Prisma.UserDecorationUncheckedUpdateManyWithoutUserNestedInput
   lectureQuestions?: Prisma.LectureQuestionUncheckedUpdateManyWithoutUserNestedInput
   warmups?: Prisma.WarmupResultUncheckedUpdateManyWithoutUserNestedInput
+  hintViews?: Prisma.HintViewUncheckedUpdateManyWithoutUserNestedInput
   friendsRequested?: Prisma.FriendshipUncheckedUpdateManyWithoutRequesterNestedInput
   friendsReceived?: Prisma.FriendshipUncheckedUpdateManyWithoutAddresseeNestedInput
   cheersSent?: Prisma.CheerUncheckedUpdateManyWithoutFromNestedInput
@@ -799,6 +828,7 @@ export type UserCreateWithoutMasteryInput = {
   decorations?: Prisma.UserDecorationCreateNestedManyWithoutUserInput
   lectureQuestions?: Prisma.LectureQuestionCreateNestedManyWithoutUserInput
   warmups?: Prisma.WarmupResultCreateNestedManyWithoutUserInput
+  hintViews?: Prisma.HintViewCreateNestedManyWithoutUserInput
   friendsRequested?: Prisma.FriendshipCreateNestedManyWithoutRequesterInput
   friendsReceived?: Prisma.FriendshipCreateNestedManyWithoutAddresseeInput
   cheersSent?: Prisma.CheerCreateNestedManyWithoutFromInput
@@ -819,6 +849,7 @@ export type UserUncheckedCreateWithoutMasteryInput = {
   decorations?: Prisma.UserDecorationUncheckedCreateNestedManyWithoutUserInput
   lectureQuestions?: Prisma.LectureQuestionUncheckedCreateNestedManyWithoutUserInput
   warmups?: Prisma.WarmupResultUncheckedCreateNestedManyWithoutUserInput
+  hintViews?: Prisma.HintViewUncheckedCreateNestedManyWithoutUserInput
   friendsRequested?: Prisma.FriendshipUncheckedCreateNestedManyWithoutRequesterInput
   friendsReceived?: Prisma.FriendshipUncheckedCreateNestedManyWithoutAddresseeInput
   cheersSent?: Prisma.CheerUncheckedCreateNestedManyWithoutFromInput
@@ -855,6 +886,7 @@ export type UserUpdateWithoutMasteryInput = {
   decorations?: Prisma.UserDecorationUpdateManyWithoutUserNestedInput
   lectureQuestions?: Prisma.LectureQuestionUpdateManyWithoutUserNestedInput
   warmups?: Prisma.WarmupResultUpdateManyWithoutUserNestedInput
+  hintViews?: Prisma.HintViewUpdateManyWithoutUserNestedInput
   friendsRequested?: Prisma.FriendshipUpdateManyWithoutRequesterNestedInput
   friendsReceived?: Prisma.FriendshipUpdateManyWithoutAddresseeNestedInput
   cheersSent?: Prisma.CheerUpdateManyWithoutFromNestedInput
@@ -875,6 +907,7 @@ export type UserUncheckedUpdateWithoutMasteryInput = {
   decorations?: Prisma.UserDecorationUncheckedUpdateManyWithoutUserNestedInput
   lectureQuestions?: Prisma.LectureQuestionUncheckedUpdateManyWithoutUserNestedInput
   warmups?: Prisma.WarmupResultUncheckedUpdateManyWithoutUserNestedInput
+  hintViews?: Prisma.HintViewUncheckedUpdateManyWithoutUserNestedInput
   friendsRequested?: Prisma.FriendshipUncheckedUpdateManyWithoutRequesterNestedInput
   friendsReceived?: Prisma.FriendshipUncheckedUpdateManyWithoutAddresseeNestedInput
   cheersSent?: Prisma.CheerUncheckedUpdateManyWithoutFromNestedInput
@@ -895,6 +928,7 @@ export type UserCreateWithoutLeavesInput = {
   decorations?: Prisma.UserDecorationCreateNestedManyWithoutUserInput
   lectureQuestions?: Prisma.LectureQuestionCreateNestedManyWithoutUserInput
   warmups?: Prisma.WarmupResultCreateNestedManyWithoutUserInput
+  hintViews?: Prisma.HintViewCreateNestedManyWithoutUserInput
   friendsRequested?: Prisma.FriendshipCreateNestedManyWithoutRequesterInput
   friendsReceived?: Prisma.FriendshipCreateNestedManyWithoutAddresseeInput
   cheersSent?: Prisma.CheerCreateNestedManyWithoutFromInput
@@ -915,6 +949,7 @@ export type UserUncheckedCreateWithoutLeavesInput = {
   decorations?: Prisma.UserDecorationUncheckedCreateNestedManyWithoutUserInput
   lectureQuestions?: Prisma.LectureQuestionUncheckedCreateNestedManyWithoutUserInput
   warmups?: Prisma.WarmupResultUncheckedCreateNestedManyWithoutUserInput
+  hintViews?: Prisma.HintViewUncheckedCreateNestedManyWithoutUserInput
   friendsRequested?: Prisma.FriendshipUncheckedCreateNestedManyWithoutRequesterInput
   friendsReceived?: Prisma.FriendshipUncheckedCreateNestedManyWithoutAddresseeInput
   cheersSent?: Prisma.CheerUncheckedCreateNestedManyWithoutFromInput
@@ -951,6 +986,7 @@ export type UserUpdateWithoutLeavesInput = {
   decorations?: Prisma.UserDecorationUpdateManyWithoutUserNestedInput
   lectureQuestions?: Prisma.LectureQuestionUpdateManyWithoutUserNestedInput
   warmups?: Prisma.WarmupResultUpdateManyWithoutUserNestedInput
+  hintViews?: Prisma.HintViewUpdateManyWithoutUserNestedInput
   friendsRequested?: Prisma.FriendshipUpdateManyWithoutRequesterNestedInput
   friendsReceived?: Prisma.FriendshipUpdateManyWithoutAddresseeNestedInput
   cheersSent?: Prisma.CheerUpdateManyWithoutFromNestedInput
@@ -971,6 +1007,7 @@ export type UserUncheckedUpdateWithoutLeavesInput = {
   decorations?: Prisma.UserDecorationUncheckedUpdateManyWithoutUserNestedInput
   lectureQuestions?: Prisma.LectureQuestionUncheckedUpdateManyWithoutUserNestedInput
   warmups?: Prisma.WarmupResultUncheckedUpdateManyWithoutUserNestedInput
+  hintViews?: Prisma.HintViewUncheckedUpdateManyWithoutUserNestedInput
   friendsRequested?: Prisma.FriendshipUncheckedUpdateManyWithoutRequesterNestedInput
   friendsReceived?: Prisma.FriendshipUncheckedUpdateManyWithoutAddresseeNestedInput
   cheersSent?: Prisma.CheerUncheckedUpdateManyWithoutFromNestedInput
@@ -991,6 +1028,7 @@ export type UserCreateWithoutDecorationsInput = {
   leaves?: Prisma.LeafTransactionCreateNestedManyWithoutUserInput
   lectureQuestions?: Prisma.LectureQuestionCreateNestedManyWithoutUserInput
   warmups?: Prisma.WarmupResultCreateNestedManyWithoutUserInput
+  hintViews?: Prisma.HintViewCreateNestedManyWithoutUserInput
   friendsRequested?: Prisma.FriendshipCreateNestedManyWithoutRequesterInput
   friendsReceived?: Prisma.FriendshipCreateNestedManyWithoutAddresseeInput
   cheersSent?: Prisma.CheerCreateNestedManyWithoutFromInput
@@ -1011,6 +1049,7 @@ export type UserUncheckedCreateWithoutDecorationsInput = {
   leaves?: Prisma.LeafTransactionUncheckedCreateNestedManyWithoutUserInput
   lectureQuestions?: Prisma.LectureQuestionUncheckedCreateNestedManyWithoutUserInput
   warmups?: Prisma.WarmupResultUncheckedCreateNestedManyWithoutUserInput
+  hintViews?: Prisma.HintViewUncheckedCreateNestedManyWithoutUserInput
   friendsRequested?: Prisma.FriendshipUncheckedCreateNestedManyWithoutRequesterInput
   friendsReceived?: Prisma.FriendshipUncheckedCreateNestedManyWithoutAddresseeInput
   cheersSent?: Prisma.CheerUncheckedCreateNestedManyWithoutFromInput
@@ -1047,6 +1086,7 @@ export type UserUpdateWithoutDecorationsInput = {
   leaves?: Prisma.LeafTransactionUpdateManyWithoutUserNestedInput
   lectureQuestions?: Prisma.LectureQuestionUpdateManyWithoutUserNestedInput
   warmups?: Prisma.WarmupResultUpdateManyWithoutUserNestedInput
+  hintViews?: Prisma.HintViewUpdateManyWithoutUserNestedInput
   friendsRequested?: Prisma.FriendshipUpdateManyWithoutRequesterNestedInput
   friendsReceived?: Prisma.FriendshipUpdateManyWithoutAddresseeNestedInput
   cheersSent?: Prisma.CheerUpdateManyWithoutFromNestedInput
@@ -1067,6 +1107,7 @@ export type UserUncheckedUpdateWithoutDecorationsInput = {
   leaves?: Prisma.LeafTransactionUncheckedUpdateManyWithoutUserNestedInput
   lectureQuestions?: Prisma.LectureQuestionUncheckedUpdateManyWithoutUserNestedInput
   warmups?: Prisma.WarmupResultUncheckedUpdateManyWithoutUserNestedInput
+  hintViews?: Prisma.HintViewUncheckedUpdateManyWithoutUserNestedInput
   friendsRequested?: Prisma.FriendshipUncheckedUpdateManyWithoutRequesterNestedInput
   friendsReceived?: Prisma.FriendshipUncheckedUpdateManyWithoutAddresseeNestedInput
   cheersSent?: Prisma.CheerUncheckedUpdateManyWithoutFromNestedInput
@@ -1087,6 +1128,7 @@ export type UserCreateWithoutLectureQuestionsInput = {
   leaves?: Prisma.LeafTransactionCreateNestedManyWithoutUserInput
   decorations?: Prisma.UserDecorationCreateNestedManyWithoutUserInput
   warmups?: Prisma.WarmupResultCreateNestedManyWithoutUserInput
+  hintViews?: Prisma.HintViewCreateNestedManyWithoutUserInput
   friendsRequested?: Prisma.FriendshipCreateNestedManyWithoutRequesterInput
   friendsReceived?: Prisma.FriendshipCreateNestedManyWithoutAddresseeInput
   cheersSent?: Prisma.CheerCreateNestedManyWithoutFromInput
@@ -1107,6 +1149,7 @@ export type UserUncheckedCreateWithoutLectureQuestionsInput = {
   leaves?: Prisma.LeafTransactionUncheckedCreateNestedManyWithoutUserInput
   decorations?: Prisma.UserDecorationUncheckedCreateNestedManyWithoutUserInput
   warmups?: Prisma.WarmupResultUncheckedCreateNestedManyWithoutUserInput
+  hintViews?: Prisma.HintViewUncheckedCreateNestedManyWithoutUserInput
   friendsRequested?: Prisma.FriendshipUncheckedCreateNestedManyWithoutRequesterInput
   friendsReceived?: Prisma.FriendshipUncheckedCreateNestedManyWithoutAddresseeInput
   cheersSent?: Prisma.CheerUncheckedCreateNestedManyWithoutFromInput
@@ -1143,6 +1186,7 @@ export type UserUpdateWithoutLectureQuestionsInput = {
   leaves?: Prisma.LeafTransactionUpdateManyWithoutUserNestedInput
   decorations?: Prisma.UserDecorationUpdateManyWithoutUserNestedInput
   warmups?: Prisma.WarmupResultUpdateManyWithoutUserNestedInput
+  hintViews?: Prisma.HintViewUpdateManyWithoutUserNestedInput
   friendsRequested?: Prisma.FriendshipUpdateManyWithoutRequesterNestedInput
   friendsReceived?: Prisma.FriendshipUpdateManyWithoutAddresseeNestedInput
   cheersSent?: Prisma.CheerUpdateManyWithoutFromNestedInput
@@ -1162,6 +1206,107 @@ export type UserUncheckedUpdateWithoutLectureQuestionsInput = {
   mastery?: Prisma.MasteryUncheckedUpdateManyWithoutUserNestedInput
   leaves?: Prisma.LeafTransactionUncheckedUpdateManyWithoutUserNestedInput
   decorations?: Prisma.UserDecorationUncheckedUpdateManyWithoutUserNestedInput
+  warmups?: Prisma.WarmupResultUncheckedUpdateManyWithoutUserNestedInput
+  hintViews?: Prisma.HintViewUncheckedUpdateManyWithoutUserNestedInput
+  friendsRequested?: Prisma.FriendshipUncheckedUpdateManyWithoutRequesterNestedInput
+  friendsReceived?: Prisma.FriendshipUncheckedUpdateManyWithoutAddresseeNestedInput
+  cheersSent?: Prisma.CheerUncheckedUpdateManyWithoutFromNestedInput
+  cheersReceived?: Prisma.CheerUncheckedUpdateManyWithoutToNestedInput
+}
+
+export type UserCreateWithoutHintViewsInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  displayName: string
+  plantedAt?: Date | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  modules?: Prisma.ModuleProgressCreateNestedManyWithoutUserInput
+  attempts?: Prisma.QuizAttemptCreateNestedManyWithoutUserInput
+  mastery?: Prisma.MasteryCreateNestedManyWithoutUserInput
+  leaves?: Prisma.LeafTransactionCreateNestedManyWithoutUserInput
+  decorations?: Prisma.UserDecorationCreateNestedManyWithoutUserInput
+  lectureQuestions?: Prisma.LectureQuestionCreateNestedManyWithoutUserInput
+  warmups?: Prisma.WarmupResultCreateNestedManyWithoutUserInput
+  friendsRequested?: Prisma.FriendshipCreateNestedManyWithoutRequesterInput
+  friendsReceived?: Prisma.FriendshipCreateNestedManyWithoutAddresseeInput
+  cheersSent?: Prisma.CheerCreateNestedManyWithoutFromInput
+  cheersReceived?: Prisma.CheerCreateNestedManyWithoutToInput
+}
+
+export type UserUncheckedCreateWithoutHintViewsInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  displayName: string
+  plantedAt?: Date | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  modules?: Prisma.ModuleProgressUncheckedCreateNestedManyWithoutUserInput
+  attempts?: Prisma.QuizAttemptUncheckedCreateNestedManyWithoutUserInput
+  mastery?: Prisma.MasteryUncheckedCreateNestedManyWithoutUserInput
+  leaves?: Prisma.LeafTransactionUncheckedCreateNestedManyWithoutUserInput
+  decorations?: Prisma.UserDecorationUncheckedCreateNestedManyWithoutUserInput
+  lectureQuestions?: Prisma.LectureQuestionUncheckedCreateNestedManyWithoutUserInput
+  warmups?: Prisma.WarmupResultUncheckedCreateNestedManyWithoutUserInput
+  friendsRequested?: Prisma.FriendshipUncheckedCreateNestedManyWithoutRequesterInput
+  friendsReceived?: Prisma.FriendshipUncheckedCreateNestedManyWithoutAddresseeInput
+  cheersSent?: Prisma.CheerUncheckedCreateNestedManyWithoutFromInput
+  cheersReceived?: Prisma.CheerUncheckedCreateNestedManyWithoutToInput
+}
+
+export type UserCreateOrConnectWithoutHintViewsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutHintViewsInput, Prisma.UserUncheckedCreateWithoutHintViewsInput>
+}
+
+export type UserUpsertWithoutHintViewsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutHintViewsInput, Prisma.UserUncheckedUpdateWithoutHintViewsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutHintViewsInput, Prisma.UserUncheckedCreateWithoutHintViewsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutHintViewsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutHintViewsInput, Prisma.UserUncheckedUpdateWithoutHintViewsInput>
+}
+
+export type UserUpdateWithoutHintViewsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  displayName?: Prisma.StringFieldUpdateOperationsInput | string
+  plantedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  modules?: Prisma.ModuleProgressUpdateManyWithoutUserNestedInput
+  attempts?: Prisma.QuizAttemptUpdateManyWithoutUserNestedInput
+  mastery?: Prisma.MasteryUpdateManyWithoutUserNestedInput
+  leaves?: Prisma.LeafTransactionUpdateManyWithoutUserNestedInput
+  decorations?: Prisma.UserDecorationUpdateManyWithoutUserNestedInput
+  lectureQuestions?: Prisma.LectureQuestionUpdateManyWithoutUserNestedInput
+  warmups?: Prisma.WarmupResultUpdateManyWithoutUserNestedInput
+  friendsRequested?: Prisma.FriendshipUpdateManyWithoutRequesterNestedInput
+  friendsReceived?: Prisma.FriendshipUpdateManyWithoutAddresseeNestedInput
+  cheersSent?: Prisma.CheerUpdateManyWithoutFromNestedInput
+  cheersReceived?: Prisma.CheerUpdateManyWithoutToNestedInput
+}
+
+export type UserUncheckedUpdateWithoutHintViewsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  displayName?: Prisma.StringFieldUpdateOperationsInput | string
+  plantedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  modules?: Prisma.ModuleProgressUncheckedUpdateManyWithoutUserNestedInput
+  attempts?: Prisma.QuizAttemptUncheckedUpdateManyWithoutUserNestedInput
+  mastery?: Prisma.MasteryUncheckedUpdateManyWithoutUserNestedInput
+  leaves?: Prisma.LeafTransactionUncheckedUpdateManyWithoutUserNestedInput
+  decorations?: Prisma.UserDecorationUncheckedUpdateManyWithoutUserNestedInput
+  lectureQuestions?: Prisma.LectureQuestionUncheckedUpdateManyWithoutUserNestedInput
   warmups?: Prisma.WarmupResultUncheckedUpdateManyWithoutUserNestedInput
   friendsRequested?: Prisma.FriendshipUncheckedUpdateManyWithoutRequesterNestedInput
   friendsReceived?: Prisma.FriendshipUncheckedUpdateManyWithoutAddresseeNestedInput
@@ -1183,6 +1328,7 @@ export type UserCreateWithoutWarmupsInput = {
   leaves?: Prisma.LeafTransactionCreateNestedManyWithoutUserInput
   decorations?: Prisma.UserDecorationCreateNestedManyWithoutUserInput
   lectureQuestions?: Prisma.LectureQuestionCreateNestedManyWithoutUserInput
+  hintViews?: Prisma.HintViewCreateNestedManyWithoutUserInput
   friendsRequested?: Prisma.FriendshipCreateNestedManyWithoutRequesterInput
   friendsReceived?: Prisma.FriendshipCreateNestedManyWithoutAddresseeInput
   cheersSent?: Prisma.CheerCreateNestedManyWithoutFromInput
@@ -1203,6 +1349,7 @@ export type UserUncheckedCreateWithoutWarmupsInput = {
   leaves?: Prisma.LeafTransactionUncheckedCreateNestedManyWithoutUserInput
   decorations?: Prisma.UserDecorationUncheckedCreateNestedManyWithoutUserInput
   lectureQuestions?: Prisma.LectureQuestionUncheckedCreateNestedManyWithoutUserInput
+  hintViews?: Prisma.HintViewUncheckedCreateNestedManyWithoutUserInput
   friendsRequested?: Prisma.FriendshipUncheckedCreateNestedManyWithoutRequesterInput
   friendsReceived?: Prisma.FriendshipUncheckedCreateNestedManyWithoutAddresseeInput
   cheersSent?: Prisma.CheerUncheckedCreateNestedManyWithoutFromInput
@@ -1239,6 +1386,7 @@ export type UserUpdateWithoutWarmupsInput = {
   leaves?: Prisma.LeafTransactionUpdateManyWithoutUserNestedInput
   decorations?: Prisma.UserDecorationUpdateManyWithoutUserNestedInput
   lectureQuestions?: Prisma.LectureQuestionUpdateManyWithoutUserNestedInput
+  hintViews?: Prisma.HintViewUpdateManyWithoutUserNestedInput
   friendsRequested?: Prisma.FriendshipUpdateManyWithoutRequesterNestedInput
   friendsReceived?: Prisma.FriendshipUpdateManyWithoutAddresseeNestedInput
   cheersSent?: Prisma.CheerUpdateManyWithoutFromNestedInput
@@ -1259,6 +1407,7 @@ export type UserUncheckedUpdateWithoutWarmupsInput = {
   leaves?: Prisma.LeafTransactionUncheckedUpdateManyWithoutUserNestedInput
   decorations?: Prisma.UserDecorationUncheckedUpdateManyWithoutUserNestedInput
   lectureQuestions?: Prisma.LectureQuestionUncheckedUpdateManyWithoutUserNestedInput
+  hintViews?: Prisma.HintViewUncheckedUpdateManyWithoutUserNestedInput
   friendsRequested?: Prisma.FriendshipUncheckedUpdateManyWithoutRequesterNestedInput
   friendsReceived?: Prisma.FriendshipUncheckedUpdateManyWithoutAddresseeNestedInput
   cheersSent?: Prisma.CheerUncheckedUpdateManyWithoutFromNestedInput
@@ -1280,6 +1429,7 @@ export type UserCreateWithoutFriendsRequestedInput = {
   decorations?: Prisma.UserDecorationCreateNestedManyWithoutUserInput
   lectureQuestions?: Prisma.LectureQuestionCreateNestedManyWithoutUserInput
   warmups?: Prisma.WarmupResultCreateNestedManyWithoutUserInput
+  hintViews?: Prisma.HintViewCreateNestedManyWithoutUserInput
   friendsReceived?: Prisma.FriendshipCreateNestedManyWithoutAddresseeInput
   cheersSent?: Prisma.CheerCreateNestedManyWithoutFromInput
   cheersReceived?: Prisma.CheerCreateNestedManyWithoutToInput
@@ -1300,6 +1450,7 @@ export type UserUncheckedCreateWithoutFriendsRequestedInput = {
   decorations?: Prisma.UserDecorationUncheckedCreateNestedManyWithoutUserInput
   lectureQuestions?: Prisma.LectureQuestionUncheckedCreateNestedManyWithoutUserInput
   warmups?: Prisma.WarmupResultUncheckedCreateNestedManyWithoutUserInput
+  hintViews?: Prisma.HintViewUncheckedCreateNestedManyWithoutUserInput
   friendsReceived?: Prisma.FriendshipUncheckedCreateNestedManyWithoutAddresseeInput
   cheersSent?: Prisma.CheerUncheckedCreateNestedManyWithoutFromInput
   cheersReceived?: Prisma.CheerUncheckedCreateNestedManyWithoutToInput
@@ -1325,6 +1476,7 @@ export type UserCreateWithoutFriendsReceivedInput = {
   decorations?: Prisma.UserDecorationCreateNestedManyWithoutUserInput
   lectureQuestions?: Prisma.LectureQuestionCreateNestedManyWithoutUserInput
   warmups?: Prisma.WarmupResultCreateNestedManyWithoutUserInput
+  hintViews?: Prisma.HintViewCreateNestedManyWithoutUserInput
   friendsRequested?: Prisma.FriendshipCreateNestedManyWithoutRequesterInput
   cheersSent?: Prisma.CheerCreateNestedManyWithoutFromInput
   cheersReceived?: Prisma.CheerCreateNestedManyWithoutToInput
@@ -1345,6 +1497,7 @@ export type UserUncheckedCreateWithoutFriendsReceivedInput = {
   decorations?: Prisma.UserDecorationUncheckedCreateNestedManyWithoutUserInput
   lectureQuestions?: Prisma.LectureQuestionUncheckedCreateNestedManyWithoutUserInput
   warmups?: Prisma.WarmupResultUncheckedCreateNestedManyWithoutUserInput
+  hintViews?: Prisma.HintViewUncheckedCreateNestedManyWithoutUserInput
   friendsRequested?: Prisma.FriendshipUncheckedCreateNestedManyWithoutRequesterInput
   cheersSent?: Prisma.CheerUncheckedCreateNestedManyWithoutFromInput
   cheersReceived?: Prisma.CheerUncheckedCreateNestedManyWithoutToInput
@@ -1381,6 +1534,7 @@ export type UserUpdateWithoutFriendsRequestedInput = {
   decorations?: Prisma.UserDecorationUpdateManyWithoutUserNestedInput
   lectureQuestions?: Prisma.LectureQuestionUpdateManyWithoutUserNestedInput
   warmups?: Prisma.WarmupResultUpdateManyWithoutUserNestedInput
+  hintViews?: Prisma.HintViewUpdateManyWithoutUserNestedInput
   friendsReceived?: Prisma.FriendshipUpdateManyWithoutAddresseeNestedInput
   cheersSent?: Prisma.CheerUpdateManyWithoutFromNestedInput
   cheersReceived?: Prisma.CheerUpdateManyWithoutToNestedInput
@@ -1401,6 +1555,7 @@ export type UserUncheckedUpdateWithoutFriendsRequestedInput = {
   decorations?: Prisma.UserDecorationUncheckedUpdateManyWithoutUserNestedInput
   lectureQuestions?: Prisma.LectureQuestionUncheckedUpdateManyWithoutUserNestedInput
   warmups?: Prisma.WarmupResultUncheckedUpdateManyWithoutUserNestedInput
+  hintViews?: Prisma.HintViewUncheckedUpdateManyWithoutUserNestedInput
   friendsReceived?: Prisma.FriendshipUncheckedUpdateManyWithoutAddresseeNestedInput
   cheersSent?: Prisma.CheerUncheckedUpdateManyWithoutFromNestedInput
   cheersReceived?: Prisma.CheerUncheckedUpdateManyWithoutToNestedInput
@@ -1432,6 +1587,7 @@ export type UserUpdateWithoutFriendsReceivedInput = {
   decorations?: Prisma.UserDecorationUpdateManyWithoutUserNestedInput
   lectureQuestions?: Prisma.LectureQuestionUpdateManyWithoutUserNestedInput
   warmups?: Prisma.WarmupResultUpdateManyWithoutUserNestedInput
+  hintViews?: Prisma.HintViewUpdateManyWithoutUserNestedInput
   friendsRequested?: Prisma.FriendshipUpdateManyWithoutRequesterNestedInput
   cheersSent?: Prisma.CheerUpdateManyWithoutFromNestedInput
   cheersReceived?: Prisma.CheerUpdateManyWithoutToNestedInput
@@ -1452,6 +1608,7 @@ export type UserUncheckedUpdateWithoutFriendsReceivedInput = {
   decorations?: Prisma.UserDecorationUncheckedUpdateManyWithoutUserNestedInput
   lectureQuestions?: Prisma.LectureQuestionUncheckedUpdateManyWithoutUserNestedInput
   warmups?: Prisma.WarmupResultUncheckedUpdateManyWithoutUserNestedInput
+  hintViews?: Prisma.HintViewUncheckedUpdateManyWithoutUserNestedInput
   friendsRequested?: Prisma.FriendshipUncheckedUpdateManyWithoutRequesterNestedInput
   cheersSent?: Prisma.CheerUncheckedUpdateManyWithoutFromNestedInput
   cheersReceived?: Prisma.CheerUncheckedUpdateManyWithoutToNestedInput
@@ -1472,6 +1629,7 @@ export type UserCreateWithoutCheersSentInput = {
   decorations?: Prisma.UserDecorationCreateNestedManyWithoutUserInput
   lectureQuestions?: Prisma.LectureQuestionCreateNestedManyWithoutUserInput
   warmups?: Prisma.WarmupResultCreateNestedManyWithoutUserInput
+  hintViews?: Prisma.HintViewCreateNestedManyWithoutUserInput
   friendsRequested?: Prisma.FriendshipCreateNestedManyWithoutRequesterInput
   friendsReceived?: Prisma.FriendshipCreateNestedManyWithoutAddresseeInput
   cheersReceived?: Prisma.CheerCreateNestedManyWithoutToInput
@@ -1492,6 +1650,7 @@ export type UserUncheckedCreateWithoutCheersSentInput = {
   decorations?: Prisma.UserDecorationUncheckedCreateNestedManyWithoutUserInput
   lectureQuestions?: Prisma.LectureQuestionUncheckedCreateNestedManyWithoutUserInput
   warmups?: Prisma.WarmupResultUncheckedCreateNestedManyWithoutUserInput
+  hintViews?: Prisma.HintViewUncheckedCreateNestedManyWithoutUserInput
   friendsRequested?: Prisma.FriendshipUncheckedCreateNestedManyWithoutRequesterInput
   friendsReceived?: Prisma.FriendshipUncheckedCreateNestedManyWithoutAddresseeInput
   cheersReceived?: Prisma.CheerUncheckedCreateNestedManyWithoutToInput
@@ -1517,6 +1676,7 @@ export type UserCreateWithoutCheersReceivedInput = {
   decorations?: Prisma.UserDecorationCreateNestedManyWithoutUserInput
   lectureQuestions?: Prisma.LectureQuestionCreateNestedManyWithoutUserInput
   warmups?: Prisma.WarmupResultCreateNestedManyWithoutUserInput
+  hintViews?: Prisma.HintViewCreateNestedManyWithoutUserInput
   friendsRequested?: Prisma.FriendshipCreateNestedManyWithoutRequesterInput
   friendsReceived?: Prisma.FriendshipCreateNestedManyWithoutAddresseeInput
   cheersSent?: Prisma.CheerCreateNestedManyWithoutFromInput
@@ -1537,6 +1697,7 @@ export type UserUncheckedCreateWithoutCheersReceivedInput = {
   decorations?: Prisma.UserDecorationUncheckedCreateNestedManyWithoutUserInput
   lectureQuestions?: Prisma.LectureQuestionUncheckedCreateNestedManyWithoutUserInput
   warmups?: Prisma.WarmupResultUncheckedCreateNestedManyWithoutUserInput
+  hintViews?: Prisma.HintViewUncheckedCreateNestedManyWithoutUserInput
   friendsRequested?: Prisma.FriendshipUncheckedCreateNestedManyWithoutRequesterInput
   friendsReceived?: Prisma.FriendshipUncheckedCreateNestedManyWithoutAddresseeInput
   cheersSent?: Prisma.CheerUncheckedCreateNestedManyWithoutFromInput
@@ -1573,6 +1734,7 @@ export type UserUpdateWithoutCheersSentInput = {
   decorations?: Prisma.UserDecorationUpdateManyWithoutUserNestedInput
   lectureQuestions?: Prisma.LectureQuestionUpdateManyWithoutUserNestedInput
   warmups?: Prisma.WarmupResultUpdateManyWithoutUserNestedInput
+  hintViews?: Prisma.HintViewUpdateManyWithoutUserNestedInput
   friendsRequested?: Prisma.FriendshipUpdateManyWithoutRequesterNestedInput
   friendsReceived?: Prisma.FriendshipUpdateManyWithoutAddresseeNestedInput
   cheersReceived?: Prisma.CheerUpdateManyWithoutToNestedInput
@@ -1593,6 +1755,7 @@ export type UserUncheckedUpdateWithoutCheersSentInput = {
   decorations?: Prisma.UserDecorationUncheckedUpdateManyWithoutUserNestedInput
   lectureQuestions?: Prisma.LectureQuestionUncheckedUpdateManyWithoutUserNestedInput
   warmups?: Prisma.WarmupResultUncheckedUpdateManyWithoutUserNestedInput
+  hintViews?: Prisma.HintViewUncheckedUpdateManyWithoutUserNestedInput
   friendsRequested?: Prisma.FriendshipUncheckedUpdateManyWithoutRequesterNestedInput
   friendsReceived?: Prisma.FriendshipUncheckedUpdateManyWithoutAddresseeNestedInput
   cheersReceived?: Prisma.CheerUncheckedUpdateManyWithoutToNestedInput
@@ -1624,6 +1787,7 @@ export type UserUpdateWithoutCheersReceivedInput = {
   decorations?: Prisma.UserDecorationUpdateManyWithoutUserNestedInput
   lectureQuestions?: Prisma.LectureQuestionUpdateManyWithoutUserNestedInput
   warmups?: Prisma.WarmupResultUpdateManyWithoutUserNestedInput
+  hintViews?: Prisma.HintViewUpdateManyWithoutUserNestedInput
   friendsRequested?: Prisma.FriendshipUpdateManyWithoutRequesterNestedInput
   friendsReceived?: Prisma.FriendshipUpdateManyWithoutAddresseeNestedInput
   cheersSent?: Prisma.CheerUpdateManyWithoutFromNestedInput
@@ -1644,6 +1808,7 @@ export type UserUncheckedUpdateWithoutCheersReceivedInput = {
   decorations?: Prisma.UserDecorationUncheckedUpdateManyWithoutUserNestedInput
   lectureQuestions?: Prisma.LectureQuestionUncheckedUpdateManyWithoutUserNestedInput
   warmups?: Prisma.WarmupResultUncheckedUpdateManyWithoutUserNestedInput
+  hintViews?: Prisma.HintViewUncheckedUpdateManyWithoutUserNestedInput
   friendsRequested?: Prisma.FriendshipUncheckedUpdateManyWithoutRequesterNestedInput
   friendsReceived?: Prisma.FriendshipUncheckedUpdateManyWithoutAddresseeNestedInput
   cheersSent?: Prisma.CheerUncheckedUpdateManyWithoutFromNestedInput
@@ -1662,6 +1827,7 @@ export type UserCountOutputType = {
   decorations: number
   lectureQuestions: number
   warmups: number
+  hintViews: number
   friendsRequested: number
   friendsReceived: number
   cheersSent: number
@@ -1676,6 +1842,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   decorations?: boolean | UserCountOutputTypeCountDecorationsArgs
   lectureQuestions?: boolean | UserCountOutputTypeCountLectureQuestionsArgs
   warmups?: boolean | UserCountOutputTypeCountWarmupsArgs
+  hintViews?: boolean | UserCountOutputTypeCountHintViewsArgs
   friendsRequested?: boolean | UserCountOutputTypeCountFriendsRequestedArgs
   friendsReceived?: boolean | UserCountOutputTypeCountFriendsReceivedArgs
   cheersSent?: boolean | UserCountOutputTypeCountCheersSentArgs
@@ -1744,6 +1911,13 @@ export type UserCountOutputTypeCountWarmupsArgs<ExtArgs extends runtime.Types.Ex
 /**
  * UserCountOutputType without action
  */
+export type UserCountOutputTypeCountHintViewsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.HintViewWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
 export type UserCountOutputTypeCountFriendsRequestedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.FriendshipWhereInput
 }
@@ -1785,6 +1959,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   decorations?: boolean | Prisma.User$decorationsArgs<ExtArgs>
   lectureQuestions?: boolean | Prisma.User$lectureQuestionsArgs<ExtArgs>
   warmups?: boolean | Prisma.User$warmupsArgs<ExtArgs>
+  hintViews?: boolean | Prisma.User$hintViewsArgs<ExtArgs>
   friendsRequested?: boolean | Prisma.User$friendsRequestedArgs<ExtArgs>
   friendsReceived?: boolean | Prisma.User$friendsReceivedArgs<ExtArgs>
   cheersSent?: boolean | Prisma.User$cheersSentArgs<ExtArgs>
@@ -1831,6 +2006,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   decorations?: boolean | Prisma.User$decorationsArgs<ExtArgs>
   lectureQuestions?: boolean | Prisma.User$lectureQuestionsArgs<ExtArgs>
   warmups?: boolean | Prisma.User$warmupsArgs<ExtArgs>
+  hintViews?: boolean | Prisma.User$hintViewsArgs<ExtArgs>
   friendsRequested?: boolean | Prisma.User$friendsRequestedArgs<ExtArgs>
   friendsReceived?: boolean | Prisma.User$friendsReceivedArgs<ExtArgs>
   cheersSent?: boolean | Prisma.User$cheersSentArgs<ExtArgs>
@@ -1850,6 +2026,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     decorations: Prisma.$UserDecorationPayload<ExtArgs>[]
     lectureQuestions: Prisma.$LectureQuestionPayload<ExtArgs>[]
     warmups: Prisma.$WarmupResultPayload<ExtArgs>[]
+    hintViews: Prisma.$HintViewPayload<ExtArgs>[]
     friendsRequested: Prisma.$FriendshipPayload<ExtArgs>[]
     friendsReceived: Prisma.$FriendshipPayload<ExtArgs>[]
     cheersSent: Prisma.$CheerPayload<ExtArgs>[]
@@ -2264,6 +2441,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   decorations<T extends Prisma.User$decorationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$decorationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserDecorationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   lectureQuestions<T extends Prisma.User$lectureQuestionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$lectureQuestionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LectureQuestionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   warmups<T extends Prisma.User$warmupsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$warmupsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WarmupResultPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  hintViews<T extends Prisma.User$hintViewsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$hintViewsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$HintViewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   friendsRequested<T extends Prisma.User$friendsRequestedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$friendsRequestedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FriendshipPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   friendsReceived<T extends Prisma.User$friendsReceivedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$friendsReceivedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FriendshipPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   cheersSent<T extends Prisma.User$cheersSentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$cheersSentArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CheerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -2862,6 +3040,30 @@ export type User$warmupsArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
   take?: number
   skip?: number
   distinct?: Prisma.WarmupResultScalarFieldEnum | Prisma.WarmupResultScalarFieldEnum[]
+}
+
+/**
+ * User.hintViews
+ */
+export type User$hintViewsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the HintView
+   */
+  select?: Prisma.HintViewSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the HintView
+   */
+  omit?: Prisma.HintViewOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.HintViewInclude<ExtArgs> | null
+  where?: Prisma.HintViewWhereInput
+  orderBy?: Prisma.HintViewOrderByWithRelationInput | Prisma.HintViewOrderByWithRelationInput[]
+  cursor?: Prisma.HintViewWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.HintViewScalarFieldEnum | Prisma.HintViewScalarFieldEnum[]
 }
 
 /**

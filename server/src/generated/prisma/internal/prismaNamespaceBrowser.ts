@@ -59,6 +59,7 @@ export const ModelName = {
   Decoration: 'Decoration',
   UserDecoration: 'UserDecoration',
   LectureQuestion: 'LectureQuestion',
+  HintView: 'HintView',
   WarmupResult: 'WarmupResult',
   Friendship: 'Friendship',
   Cheer: 'Cheer'
@@ -138,6 +139,7 @@ export const LeafTransactionScalarFieldEnum = {
   userId: 'userId',
   amount: 'amount',
   reason: 'reason',
+  dedupeKey: 'dedupeKey',
   createdAt: 'createdAt'
 } as const
 
@@ -174,6 +176,17 @@ export const LectureQuestionScalarFieldEnum = {
 } as const
 
 export type LectureQuestionScalarFieldEnum = (typeof LectureQuestionScalarFieldEnum)[keyof typeof LectureQuestionScalarFieldEnum]
+
+
+export const HintViewScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  itemId: 'itemId',
+  hint: 'hint',
+  createdAt: 'createdAt'
+} as const
+
+export type HintViewScalarFieldEnum = (typeof HintViewScalarFieldEnum)[keyof typeof HintViewScalarFieldEnum]
 
 
 export const WarmupResultScalarFieldEnum = {
