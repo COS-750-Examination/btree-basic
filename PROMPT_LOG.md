@@ -236,6 +236,114 @@ This log records the generative AI prompts used during development of B-Tree Bas
 
 ---
 
+## Entry 005: Backend implementation plan
+
+| Field        | Detail                                         |
+| ------------ | ---------------------------------------------- |
+| Date         | 13 November 2026                               |
+| Requested by | Kyle Liebenberg, backend owner                 |
+| Tool         | Claude Code (Anthropic), model Claude Opus 5.5 |
+| Scope        | `docs/BACKEND_PLAN.md` (new)                   |
+| Status       | Completed; plan left uncommitted for review    |
+
+### Request
+
+> Please review the codebase to gain an understanding of the project, a web application that teaches B-trees to second-year computer science students before their B-tree lecture. Several items remain outstanding in `docs/TODO.md`, and I am responsible for the Backend section. Please review what remains on the to-do list and produce an ordered plan for implementing all of it.
+
+### Clarifications provided
+
+The first draft was reviewed against the COS750 Examination Specification. The team judged it too heavy for a prototype, and these changes were made:
+
+| Question raised                                         | Decision                                                                                                                |
+| ------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| Should password reset by email be supported?            | **No.** Out of scope for the prototype.                                                                                 |
+| Should the production database be backed up?            | **No.** Out of scope for the prototype.                                                                                 |
+| Where should deployment sit in the plan?                | **Last, and optional.** The demonstration can run locally.                                                              |
+| Cross-site cookies or one shared domain for deployment? | No separate decision needed. The optional deployment task uses a Vercel rewrite (one origin).                           |
+| Badge rules (Explorer, Splitter, Root Raiser)?          | Use the proposed rules: warm-up plus module 1, three correct O5 answers in a row, O6 mastered.                          |
+| Should sessions be made revocable?                      | **No.** The 14-day JWT cookie is acceptable for a prototype.                                                            |
+| How should the work be delivered?                       | **One branch and pull request per task**, with related sub-tasks grouped as commits, and one prompt log entry per task. |
+
+### Deliverables
+
+- `docs/BACKEND_PLAN.md`, with six tasks, each on its own branch:
+  1. Test coverage.
+  2. Rewards: idempotent leaf payouts, a 3-day streak bonus, server-side checks of first attempts and hints, and a ready-check bonus.
+  3. Badges.
+  4. Friends and privacy: decline, cancel and unfriend; rate limits; data export.
+  5. Account settings.
+  6. Optional deployment.
+- Each task lists:
+  - its files;
+  - the function signatures it introduces;
+  - named tests with their expected results;
+  - commits;
+  - a pre-merge checklist (TODO, CHANGELOG, prompt log).
+- Backend work that needs client changes is marked `frontend change required` and summarised in a hand-off table.
+- Five risks found in the existing code are listed under Review Focus, each with the test that addresses it:
+  - lesson leaves paid twice on parallel requests;
+  - unlimited leaves from `POST /hints`;
+  - streak days counted in UTC rather than South African time;
+  - crossing friend requests;
+  - rate limits behind proxies (deployment only).
+
+### Verification summary
+
+| Check                                                 | Result                                 |
+| ----------------------------------------------------- | -------------------------------------- |
+| Every Backend item in `docs/TODO.md` mapped to a task | Done, or marked "won't do (prototype)" |
+| Prettier on the plan                                  | Pass                                   |
+
+### Human review required
+
+- **Badge rules (ID lead):** confirm the proposed rules for Explorer, Splitter and Root Raiser.
+- **Answer integrity:** the server holds no answer keys, so the server-side check only stops a replayed answer, not a hand-crafted request.
+
+---
+
+## Entry 006: Backend test scaffolding (BACKEND_PLAN Task 1)
+
+| Field        | Detail                                                                               |
+| ------------ | ------------------------------------------------------------------------------------ |
+| Date         | 13 November 2026                                                                     |
+| Requested by | Kyle Liebenberg, backend owner                                                       |
+| Tool         | Claude Code (Anthropic), model Claude Opus 5.5                                       |
+| Scope        | `server/test/helpers.ts`, `server/test/grove.test.ts`, `server/test/friends.test.ts` |
+| Status       | Completed; left uncommitted on branch `test/backend-coverage` for review             |
+
+### Request
+
+> Please refer to Task 1 in `docs/BACKEND_PLAN.md` and create all the necessary files (`helpers.ts`, `grove.test.ts` and `friends.test.ts`), together with the test signatures. The test bodies are to be left empty, as I will implement them myself.
+
+### Clarifications provided
+
+None were needed. The shared helpers are implemented in full, since every test depends on them. Only the test bodies are left empty.
+
+### Deliverables
+
+- `server/test/helpers.ts`:
+  - `hasDb`, `makeApp`, `getPrisma` and `closeDb`.
+  - `student`: creates a signed-in student directly in the database, which avoids the IP-based auth rate limit.
+  - `befriend`, `removeStudents`, `ensureCatalogue`, `giveLeaves` and `completeModules`.
+  - Source modules are imported lazily, so test runs without a database still work.
+- `server/test/grove.test.ts`: 13 empty tests covering leaves, the decoration catalogue, purchases, placement and lecture questions. Set-up and clean-up of two students are included.
+- `server/test/friends.test.ts`: 12 empty tests covering friend requests, the friends list, friend groves, cheers and privacy. Set-up and clean-up of two friends-to-be and a stranger are included.
+
+### Verification summary
+
+| Check                                                  | Result                                        |
+| ------------------------------------------------------ | --------------------------------------------- |
+| Server tests against local PostgreSQL                  | 37 / 37 pass (25 new tests with empty bodies) |
+| Test users left in the database after the run          | 0                                             |
+| ESLint, TypeScript (strict), Prettier on the new files | Pass                                          |
+
+### Human review required
+
+- **Empty tests pass:** a test with an empty body reports as passing, so the 25 new tests show green until they are written. Fill them in before merging.
+- **Placeholder password:** students made with `student()` cannot log in with a password. Tests that need password login must register through `/api/auth/register` instead.
+
+---
+
 ## Entry template
 
 ```markdown

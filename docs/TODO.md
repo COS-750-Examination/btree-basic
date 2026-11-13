@@ -72,8 +72,8 @@ Tick items off as they land, and move finished work into the CHANGELOG.
 
 ### Quality
 
-- [ ] Supertest coverage for the grove, decorations, lecture-questions, friends and cheers routes. Only auth, progress and the main flow are tested now.
-- [ ] Test that friends can never see another student's scores or answers.
+- [x] Supertest coverage for the grove, decorations, lecture-questions, friends and cheers routes. Done 13 November 2026.
+- [x] Test that friends can never see another student's scores or answers. Done 13 November 2026.
 
 ---
 

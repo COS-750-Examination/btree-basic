@@ -24,6 +24,11 @@ All notable changes to this project are documented here. The format follows [Kee
   - Craft drawer tiles follow the Figma `DecorationTile` states (owned, buy, locked).
 - **Decoration unlock stages** (`minStage` in `@btree/shared`). The tree swing needs a young tree, butterflies a sprout, and everything else a sapling. Locked decorations show as dashed tiles, and the swing's spot shows as a dashed outline with a "Swing spot · young tree" tag, as in the mockup. The API refuses to sell a decoration before its stage (409), with a test.
 - Illustration colour tokens `--apple`, `--blossom`, `--coral` and `--bunting-blue`, with Day and Dusk values from Figma.
+- **Server tests for the grove and friends routes** (`server/test/grove.test.ts`, `server/test/friends.test.ts`), 25 Supertest cases against Postgres:
+  - Grove: leaves, the decoration catalogue, purchases (404, 409, 400, 201), placement and lecture questions.
+  - Friends: friend requests, the friends list, friend groves and cheers.
+  - Privacy: a friend's grove and the friends list expose only the `FriendGrove` and `FriendSummary` fields. No scores, hints, leaves, answers or email addresses appear, even when the friend has all of them.
+- Shared test helpers (`server/test/helpers.ts`). Students are created directly in the database with a session cookie, so the tests never hit the login rate limit.
 
 ### Content
 
