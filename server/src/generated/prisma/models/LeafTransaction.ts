@@ -39,6 +39,7 @@ export type LeafTransactionMinAggregateOutputType = {
   userId: string | null
   amount: number | null
   reason: $Enums.LeafReason | null
+  dedupeKey: string | null
   createdAt: Date | null
 }
 
@@ -47,6 +48,7 @@ export type LeafTransactionMaxAggregateOutputType = {
   userId: string | null
   amount: number | null
   reason: $Enums.LeafReason | null
+  dedupeKey: string | null
   createdAt: Date | null
 }
 
@@ -55,6 +57,7 @@ export type LeafTransactionCountAggregateOutputType = {
   userId: number
   amount: number
   reason: number
+  dedupeKey: number
   createdAt: number
   _all: number
 }
@@ -73,6 +76,7 @@ export type LeafTransactionMinAggregateInputType = {
   userId?: true
   amount?: true
   reason?: true
+  dedupeKey?: true
   createdAt?: true
 }
 
@@ -81,6 +85,7 @@ export type LeafTransactionMaxAggregateInputType = {
   userId?: true
   amount?: true
   reason?: true
+  dedupeKey?: true
   createdAt?: true
 }
 
@@ -89,6 +94,7 @@ export type LeafTransactionCountAggregateInputType = {
   userId?: true
   amount?: true
   reason?: true
+  dedupeKey?: true
   createdAt?: true
   _all?: true
 }
@@ -184,6 +190,7 @@ export type LeafTransactionGroupByOutputType = {
   userId: string
   amount: number
   reason: $Enums.LeafReason
+  dedupeKey: string | null
   createdAt: Date
   _count: LeafTransactionCountAggregateOutputType | null
   _avg: LeafTransactionAvgAggregateOutputType | null
@@ -215,6 +222,7 @@ export type LeafTransactionWhereInput = {
   userId?: Prisma.StringFilter<"LeafTransaction"> | string
   amount?: Prisma.IntFilter<"LeafTransaction"> | number
   reason?: Prisma.EnumLeafReasonFilter<"LeafTransaction"> | $Enums.LeafReason
+  dedupeKey?: Prisma.StringNullableFilter<"LeafTransaction"> | string | null
   createdAt?: Prisma.DateTimeFilter<"LeafTransaction"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
@@ -224,27 +232,31 @@ export type LeafTransactionOrderByWithRelationInput = {
   userId?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   reason?: Prisma.SortOrder
+  dedupeKey?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
 }
 
 export type LeafTransactionWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  userId_dedupeKey?: Prisma.LeafTransactionUserIdDedupeKeyCompoundUniqueInput
   AND?: Prisma.LeafTransactionWhereInput | Prisma.LeafTransactionWhereInput[]
   OR?: Prisma.LeafTransactionWhereInput[]
   NOT?: Prisma.LeafTransactionWhereInput | Prisma.LeafTransactionWhereInput[]
   userId?: Prisma.StringFilter<"LeafTransaction"> | string
   amount?: Prisma.IntFilter<"LeafTransaction"> | number
   reason?: Prisma.EnumLeafReasonFilter<"LeafTransaction"> | $Enums.LeafReason
+  dedupeKey?: Prisma.StringNullableFilter<"LeafTransaction"> | string | null
   createdAt?: Prisma.DateTimeFilter<"LeafTransaction"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-}, "id">
+}, "id" | "userId_dedupeKey">
 
 export type LeafTransactionOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   reason?: Prisma.SortOrder
+  dedupeKey?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.LeafTransactionCountOrderByAggregateInput
   _avg?: Prisma.LeafTransactionAvgOrderByAggregateInput
@@ -261,6 +273,7 @@ export type LeafTransactionScalarWhereWithAggregatesInput = {
   userId?: Prisma.StringWithAggregatesFilter<"LeafTransaction"> | string
   amount?: Prisma.IntWithAggregatesFilter<"LeafTransaction"> | number
   reason?: Prisma.EnumLeafReasonWithAggregatesFilter<"LeafTransaction"> | $Enums.LeafReason
+  dedupeKey?: Prisma.StringNullableWithAggregatesFilter<"LeafTransaction"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"LeafTransaction"> | Date | string
 }
 
@@ -268,6 +281,7 @@ export type LeafTransactionCreateInput = {
   id?: string
   amount: number
   reason: $Enums.LeafReason
+  dedupeKey?: string | null
   createdAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutLeavesInput
 }
@@ -277,6 +291,7 @@ export type LeafTransactionUncheckedCreateInput = {
   userId: string
   amount: number
   reason: $Enums.LeafReason
+  dedupeKey?: string | null
   createdAt?: Date | string
 }
 
@@ -284,6 +299,7 @@ export type LeafTransactionUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   reason?: Prisma.EnumLeafReasonFieldUpdateOperationsInput | $Enums.LeafReason
+  dedupeKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutLeavesNestedInput
 }
@@ -293,6 +309,7 @@ export type LeafTransactionUncheckedUpdateInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   reason?: Prisma.EnumLeafReasonFieldUpdateOperationsInput | $Enums.LeafReason
+  dedupeKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -301,6 +318,7 @@ export type LeafTransactionCreateManyInput = {
   userId: string
   amount: number
   reason: $Enums.LeafReason
+  dedupeKey?: string | null
   createdAt?: Date | string
 }
 
@@ -308,6 +326,7 @@ export type LeafTransactionUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   reason?: Prisma.EnumLeafReasonFieldUpdateOperationsInput | $Enums.LeafReason
+  dedupeKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -316,6 +335,7 @@ export type LeafTransactionUncheckedUpdateManyInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   reason?: Prisma.EnumLeafReasonFieldUpdateOperationsInput | $Enums.LeafReason
+  dedupeKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -329,11 +349,17 @@ export type LeafTransactionOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
+export type LeafTransactionUserIdDedupeKeyCompoundUniqueInput = {
+  userId: string
+  dedupeKey: string
+}
+
 export type LeafTransactionCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   reason?: Prisma.SortOrder
+  dedupeKey?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -346,6 +372,7 @@ export type LeafTransactionMaxOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   reason?: Prisma.SortOrder
+  dedupeKey?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -354,6 +381,7 @@ export type LeafTransactionMinOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   reason?: Prisma.SortOrder
+  dedupeKey?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -411,6 +439,7 @@ export type LeafTransactionCreateWithoutUserInput = {
   id?: string
   amount: number
   reason: $Enums.LeafReason
+  dedupeKey?: string | null
   createdAt?: Date | string
 }
 
@@ -418,6 +447,7 @@ export type LeafTransactionUncheckedCreateWithoutUserInput = {
   id?: string
   amount: number
   reason: $Enums.LeafReason
+  dedupeKey?: string | null
   createdAt?: Date | string
 }
 
@@ -455,6 +485,7 @@ export type LeafTransactionScalarWhereInput = {
   userId?: Prisma.StringFilter<"LeafTransaction"> | string
   amount?: Prisma.IntFilter<"LeafTransaction"> | number
   reason?: Prisma.EnumLeafReasonFilter<"LeafTransaction"> | $Enums.LeafReason
+  dedupeKey?: Prisma.StringNullableFilter<"LeafTransaction"> | string | null
   createdAt?: Prisma.DateTimeFilter<"LeafTransaction"> | Date | string
 }
 
@@ -462,6 +493,7 @@ export type LeafTransactionCreateManyUserInput = {
   id?: string
   amount: number
   reason: $Enums.LeafReason
+  dedupeKey?: string | null
   createdAt?: Date | string
 }
 
@@ -469,6 +501,7 @@ export type LeafTransactionUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   reason?: Prisma.EnumLeafReasonFieldUpdateOperationsInput | $Enums.LeafReason
+  dedupeKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -476,6 +509,7 @@ export type LeafTransactionUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   reason?: Prisma.EnumLeafReasonFieldUpdateOperationsInput | $Enums.LeafReason
+  dedupeKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -483,6 +517,7 @@ export type LeafTransactionUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   reason?: Prisma.EnumLeafReasonFieldUpdateOperationsInput | $Enums.LeafReason
+  dedupeKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -493,6 +528,7 @@ export type LeafTransactionSelect<ExtArgs extends runtime.Types.Extensions.Inter
   userId?: boolean
   amount?: boolean
   reason?: boolean
+  dedupeKey?: boolean
   createdAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["leafTransaction"]>
@@ -502,6 +538,7 @@ export type LeafTransactionSelectCreateManyAndReturn<ExtArgs extends runtime.Typ
   userId?: boolean
   amount?: boolean
   reason?: boolean
+  dedupeKey?: boolean
   createdAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["leafTransaction"]>
@@ -511,6 +548,7 @@ export type LeafTransactionSelectUpdateManyAndReturn<ExtArgs extends runtime.Typ
   userId?: boolean
   amount?: boolean
   reason?: boolean
+  dedupeKey?: boolean
   createdAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["leafTransaction"]>
@@ -520,10 +558,11 @@ export type LeafTransactionSelectScalar = {
   userId?: boolean
   amount?: boolean
   reason?: boolean
+  dedupeKey?: boolean
   createdAt?: boolean
 }
 
-export type LeafTransactionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "amount" | "reason" | "createdAt", ExtArgs["result"]["leafTransaction"]>
+export type LeafTransactionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "amount" | "reason" | "dedupeKey" | "createdAt", ExtArgs["result"]["leafTransaction"]>
 export type LeafTransactionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
@@ -544,6 +583,7 @@ export type $LeafTransactionPayload<ExtArgs extends runtime.Types.Extensions.Int
     userId: string
     amount: number
     reason: $Enums.LeafReason
+    dedupeKey: string | null
     createdAt: Date
   }, ExtArgs["result"]["leafTransaction"]>
   composites: {}
@@ -973,6 +1013,7 @@ export interface LeafTransactionFieldRefs {
   readonly userId: Prisma.FieldRef<"LeafTransaction", 'String'>
   readonly amount: Prisma.FieldRef<"LeafTransaction", 'Int'>
   readonly reason: Prisma.FieldRef<"LeafTransaction", 'LeafReason'>
+  readonly dedupeKey: Prisma.FieldRef<"LeafTransaction", 'String'>
   readonly createdAt: Prisma.FieldRef<"LeafTransaction", 'DateTime'>
 }
     

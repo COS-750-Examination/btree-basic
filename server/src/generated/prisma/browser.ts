@@ -34,7 +34,7 @@ export type ModuleProgress = Prisma.ModuleProgressModel
 export type QuizAttempt = Prisma.QuizAttemptModel
 /**
  * Model Mastery
- * Cached per-objective mastery, recomputed from QuizAttempt on each new attempt.
+ * 
  */
 export type Mastery = Prisma.MasteryModel
 /**
@@ -44,7 +44,7 @@ export type Mastery = Prisma.MasteryModel
 export type LeafTransaction = Prisma.LeafTransactionModel
 /**
  * Model Decoration
- * Catalogue of grove decorations (seeded).
+ * 
  */
 export type Decoration = Prisma.DecorationModel
 /**
@@ -54,9 +54,14 @@ export type Decoration = Prisma.DecorationModel
 export type UserDecoration = Prisma.UserDecorationModel
 /**
  * Model LectureQuestion
- * "Questions for the lecture" notes from the readiness screen.
+ * 
  */
 export type LectureQuestion = Prisma.LectureQuestionModel
+/**
+ * Model HintView
+ * 
+ */
+export type HintView = Prisma.HintViewModel
 /**
  * Model WarmupResult
  * 

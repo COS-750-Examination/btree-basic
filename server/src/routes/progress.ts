@@ -1,17 +1,22 @@
 import {
+  HintBody,
   ProgressPutBody,
   QuizAttemptBody,
   WarmupBody,
   objectiveMastery,
+  type AttemptResult,
+  type LeafBonus,
   type ObjectiveId,
+  type StreakSummary,
 } from '@btree/shared';
 import { Router } from 'express';
+import { trustedAttempt } from '../lib/attempts';
 import { prisma } from '../lib/prisma';
-import { awardLeaves, readinessFor } from '../lib/progress';
+import { awardLeaves, readinessFor, streakDays } from '../lib/progress';
+import { awardReadyCheckBonus, awardStreakBonus, isReadyCheckItem } from '../lib/rewards';
 import { requireAuth, uid } from '../middleware/auth';
 import { validateBody } from '../middleware/validate';
 
-/** FR11: lesson progress, quiz attempts, mastery and readiness. Mounted at /api. */
 export const progressRouter = Router();
 
 progressRouter.get('/progress', requireAuth, async (req, res) => {
@@ -49,20 +54,24 @@ progressRouter.put('/progress', requireAuth, validateBody(ProgressPutBody), asyn
         ...(newlyCompleted ? { completedAt: new Date() } : {}),
       },
     });
-    if (newlyCompleted) await awardLeaves(userId, 'lesson');
+    if (newlyCompleted) await awardLeaves(userId, 'lesson', `lesson:${m.moduleId}`);
   }
   res.json(await readinessFor(userId));
 });
 
 progressRouter.post('/attempts', requireAuth, validateBody(QuizAttemptBody), async (req, res) => {
   const userId = uid(req);
-  const a = req.body as QuizAttemptBody;
+  const claim = req.body as QuizAttemptBody;
+  const a = { ...claim, ...(await trustedAttempt(userId, claim)) };
   await prisma.quizAttempt.create({ data: { userId, ...a } });
 
   if (a.correct)
-    await awardLeaves(userId, a.firstAttempt && a.hintsUsed === 0 ? 'firstTry' : 'withHint');
+    await awardLeaves(
+      userId,
+      a.firstAttempt && a.hintsUsed === 0 ? 'firstTry' : 'withHint',
+      `answer:${a.itemId}`,
+    );
 
-  // Refresh the cached mastery row for this objective.
   const attempts = await prisma.quizAttempt.findMany({
     where: { userId, objective: a.objective },
     select: { objective: true, correct: true, firstAttempt: true, hintsUsed: true },
@@ -75,12 +84,30 @@ progressRouter.post('/attempts', requireAuth, validateBody(QuizAttemptBody), asy
     create: { userId, objective: a.objective, score: m.score, counted: m.counted },
     update: { score: m.score, counted: m.counted },
   });
-  res.status(201).json(m);
+
+  const bonuses: LeafBonus[] = [];
+  const streak = await awardStreakBonus(userId);
+  if (streak) bonuses.push(streak);
+  if (isReadyCheckItem(a.itemId)) {
+    const ready = await awardReadyCheckBonus(userId);
+    if (ready) bonuses.push(ready);
+  }
+
+  const result: AttemptResult = { ...m, bonuses };
+  res.status(201).json(result);
 });
 
-progressRouter.post('/hints', requireAuth, async (req, res) => {
-  await awardLeaves(uid(req), 'hintRead');
+progressRouter.post('/hints', requireAuth, validateBody(HintBody), async (req, res) => {
+  const userId = uid(req);
+  const { itemId, hint } = req.body as HintBody;
+  await prisma.hintView.create({ data: { userId, itemId, hint } });
+  await awardLeaves(userId, 'hintRead', `hint:${itemId}:${hint}`);
   res.status(201).json({ ok: true });
+});
+
+progressRouter.get('/streak', requireAuth, async (req, res) => {
+  const summary: StreakSummary = { days: await streakDays(uid(req)) };
+  res.json(summary);
 });
 
 progressRouter.get('/mastery', requireAuth, async (req, res) => {
@@ -91,7 +118,6 @@ progressRouter.get('/readiness', requireAuth, async (req, res) => {
   res.json(await readinessFor(uid(req)));
 });
 
-/** Warm-up result decides whether module 2 (search trees recap) is added to the path. */
 progressRouter.post('/warmup', requireAuth, validateBody(WarmupBody), async (req, res) => {
   const { answers } = req.body as WarmupBody;
   const correct = answers.filter((a) => a.correct).length;

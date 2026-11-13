@@ -1,4 +1,4 @@
-import { fromSpec, insert, isLeaf } from '@btree/engine';
+import { fromSpec, insert, isLeaf, type BTreeNode } from '@btree/engine';
 import type { Confidence, QuizItem } from '@btree/shared';
 import { useMemo, useState } from 'react';
 import { BSTView } from '../tree/BSTView';
@@ -6,6 +6,7 @@ import { BTreeView } from '../tree/BTreeView';
 import { Button, ConfidencePicker, cn } from '../ui';
 import { mark, type Answer } from './mark';
 import { RULE_LABELS } from './rules';
+import { shuffledOptions } from './shuffle';
 
 export type { Answer } from './mark';
 
@@ -27,6 +28,11 @@ export function QuestionCard({
 }) {
   const [choice, setChoice] = useState<string | null>(null);
   const [rule, setRule] = useState<string>('');
+  const [path, setPath] = useState<BTreeNode[]>([]);
+  const options = useMemo(
+    () => ('options' in item ? shuffledOptions(item.id, item.options) : []),
+    [item],
+  );
   const tree = useMemo(
     () => (item.tree && item.order ? fromSpec(item.order, item.tree) : null),
     [item],
@@ -98,13 +104,19 @@ export function QuestionCard({
             scene
             label={`B-tree of order ${item.order} for this question`}
             newKey={item.type === 'pick-median' ? item.insertKey : undefined}
+            onNodeClick={
+              item.type === 'trace-path'
+                ? (n) => !locked && setPath((p) => (p.some((x) => x.id === n.id) ? p : [...p, n]))
+                : undefined
+            }
+            selectedNodeIds={path.map((n) => n.id)}
           />
         </div>
       )}
 
       {'options' in item && (
         <div className={cn('grid gap-3', item.type === 'bst-mcq' && 'sm:grid-cols-2')}>
-          {item.options.map((o, i) =>
+          {options.map((o, i) =>
             optionButton(
               o.id,
               item.type === 'bst-mcq' ? `${String.fromCharCode(65 + i)}. ${o.text}` : o.text,
@@ -145,6 +157,36 @@ export function QuestionCard({
             ))}
           </div>
           {answer && choice && (
+            <p
+              role="status"
+              className={cn(
+                'text-label mt-2 font-bold',
+                answer.correct ? 'text-leaf' : 'text-danger-text',
+              )}
+            >
+              {answer.feedback}
+            </p>
+          )}
+        </div>
+      )}
+
+      {item.type === 'trace-path' && (
+        <div>
+          <p className="text-label font-bold">
+            Your path: {path.length ? path.map((n) => n.keys.join(', ')).join(' → ') : 'none yet'}
+          </p>
+          <div className="mt-2 flex gap-3">
+            <Button variant="outline" onClick={() => setPath([])} disabled={locked || !path.length}>
+              Clear
+            </Button>
+            <Button
+              onClick={() => submit(path.map((n) => n.keys.join(',')).join('|'))}
+              disabled={locked || !path.length}
+            >
+              Check
+            </Button>
+          </div>
+          {answer && (
             <p
               role="status"
               className={cn(

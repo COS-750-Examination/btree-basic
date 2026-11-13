@@ -14,7 +14,7 @@ import type * as Prisma from "../internal/prismaNamespace"
 
 /**
  * Model Decoration
- * Catalogue of grove decorations (seeded).
+ * 
  */
 export type DecorationModel = runtime.Types.Result.DefaultSelection<Prisma.$DecorationPayload>
 

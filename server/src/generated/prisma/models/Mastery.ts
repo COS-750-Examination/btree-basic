@@ -14,7 +14,7 @@ import type * as Prisma from "../internal/prismaNamespace"
 
 /**
  * Model Mastery
- * Cached per-objective mastery, recomputed from QuizAttempt on each new attempt.
+ * 
  */
 export type MasteryModel = runtime.Types.Result.DefaultSelection<Prisma.$MasteryPayload>
 

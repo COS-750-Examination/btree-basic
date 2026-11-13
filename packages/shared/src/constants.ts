@@ -1,7 +1,3 @@
-/**
- * Learning objectives from the Instructional Design document (ABCD format, Bloom level).
- * Labels are short versions for the readiness screen; edit wording with the ID lead.
- */
 export const OBJECTIVES = [
   { id: 'O1', label: 'Identify the rules of a B-tree of order m', bloom: 'Remember' },
   { id: 'O2', label: 'Decide whether a tree is a valid B-tree', bloom: 'Understand' },
@@ -16,7 +12,6 @@ export const OBJECTIVES = [
 export type ObjectiveId = (typeof OBJECTIVES)[number]['id'];
 export const OBJECTIVE_IDS = OBJECTIVES.map((o) => o.id) as [ObjectiveId, ...ObjectiveId[]];
 
-/** Modules shown on the Lessons screen (03). */
 export const MODULES = [
   {
     id: 1,
@@ -92,7 +87,6 @@ export const MODULES = [
 
 export type ModuleId = (typeof MODULES)[number]['id'];
 
-/** Leaves earned per action (My grove screen, 09). Hints are free and nothing ever wilts. */
 export const LEAF_REWARDS = {
   lesson: 30,
   firstTry: 10,
@@ -104,7 +98,6 @@ export const LEAF_REWARDS = {
 
 export type LeafReason = keyof typeof LEAF_REWARDS | 'purchase';
 
-/** Growth stages of the student's tree, unlocked by modules mastered. */
 export const GROWTH_STAGES = [
   { id: 'seed', label: 'Seed', minModules: 0 },
   { id: 'sprout', label: 'Sprout', minModules: 1 },
@@ -123,15 +116,28 @@ export const GROWTH_STAGE_IDS = GROWTH_STAGES.map((s) => s.id) as [
 export const CONFIDENCE_LEVELS = ['guessing', 'fairly-sure', 'certain'] as const;
 export type Confidence = (typeof CONFIDENCE_LEVELS)[number];
 
-/** Readiness threshold from the Assessment Strategy (mastery learning, Bloom 1968). */
 export const READY_THRESHOLD = 0.8;
-/** Per-lesson quiz score below which the student is routed to extra worked examples. */
 export const REMEDIATION_THRESHOLD = 0.6;
 
-/**
- * Grove decorations bought with leaves. The server seeds this catalogue into the database.
- * `minStage` is the smallest tree that can hold the decoration (Figma: "Swing spot · young tree").
- */
+export const DAY_TIMEZONE = 'Africa/Johannesburg';
+
+export const STREAK_BONUS_DAYS = 3;
+
+export const RUN_GAP_MINUTES = 30;
+
+export const READY_CHECK_ITEM_IDS = [
+  'r-o1',
+  'r-o2',
+  'r-o3',
+  'r-o4',
+  'r-o5',
+  'r-o6',
+  'r-o7',
+  'r-o8',
+] as const;
+
+export const READY_CHECK_PASS = Math.ceil(READY_THRESHOLD * READY_CHECK_ITEM_IDS.length);
+
 export const DECORATIONS = [
   { id: 'apples', name: 'Apples', cost: 40, minStage: 'sapling' },
   { id: 'blossoms', name: 'Blossoms', cost: 40, minStage: 'sapling' },
