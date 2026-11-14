@@ -18,7 +18,7 @@ export async function exportUserData(userId: string) {
   ] = await Promise.all([
     prisma.user.findUniqueOrThrow({
       where: { id: userId },
-      select: { email: true, displayName: true, plantedAt: true, createdAt: true },
+      select: { email: true, displayName: true, theme: true, plantedAt: true, createdAt: true },
     }),
     prisma.moduleProgress.findMany({
       where: { userId },

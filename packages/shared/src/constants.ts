@@ -182,3 +182,6 @@ export const DECORATIONS = [
 ] as const satisfies readonly { id: string; name: string; cost: number; minStage: GrowthStageId }[];
 
 export type DecorationId = (typeof DECORATIONS)[number]['id'];
+
+export const THEMES = ['day', 'dusk'] as const;
+export type Theme = (typeof THEMES)[number];

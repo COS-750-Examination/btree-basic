@@ -404,6 +404,13 @@ Rules (D2, as proposed):
 
 **Branch:** `feat/account-settings`
 
+**Status:** done on `feat/account-settings` on 14 November 2026.
+
+**Changes from the plan:**
+
+- Password changes are limited per student (10 per 15 minutes) instead of using the IP-based `authLimiter`. That limiter is shared with login, so theme changes from a class on one network would have used up everyone's logins. Name and theme changes are not limited.
+- `toPublicUser` moved from `routes/auth.ts` to `lib/auth.ts`, so `lib/account.ts` doesn't import from a route file.
+
 ### 5.1 `PATCH /api/account`
 
 **Files:**
@@ -419,24 +426,24 @@ Rules (D2, as proposed):
   - `newPassword` requires `currentPassword`
 - `PATCH /api/account` returns `200 PublicUser`.
   - A wrong `currentPassword` returns 400 `'Current password is incorrect'`. It is 400, not 401, so the client doesn't treat it as being signed out.
-  - `authLimiter` is mounted on this route.
+  - Password changes are rate-limited per student (see Changes from the plan).
 
-- [ ] Tests:
+- [x] Tests:
   - renaming shows the new name in a friend's `GET /friends`
   - the theme is saved and returned by `/auth/session`
   - after a password change the old password fails and the new one works
   - wrong current password → 400
   - empty body → 400
   - `newPassword` without `currentPassword` → 400
-- [ ] Commit `feat(server): update display name, theme and password`
+- [x] Commit `feat(server): update display name, theme and password`
 
 ### 5.2 Record what is out of scope
 
-- [ ] In `docs/TODO.md`, mark these as "won't do (prototype)":
+- [x] In `docs/TODO.md`, mark these as "won't do (prototype)":
   - password reset
   - sessions, with the reason: "the 14-day JWT cookie is acceptable for a prototype"
   - backups
-- [ ] Commit `docs: mark prototype out-of-scope items`
+- [x] Commit `docs: mark prototype out-of-scope items`
 
 **Frontend change required:** a profile settings section on the Account page (name and password). Apply `user.theme` on sign-in when it isn't null, and `PATCH` the theme when a signed-in student changes it.
 

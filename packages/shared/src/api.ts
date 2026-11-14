@@ -5,6 +5,7 @@ import {
   GROWTH_STAGE_IDS,
   MODULES,
   OBJECTIVE_IDS,
+  THEMES,
 } from './constants';
 
 export const RegisterBody = z.object({
@@ -20,13 +21,33 @@ export const LoginBody = z.object({
 });
 export type LoginBody = z.infer<typeof LoginBody>;
 
+export const ThemeSchema = z.enum(THEMES);
+
 export const PublicUser = z.object({
   id: z.string(),
   email: z.string(),
   displayName: z.string(),
+  theme: ThemeSchema.nullable(),
   plantedAt: z.string(),
 });
 export type PublicUser = z.infer<typeof PublicUser>;
+
+export const AccountPatchBody = z
+  .object({
+    displayName: z.string().trim().min(1).max(40).optional(),
+    theme: ThemeSchema.optional(),
+    currentPassword: z.string().min(1).optional(),
+    newPassword: z.string().min(8, 'Use at least 8 characters').max(128).optional(),
+  })
+  .refine(
+    (b) => b.displayName !== undefined || b.theme !== undefined || b.newPassword !== undefined,
+    { message: 'Change at least one setting' },
+  )
+  .refine((b) => b.newPassword === undefined || b.currentPassword !== undefined, {
+    message: 'Enter your current password to set a new one',
+    path: ['currentPassword'],
+  });
+export type AccountPatchBody = z.infer<typeof AccountPatchBody>;
 
 export const ObjectiveIdSchema = z.enum(OBJECTIVE_IDS);
 export const ConfidenceSchema = z.enum(CONFIDENCE_LEVELS);

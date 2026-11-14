@@ -124,6 +124,12 @@ describe.skipIf(!hasDb)('GET /api/account/export (database)', () => {
     expect(await prisma.quizAttempt.count({ where: { itemId: 'friend-only-item' } })).toBe(1);
   });
 
+  it('includes the saved theme in the user section', async () => {
+    await me.agent.patch('/api/account').send({ theme: 'dusk' }).expect(200);
+    const res = await me.agent.get('/api/account/export').expect(200);
+    expect(res.body.user.theme).toBe('dusk');
+  });
+
   it('returns 401 for a guest', async () => {
     await request(app).get('/api/account/export').expect(401);
   });

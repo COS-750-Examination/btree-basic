@@ -9,6 +9,14 @@
 * 🟢 You can import this file directly.
 */
 
+export const Theme = {
+  day: 'day',
+  dusk: 'dusk'
+} as const
+
+export type Theme = (typeof Theme)[keyof typeof Theme]
+
+
 export const LeafReason = {
   lesson: 'lesson',
   firstTry: 'firstTry',
