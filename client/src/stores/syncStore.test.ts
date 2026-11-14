@@ -14,14 +14,21 @@ describe('sync store', () => {
     useSyncStore.getState().save(() => Promise.reject(new TypeError('Failed to fetch')));
     await flush();
     expect(useSyncStore.getState().queue).toHaveLength(1);
-    expect(useSyncStore.getState().rejected).toBe(false);
+    expect(useSyncStore.getState().rejected).toBeNull();
   });
 
   it('does not queue a save the server refused, but flags it', async () => {
+    useSyncStore.getState().save(() => Promise.reject(new ApiRequestError(400, 'Bad request')));
+    await flush();
+    expect(useSyncStore.getState().queue).toHaveLength(0);
+    expect(useSyncStore.getState().rejected).toBe('refused');
+  });
+
+  it('flags a save refused because the session expired', async () => {
     useSyncStore.getState().save(() => Promise.reject(new ApiRequestError(401, 'Sign in')));
     await flush();
     expect(useSyncStore.getState().queue).toHaveLength(0);
-    expect(useSyncStore.getState().rejected).toBe(true);
+    expect(useSyncStore.getState().rejected).toBe('expired');
   });
 
   it('queues new saves behind waiting ones and sends them in order on retry', async () => {

@@ -1,6 +1,8 @@
 import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { MemoryRouter } from 'react-router';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { ApiRequestError } from '../../api/client';
 import { useProgressStore } from '../../stores/progressStore';
 import { useSyncStore } from '../../stores/syncStore';
 import { ErrorBoundary } from './ErrorBoundary';
@@ -23,12 +25,12 @@ afterEach(() => vi.restoreAllMocks());
 
 describe('OfflineBanner', () => {
   it('shows nothing while online with everything saved', () => {
-    render(<OfflineBanner />);
+    render(<OfflineBanner />, { wrapper: MemoryRouter });
     expect(screen.getByRole('status')).toBeEmptyDOMElement();
   });
 
   it('tells a signed-in student their progress will save when they reconnect', () => {
-    render(<OfflineBanner />);
+    render(<OfflineBanner />, { wrapper: MemoryRouter });
     setOnline(false);
     expect(screen.getByRole('status')).toHaveTextContent(/you're offline/i);
     expect(screen.getByRole('status')).toHaveTextContent(/will save when you reconnect/i);
@@ -37,7 +39,7 @@ describe('OfflineBanner', () => {
   it('counts unsaved changes and sends them again on "Try again"', async () => {
     let up = false;
     const call = vi.fn(() => (up ? Promise.resolve() : Promise.reject(new TypeError('offline'))));
-    render(<OfflineBanner />);
+    render(<OfflineBanner />, { wrapper: MemoryRouter });
     await act(async () => {
       useSyncStore.getState().save(call);
       await Promise.resolve();
@@ -47,6 +49,22 @@ describe('OfflineBanner', () => {
     up = true;
     await userEvent.click(screen.getByRole('button', { name: 'Try again' }));
     expect(screen.getByRole('status')).toBeEmptyDOMElement();
+  });
+});
+
+describe('OfflineBanner when the session expired', () => {
+  it('offers to sign in again', async () => {
+    render(<OfflineBanner />, { wrapper: MemoryRouter });
+    await act(async () => {
+      useSyncStore.getState().save(() => Promise.reject(new ApiRequestError(401, 'Sign in')));
+      await Promise.resolve();
+    });
+    expect(screen.getByRole('status')).toHaveTextContent(/you've been signed out/i);
+    const link = screen.getByRole('link', { name: 'Sign in again' });
+    expect(link).toHaveAttribute('href', '/login');
+
+    await userEvent.click(link);
+    expect(useSyncStore.getState().rejected).toBeNull();
   });
 });
 

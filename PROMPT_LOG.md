@@ -590,6 +590,183 @@ Task 5.2 only marks items in `docs/TODO.md` as out of scope. It is left for when
 
 ---
 
+## Entry 011: Display font change (Sniglet to Coiny)
+
+| Field        | Detail                                                                                                  |
+| ------------ | ------------------------------------------------------------------------------------------------------- |
+| Date         | 14 November 2026                                                                                        |
+| Requested by | Taylor Sergel, frontend                                                                                 |
+| Tool         | Claude Code (Anthropic), model Claude Opus 5.5                                                          |
+| Scope        | `client/src/main.tsx`, `client/src/styles/tokens.css`, `client/src/styles/index.css`, README, CHANGELOG |
+| Status       | Completed; committed on branch `feat/ui-updates`                                                        |
+
+### Request
+
+> Please replace the Sniglet display font with Spectral, because its rounded bubble letters are hard to read at smaller sizes.
+
+### Clarifications provided
+
+Several fonts were tried in turn at the requester's direction: Spectral, Gravitas One, Sofia Sans, Hammersmith One, Luckiest Guy, Love Ya Like A Sister, Chango, DynaPuff and Coiny. **Coiny** was chosen.
+
+- Each font was self-hosted through Fontsource, as before, and the previous package was removed each time.
+- Coiny has a single 400 weight, so headings use `font-weight: 400` to avoid the browser faking a bold.
+- The assistant pointed out that very heavy display fonts can still be hard to read at small sizes, because the same font is used for buttons and labels. The requester accepted Coiny after reviewing it in the app.
+
+### Deliverables
+
+- `@fontsource/coiny` replaces `@fontsource/sniglet`.
+- `--font-display` is `'Coiny', 'Arial Rounded MT Bold', 'Trebuchet MS', system-ui, sans-serif`.
+- README tech-stack table and CHANGELOG updated.
+
+### Verification summary
+
+| Check                                 | Result       |
+| ------------------------------------- | ------------ |
+| Client tests                          | 43 / 43 pass |
+| Production build                      | Pass         |
+| ESLint, TypeScript (strict), Prettier | Pass         |
+
+### Human review required
+
+- **Readability at small sizes:** check buttons, hint buttons, lesson numbers and the key bubbles in the tree diagrams at 360px wide.
+- **Figma:** the Figma file still specifies Sniglet ExtraBold. Update it if the team keeps Coiny.
+
+---
+
+## Entry 012: Error boundary and offline banner (FRONTEND_PLAN Task 5)
+
+| Field        | Detail                                                                                                                       |
+| ------------ | ---------------------------------------------------------------------------------------------------------------------------- |
+| Date         | 14 November 2026                                                                                                             |
+| Requested by | Taylor Sergel, frontend                                                                                                      |
+| Tool         | Claude Code (Anthropic), model Claude Opus 5.5                                                                               |
+| Scope        | `client/src/stores/syncStore.ts`, `progressStore.ts`, `components/layout/` (banner, error boundary, shell), `App.tsx`, tests |
+| Status       | Completed; on branch `feat/ui-updates`                                                                                       |
+
+### Request
+
+> Please add an error boundary and an offline banner, so that a failed save is shown to the student instead of failing silently, and explain how to check that it works.
+
+### Clarifications provided
+
+- The task was taken from `docs/TODO.md` before the backend handover (`docs/FRONTEND_PLAN.md`) arrived. It was later checked against the plan's Task 5.
+- Failed saves are retried rather than only reported, so the banner's promise that progress "will save when you reconnect" is true.
+- The retry queue is kept in memory only. The banner asks students to keep the tab open, and the browser warns before the tab is closed while saves are waiting.
+- A follow-up added the plan's **Sign in again** link for saves refused because the session expired (401).
+
+### Deliverables
+
+- **`syncStore.ts` (new):** every progress save goes through it.
+  - Saves that fail because of the network, a timeout, rate limiting or a server error are queued in order and resent when the connection returns.
+  - A refused save (other 4xx) isn't retried. It is flagged as `expired` (401) or `refused`.
+  - Signing out clears the queue, so saves never reach another account.
+- **`OfflineBanner.tsx` (new):** offline, unsaved changes with **Try again**, session expired with **Sign in again**, and refused saves with **Dismiss**. It is a `role="status"` live region.
+- **`ErrorBoundary.tsx` (new):** wraps each screen (reset on route change) and the whole app. A crash shows a friendly card with **Reload the page**; a page that couldn't download offline says to check the connection.
+- **`useOnline.ts` (new):** the browser's online state as a hook.
+- **Tests:** `syncStore.test.ts` and `OfflineBanner.test.tsx`.
+
+### Verification summary
+
+| Check                                 | Result                      |
+| ------------------------------------- | --------------------------- |
+| Client tests                          | 65 / 65 pass                |
+| Manual: DevTools Offline              | Banner and error card shown |
+| ESLint, TypeScript (strict), Prettier | Pass                        |
+
+### Human review required
+
+- **Lost queue on reload:** waiting saves are lost if the tab is closed or reloaded. The browser warning reduces this but doesn't prevent it.
+- **Duplicate attempts:** if a save reached the server but its reply was lost, the retry records the answer twice. Leaves are protected by the server's dedupe keys, but the attempt history may contain the duplicate.
+
+---
+
+## Entry 013: Take decorations off the tree and put them back
+
+| Field        | Detail                                                                                                   |
+| ------------ | -------------------------------------------------------------------------------------------------------- |
+| Date         | 14 November 2026                                                                                         |
+| Requested by | Taylor Sergel, frontend                                                                                  |
+| Tool         | Claude Code (Anthropic), model Claude Opus 5.5                                                           |
+| Scope        | `server/src/routes/grove.ts`, `@btree/shared` (`Decoration`), `progressStore.ts`, `GrovePage.tsx`, tests |
+| Status       | Completed; committed on branch `feat/ui-updates`                                                         |
+
+### Request
+
+> The Figma design has a craft drawer that holds all the decorations for the tree. The tree should start plain; students buy decorations with the leaves they earn, and after buying they should be able to choose which decorations are added to the tree and remove any they don't want, to personalise it. Please implement this, backend and frontend.
+
+### Clarifications provided
+
+- The assistant reviewed the Figma file (screen "09 My grove" and the `DecorationTile` component). The craft drawer, buying and the Owned, Buy and Locked tiles already existed behind the **Decorate** button. The demo account looked decorated because the seed gives it four decorations; new accounts start plain.
+- The missing piece was taking decorations off and putting them back. The requester chose to keep the drawer behind **Decorate** rather than always showing it.
+- The requester asked for the backend change to be made here rather than handed to the backend owner. The database already stored `placed` and `PUT /api/grove/placement` already saved it; only reading it back was missing.
+- Figma has no tile for "owned but not on the tree", so one was added in the same style.
+
+### Deliverables
+
+- **Backend:** `GET /api/decorations` returns `placed` (false when not owned). The shared `Decoration` schema has the field.
+- **Store:** `hiddenDecorations`, `toggleDecoration` and `placedDecorations`. Guests keep the choice in the session; signed-in students save it with `PUT /api/grove/placement` and load it on sign-in.
+- **Grove page:** owned tiles show "in your tree" with **Take off**, or "in your drawer" with **Add to tree**. The tree shows only placed decorations.
+- **Tests:** 2 server cases in `grove.test.ts`, 5 store cases in `progressStore.test.ts`.
+
+### Verification summary
+
+| Check                                        | Result         |
+| -------------------------------------------- | -------------- |
+| Server tests against local PostgreSQL        | 103 / 103 pass |
+| Client tests                                 | 57 / 57 pass   |
+| ESLint, TypeScript (strict), Prettier, build | Pass           |
+
+### Human review required
+
+- **Figma:** add the "in your drawer" tile state to the `DecorationTile` component.
+- **Drag to place (Task 7):** still needs `x` and `y` returned by the API.
+
+---
+
+## Entry 014: Readiness after sign-in and mastery percentages
+
+| Field        | Detail                                                                                                                                                          |
+| ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Date         | 14 November 2026                                                                                                                                                |
+| Requested by | Taylor Sergel, frontend                                                                                                                                         |
+| Tool         | Claude Code (Anthropic), model Claude Opus 5.5                                                                                                                  |
+| Scope        | `server/src/routes/progress.ts`, `@btree/shared` (`AttemptRecord`, `objectiveMastery`), `progressStore.ts`, `ReadyPage.tsx`, `client/src/lib/mastery.ts`, tests |
+| Status       | Completed; committed on branch `feat/ui-updates`                                                                                                                |
+
+### Request
+
+> The readiness percentage in the header shows 0% after signing out and back in instead of the actual percentage. On the Ready for lecture page, some objectives at 80% say "Mastered" while others at 100% say "Getting there", which doesn't make sense. Please fix both.
+
+### Clarifications provided
+
+- **0% after sign-in:** past answers were never loaded from the server, so the header worked out readiness from nothing. The Ready page asked the server separately, so the two disagreed.
+- **"Getting there" at 100%:** an objective is mastered at 80% or more from at least 3 first-try answers without hints. The percentage was plain accuracy, so one right answer showed 100%. An explanatory hint was tried first; the requester asked for the percentages themselves to be rethought.
+- The score was redefined as **progress toward mastery**: right answers out of at least 3. The mastery rule itself is unchanged, so badges are unaffected.
+
+### Deliverables
+
+- **Backend:** `GET /api/attempts` returns the student's saved answers, oldest first (shared `AttemptRecord`).
+- **Store:** answers load on sign-in, so the header and Ready page agree. This also stops an answer already paid on another device paying +10 leaves again.
+- **Scoring:** `score = right / max(counted, 3)`. An objective is mastered exactly when its score reaches 80%.
+- **Ready page:** explains the rule, and each objective in progress says what's left (`masteryHint` in `client/src/lib/mastery.ts`).
+- **Tests:** 2 server cases in `attempts.test.ts`, a store case, and `mastery.test.ts`, which checks every combination of up to 6 answers.
+
+### Verification summary
+
+| Check                                        | Result         |
+| -------------------------------------------- | -------------- |
+| Server tests against local PostgreSQL        | 105 / 105 pass |
+| Client tests                                 | 63 / 63 pass   |
+| Engine tests                                 | 19 / 19 pass   |
+| ESLint, TypeScript (strict), Prettier, build | Pass           |
+
+### Human review required
+
+- **ID document:** the Assessment Strategy should describe the percentage as progress toward mastery (right answers out of at least 3).
+- **Stored scores:** `Mastery.score` rows written before this change keep the old value until the student next answers a question for that objective. Readiness is calculated from answers, not from that table, so screens are unaffected.
+
+---
+
 ## Entry template
 
 ```markdown

@@ -1,5 +1,6 @@
 import { CloudOff, WifiOff } from 'lucide-react';
 import { useEffect, type ReactNode } from 'react';
+import { Link } from 'react-router';
 import { useOnline } from '../../lib/useOnline';
 import { useProgressStore } from '../../stores/progressStore';
 import { useSyncStore } from '../../stores/syncStore';
@@ -43,6 +44,17 @@ export function OfflineBanner() {
       <Button size="sm" variant="ghost" onClick={() => void retry()} disabled={retrying}>
         {retrying ? 'Saving…' : 'Try again'}
       </Button>
+    );
+  } else if (rejected === 'expired') {
+    message = "You've been signed out, so your last change wasn't saved. Sign in to keep saving.";
+    action = (
+      <Link
+        to="/login"
+        onClick={dismissRejected}
+        className="bg-paper text-ink shadow-paper-stack-sm text-label rounded-lg px-3 py-1.5 font-bold"
+      >
+        Sign in again
+      </Link>
     );
   } else if (rejected) {
     message =

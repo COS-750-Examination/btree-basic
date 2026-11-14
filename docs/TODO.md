@@ -34,7 +34,9 @@ Tick items off as they land, and move finished work into the CHANGELOG.
 - [ ] Profile settings: change display name and password, and remember the Day/Dusk choice per account. The server side is ready: `PATCH /api/account` takes `displayName`, `theme`, and `currentPassword` with `newPassword`, and `user.theme` (null until set) comes back from sign-in and `/api/auth/session`. Apply it on sign-in when it isn't null.
 - [ ] "Download my data" link on the Account page (`<a href="/api/account/export" download>`). The server side is ready.
 - [ ] Turn the mastery mini-lessons behind "Need more?" into real content. For now they just send the student back to the lesson.
-- [ ] Add an error boundary and an offline banner, so a failed save is shown to the student instead of failing silently.
+- [x] Add an error boundary and an offline banner, so a failed save is shown to the student instead of failing silently. Done 14 November 2026.
+- [x] Let students take bought decorations off the tree and put them back (craft drawer). Done 14 November 2026.
+- [x] Load past answers on sign-in, so readiness doesn't drop to 0%, and make mastery percentages show progress toward mastery. Done 14 November 2026.
 
 ### Quality
 

@@ -6,8 +6,11 @@ type SaveCall = () => Promise<unknown>;
 interface SyncState {
   /** Saves that failed for a reason worth retrying (offline, server error), oldest first. */
   queue: SaveCall[];
-  /** The server refused a save (4xx), so retrying would not help. */
-  rejected: boolean;
+  /**
+   * The server refused a save, so retrying would not help: `expired` for 401 (the session
+   * ended, so the student must sign in again), `refused` for any other 4xx.
+   */
+  rejected: 'expired' | 'refused' | null;
   retrying: boolean;
   /** Runs a save and keeps it for a retry if it fails. Never throws. */
   save: (call: SaveCall) => void;
@@ -22,6 +25,9 @@ interface SyncState {
 const isRetryable = (e: unknown) =>
   !(e instanceof ApiRequestError) || e.status >= 500 || e.status === 408 || e.status === 429;
 
+const rejection = (e: unknown): SyncState['rejected'] =>
+  e instanceof ApiRequestError && e.status === 401 ? 'expired' : 'refused';
+
 /**
  * Tracks progress saves that did not reach the API, so the student is told instead of the
  * save failing silently, and so the saves can be sent again once the connection is back.
@@ -31,12 +37,12 @@ export const useSyncStore = create<SyncState>()((set, get) => {
   const fail = (call: SaveCall, e: unknown) => {
     console.warn('Could not save progress:', e);
     if (isRetryable(e)) set((s) => ({ queue: [...s.queue, call] }));
-    else set({ rejected: true });
+    else set({ rejected: rejection(e) });
   };
 
   return {
     queue: [],
-    rejected: false,
+    rejected: null,
     retrying: false,
 
     save: (call) => {
@@ -58,7 +64,7 @@ export const useSyncStore = create<SyncState>()((set, get) => {
             await next!();
           } catch (e) {
             if (isRetryable(e)) return; // still offline: keep this one and the rest
-            set({ rejected: true });
+            set({ rejected: rejection(e) });
           }
           set((s) => ({ queue: s.queue.slice(1) }));
         }
@@ -67,7 +73,7 @@ export const useSyncStore = create<SyncState>()((set, get) => {
       }
     },
 
-    dismissRejected: () => set({ rejected: false }),
-    clear: () => set({ queue: [], rejected: false }),
+    dismissRejected: () => set({ rejected: null }),
+    clear: () => set({ queue: [], rejected: null }),
   };
 });

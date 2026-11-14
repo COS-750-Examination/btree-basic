@@ -32,7 +32,7 @@ All notable changes to this project are documented here. The format follows [Kee
   - Tests: two server cases in `grove.test.ts`, five store cases in `progressStore.test.ts`.
 - **Offline banner and error boundary**, so a failed save is shown to the student instead of failing silently.
   - A banner under the header says when the student is offline, or how many changes haven't saved yet, with a "Try again" button. Saves that failed because of the network or a server error are kept in order and sent again automatically when the connection returns (`client/src/stores/syncStore.ts`). The queue lives in memory only, so the browser warns before the tab is closed while saves are waiting.
-  - A save the server refuses (4xx, such as an expired session) isn't retried; the banner suggests signing out and back in.
+  - A save the server refuses (4xx) isn't retried. If the session expired (401), the banner says the student was signed out and offers **Sign in again**; for any other refusal it suggests signing out and back in.
   - Each screen is wrapped in an error boundary. A crash shows a "This branch snapped" card with a reload button instead of a blank page, and a page that couldn't download (usually offline) says to check the connection. Moving to another page clears the error, and an outer boundary covers the header and shell.
 - **Grove art from Figma** (09 My grove, the Components page and the Dusk frames), replacing the placeholder SVG.
   - Scene: sky, sun, clouds and three hills redrawn from the Figma "Grove scene". In Dusk the sun becomes a moon and fireflies appear, using Figma's own tokens (transparent in Day), so no theme check is needed.
