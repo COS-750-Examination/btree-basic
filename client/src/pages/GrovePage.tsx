@@ -19,7 +19,7 @@ import {
   Tag,
   cn,
 } from '../components/ui';
-import { useLocalReadiness, useProgressStore } from '../stores/progressStore';
+import { placedDecorations, useLocalReadiness, useProgressStore } from '../stores/progressStore';
 
 const EARN = [
   ['Finish a lesson', LEAF_REWARDS.lesson],
@@ -32,7 +32,9 @@ const EARN = [
 /** Screen 09: the student's grove. Growth comes from mastery; leaves buy decorations. */
 export function GrovePage() {
   const r = useLocalReadiness();
-  const { ownedDecorations, buyDecoration, leaves } = useProgressStore();
+  const progress = useProgressStore();
+  const { ownedDecorations, hiddenDecorations, buyDecoration, toggleDecoration, leaves } = progress;
+  const onTree = placedDecorations(progress);
   const me = useMe();
   const friends = useFriends(Boolean(me.data));
   const sceneRef = useRef<HTMLDivElement>(null);
@@ -71,17 +73,21 @@ export function GrovePage() {
           <div ref={sceneRef}>
             <SceneBackdrop
               className="aspect-[832/480]"
-              art={<GroveTree stage={r.stage} decorations={ownedDecorations} showSpots />}
+              art={<GroveTree stage={r.stage} decorations={onTree} showSpots />}
             />
           </div>
 
           {decorating && (
             <Card>
               <CardTitle>Craft drawer</CardTitle>
-              <p className="text-ink-muted text-small mb-3">You have {leaves} leaves.</p>
+              <p className="text-ink-muted text-small mb-3">
+                You have {leaves} leaves. Decorations you buy go straight onto your tree. Take them
+                off or put them back whenever you like.
+              </p>
               <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-6">
                 {DECORATIONS.map((d) => {
                   const owned = ownedDecorations.includes(d.id);
+                  const hidden = hiddenDecorations.includes(d.id);
                   const unlocked = reachedStage(r.stage, d.minStage);
                   return (
                     <li
@@ -100,7 +106,21 @@ export function GrovePage() {
                           {GROWTH_STAGES.find((s) => s.id === d.minStage)?.label}
                         </span>
                       ) : owned ? (
-                        <span className="text-small text-ink-muted">in your tree</span>
+                        <>
+                          <span className="text-small text-ink-muted">
+                            {hidden ? 'in your drawer' : 'in your tree'}
+                          </span>
+                          <Button
+                            size="sm"
+                            variant={hidden ? 'primary' : 'outline'}
+                            onClick={() => toggleDecoration(d.id)}
+                            aria-label={
+                              hidden ? `Add ${d.name} to your tree` : `Take ${d.name} off your tree`
+                            }
+                          >
+                            {hidden ? 'Add to tree' : 'Take off'}
+                          </Button>
+                        </>
                       ) : (
                         <Button
                           size="sm"

@@ -25,6 +25,11 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ### Added
 
+- **Take decorations off the tree and put them back.** Bought decorations still go straight onto the tree, but each owned tile in the craft drawer (**Decorate** on My grove) now has a **Take off** / **Add to tree** button, and says "in your tree" or "in your drawer". Nothing is refunded or lost: the decoration stays owned.
+  - Guests keep the choice in the browser session, like their leaves. Signed-in students save it with the existing `PUT /api/grove/placement` (`placed`), so it survives signing out and in.
+  - `GET /api/decorations` now also returns `placed` for each decoration (false when not owned). The shared `Decoration` schema has the new field.
+  - A friend's grove already shows only decorations that are on the tree.
+  - Tests: two server cases in `grove.test.ts`, five store cases in `progressStore.test.ts`.
 - **Offline banner and error boundary**, so a failed save is shown to the student instead of failing silently.
   - A banner under the header says when the student is offline, or how many changes haven't saved yet, with a "Try again" button. Saves that failed because of the network or a server error are kept in order and sent again automatically when the connection returns (`client/src/stores/syncStore.ts`). The queue lives in memory only, so the browser warns before the tab is closed while saves are waiting.
   - A save the server refuses (4xx, such as an expired session) isn't retried; the banner suggests signing out and back in.

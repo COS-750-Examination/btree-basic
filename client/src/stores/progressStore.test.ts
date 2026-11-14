@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { api } from '../api/client';
-import { useProgressStore } from './progressStore';
+import { placedDecorations, useProgressStore } from './progressStore';
 
 const correct = { itemId: 'm5-q2', objective: 'O3' as const, firstAttempt: true, hintsUsed: 0 };
 
@@ -39,5 +39,72 @@ describe('progress store leaves', () => {
     useProgressStore.getState().setSignedIn(true);
     useProgressStore.getState().readHint('m5-q2', 2);
     expect(post).toHaveBeenCalledWith('/hints', { itemId: 'm5-q2', hint: 2 });
+  });
+});
+
+describe('progress store decorations', () => {
+  const own = (...ids: string[]) =>
+    useProgressStore.setState({ ownedDecorations: ids, hiddenDecorations: [] });
+
+  it('puts a bought decoration straight onto the tree', () => {
+    useProgressStore.setState({ leaves: 100 });
+    useProgressStore.getState().buyDecoration('apples', 40);
+    expect(placedDecorations(useProgressStore.getState())).toEqual(['apples']);
+  });
+
+  it('takes an owned decoration off the tree and puts it back', () => {
+    own('apples', 'bunting');
+    const { toggleDecoration } = useProgressStore.getState();
+
+    toggleDecoration('bunting');
+    expect(placedDecorations(useProgressStore.getState())).toEqual(['apples']);
+    expect(useProgressStore.getState().ownedDecorations).toEqual(['apples', 'bunting']);
+
+    toggleDecoration('bunting');
+    expect(placedDecorations(useProgressStore.getState())).toEqual(['apples', 'bunting']);
+  });
+
+  it('ignores decorations the student does not own', () => {
+    own('apples');
+    useProgressStore.getState().toggleDecoration('songbird');
+    expect(useProgressStore.getState().hiddenDecorations).toEqual([]);
+  });
+
+  it('saves the change to the server when signed in', () => {
+    const put = vi.spyOn(api, 'put').mockResolvedValue(undefined);
+    own('apples');
+    useProgressStore.getState().setSignedIn(true);
+
+    useProgressStore.getState().toggleDecoration('apples');
+    expect(put).toHaveBeenLastCalledWith('/grove/placement', {
+      items: [{ decorationId: 'apples', placed: false }],
+    });
+
+    useProgressStore.getState().toggleDecoration('apples');
+    expect(put).toHaveBeenLastCalledWith('/grove/placement', {
+      items: [{ decorationId: 'apples', placed: true }],
+    });
+  });
+
+  it('loads which owned decorations are off the tree on sign-in', async () => {
+    vi.spyOn(api, 'get').mockImplementation((path: string) =>
+      Promise.resolve(
+        {
+          '/progress': { modules: [] },
+          '/leaves': { balance: 0 },
+          '/lecture-questions': [],
+          '/decorations': [
+            { id: 'apples', owned: true, placed: true },
+            { id: 'bunting', owned: true, placed: false },
+            { id: 'songbird', owned: false, placed: false },
+          ],
+        }[path],
+      ),
+    );
+
+    await useProgressStore.getState().hydrateFromServer();
+
+    expect(useProgressStore.getState().ownedDecorations).toEqual(['apples', 'bunting']);
+    expect(placedDecorations(useProgressStore.getState())).toEqual(['apples']);
   });
 });

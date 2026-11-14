@@ -34,6 +34,8 @@ interface ProgressState {
   needsRecap: boolean | null;
   lectureQuestions: { id: string; text: string }[];
   ownedDecorations: string[];
+  /** Owned decorations the student took off the tree. Bought ones start on the tree. */
+  hiddenDecorations: string[];
   hintsRead: string[];
 
   setSignedIn: (v: boolean) => void;
@@ -50,6 +52,8 @@ interface ProgressState {
   addLectureQuestion: (text: string) => void;
   removeLectureQuestion: (id: string) => void;
   buyDecoration: (id: string, cost: number) => boolean;
+  /** Puts an owned decoration on the tree or takes it off. */
+  toggleDecoration: (id: string) => void;
   reset: () => void;
 }
 
@@ -61,6 +65,7 @@ const initial = {
   needsRecap: null,
   lectureQuestions: [],
   ownedDecorations: [],
+  hiddenDecorations: [],
   hintsRead: [],
 };
 
@@ -96,7 +101,7 @@ export const useProgressStore = create<ProgressState>()(
             ),
             api.get<{ balance: number }>('/leaves'),
             api.get<{ id: string; text: string }[]>('/lecture-questions'),
-            api.get<{ id: string; owned: boolean }[]>('/decorations'),
+            api.get<{ id: string; owned: boolean; placed: boolean }[]>('/decorations'),
           ]);
           set({
             modules: Object.fromEntries(
@@ -105,6 +110,7 @@ export const useProgressStore = create<ProgressState>()(
             leaves: leaves.balance,
             lectureQuestions: questions,
             ownedDecorations: decorations.filter((d) => d.owned).map((d) => d.id),
+            hiddenDecorations: decorations.filter((d) => d.owned && !d.placed).map((d) => d.id),
           });
         },
 
@@ -204,6 +210,19 @@ export const useProgressStore = create<ProgressState>()(
           return true;
         },
 
+        toggleDecoration: (id) => {
+          const s = get();
+          if (!s.ownedDecorations.includes(id)) return;
+          const placed = s.hiddenDecorations.includes(id);
+          set({
+            hiddenDecorations: placed
+              ? s.hiddenDecorations.filter((x) => x !== id)
+              : [...s.hiddenDecorations, id],
+          });
+          if (s.signedIn)
+            save(() => api.put('/grove/placement', { items: [{ decorationId: id, placed }] }));
+        },
+
         reset: () => {
           useSyncStore.getState().clear();
           set({ ...initial });
@@ -219,6 +238,11 @@ export const useProgressStore = create<ProgressState>()(
 );
 
 /* ---------- Derived values ---------- */
+
+/** Owned decorations that are currently on the tree. */
+export const placedDecorations = (
+  s: Pick<ProgressState, 'ownedDecorations' | 'hiddenDecorations'>,
+) => s.ownedDecorations.filter((id) => !s.hiddenDecorations.includes(id));
 
 export const modulesDone = (s: Pick<ProgressState, 'modules'>) =>
   Object.values(s.modules).filter((m) => m.completed).length;

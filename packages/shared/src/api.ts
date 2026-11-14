@@ -142,6 +142,8 @@ export const Decoration = z.object({
   name: z.string(),
   cost: z.number().int().min(0),
   owned: z.boolean(),
+  /** On the tree. Owned decorations can be taken off and put back; false when not owned. */
+  placed: z.boolean(),
 });
 export type Decoration = z.infer<typeof Decoration>;
 
