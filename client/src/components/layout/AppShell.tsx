@@ -4,7 +4,9 @@ import { Outlet, useLocation } from 'react-router';
 import { useMe } from '../../api/hooks';
 import { useProgressStore } from '../../stores/progressStore';
 import { applyTheme, useThemeStore } from '../../stores/themeStore';
+import { ErrorBoundary } from './ErrorBoundary';
 import { Header } from './Header';
+import { OfflineBanner } from './OfflineBanner';
 
 export function AppShell() {
   const theme = useThemeStore((s) => s.theme);
@@ -38,8 +40,12 @@ export function AppShell() {
         Skip to content
       </a>
       <Header />
+      <OfflineBanner />
       <main id="main" className="mx-auto max-w-6xl px-4 py-8">
-        <Outlet />
+        {/* Keyed by route: a crash on one screen is cleared by moving to another. */}
+        <ErrorBoundary key={pathname}>
+          <Outlet />
+        </ErrorBoundary>
       </main>
     </MotionConfig>
   );

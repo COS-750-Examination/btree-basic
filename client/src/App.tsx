@@ -1,6 +1,7 @@
 import { lazy, Suspense, type ComponentType } from 'react';
 import { Route, Routes } from 'react-router';
 import { AppShell } from './components/layout/AppShell';
+import { ErrorBoundary } from './components/layout/ErrorBoundary';
 import { WelcomePage } from './pages/WelcomePage';
 
 // Each screen is its own chunk so mobile-data users only download what they open.
@@ -24,31 +25,34 @@ const NotFoundPage = named(() => import('./pages/NotFoundPage'), 'NotFoundPage')
 /** Routes map one-to-one to the screens in the Instructional Design document (01–10). */
 export function App() {
   return (
-    <Suspense
-      fallback={
-        <p role="status" className="text-ink-muted p-8 text-center">
-          Growing…
-        </p>
-      }
-    >
-      <Routes>
-        <Route element={<AppShell />}>
-          <Route index element={<WelcomePage />} />
-          <Route path="warm-up" element={<WarmupPage />} />
-          <Route path="lessons" element={<LessonsPage />} />
-          <Route path="lessons/:moduleId" element={<LessonPage />} />
-          <Route path="visualiser" element={<VisualiserPage />} />
-          <Route path="practice/:activity?" element={<PracticePage />} />
-          <Route path="quiz/:moduleId?" element={<QuizPage />} />
-          <Route path="ready" element={<ReadyPage />} />
-          <Route path="grove" element={<GrovePage />} />
-          <Route path="grove/:friendId" element={<FriendGrovePage />} />
-          <Route path="login" element={<LoginPage />} />
-          <Route path="register" element={<RegisterPage />} />
-          <Route path="account" element={<AccountPage />} />
-          <Route path="*" element={<NotFoundPage />} />
-        </Route>
-      </Routes>
-    </Suspense>
+    // Outer net for crashes in the shell itself; each screen also has its own (AppShell).
+    <ErrorBoundary>
+      <Suspense
+        fallback={
+          <p role="status" className="text-ink-muted p-8 text-center">
+            Growing…
+          </p>
+        }
+      >
+        <Routes>
+          <Route element={<AppShell />}>
+            <Route index element={<WelcomePage />} />
+            <Route path="warm-up" element={<WarmupPage />} />
+            <Route path="lessons" element={<LessonsPage />} />
+            <Route path="lessons/:moduleId" element={<LessonPage />} />
+            <Route path="visualiser" element={<VisualiserPage />} />
+            <Route path="practice/:activity?" element={<PracticePage />} />
+            <Route path="quiz/:moduleId?" element={<QuizPage />} />
+            <Route path="ready" element={<ReadyPage />} />
+            <Route path="grove" element={<GrovePage />} />
+            <Route path="grove/:friendId" element={<FriendGrovePage />} />
+            <Route path="login" element={<LoginPage />} />
+            <Route path="register" element={<RegisterPage />} />
+            <Route path="account" element={<AccountPage />} />
+            <Route path="*" element={<NotFoundPage />} />
+          </Route>
+        </Routes>
+      </Suspense>
+    </ErrorBoundary>
   );
 }

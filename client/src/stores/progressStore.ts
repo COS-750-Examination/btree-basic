@@ -9,6 +9,7 @@ import {
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import { api } from '../api/client';
+import { useSyncStore } from './syncStore';
 
 export interface LocalAttempt extends AttemptLike {
   itemId: string;
@@ -63,10 +64,11 @@ const initial = {
   hintsRead: [],
 };
 
-/** Fire-and-forget save; the app keeps working if the API is down (NFR7). */
-const save = (fn: () => Promise<unknown>) => {
-  fn().catch((e: unknown) => console.warn('Could not save progress:', e));
-};
+/**
+ * Fire-and-forget save; the app keeps working if the API is down (NFR7). A failed save is
+ * kept by the sync store, which shows the offline banner and sends it again later.
+ */
+const save = (fn: () => Promise<unknown>) => useSyncStore.getState().save(fn);
 
 /**
  * Learner progress. Guests keep it in sessionStorage only (FR12); signed-in students also
@@ -202,7 +204,10 @@ export const useProgressStore = create<ProgressState>()(
           return true;
         },
 
-        reset: () => set({ ...initial }),
+        reset: () => {
+          useSyncStore.getState().clear();
+          set({ ...initial });
+        },
       };
     },
     {
