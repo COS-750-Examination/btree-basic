@@ -11,7 +11,7 @@ import { RewardToast } from './RewardToast';
 
 export function AppShell() {
   const theme = useThemeStore((s) => s.theme);
-  const { pathname } = useLocation();
+  const { pathname, hash } = useLocation();
   const me = useMe();
   const { setSignedIn, hydrateFromServer } = useProgressStore();
 
@@ -19,9 +19,10 @@ export function AppShell() {
     applyTheme(theme);
   }, [theme]);
   // Block body on purpose: newer browsers return a Promise from scrollTo, which must not be the cleanup.
+  // A link to a section (e.g. /account#friends) is left to that section to scroll into view.
   useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [pathname]);
+    if (!hash) window.scrollTo(0, 0);
+  }, [pathname, hash]);
 
   // Signed-in students get their saved progress back (FR11); guests keep session-only progress (FR12).
   useEffect(() => {

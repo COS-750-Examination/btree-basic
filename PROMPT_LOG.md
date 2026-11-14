@@ -854,6 +854,51 @@ Several fonts were tried in turn at the requester's direction: Spectral, Gravita
 
 ---
 
+## Entry 017: Friends (FRONTEND_PLAN Task 3)
+
+| Field        | Detail                                                                                                                                |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------------------- |
+| Date         | 14 November 2026                                                                                                                      |
+| Requested by | Taylor Sergel, frontend                                                                                                               |
+| Tool         | Claude Code (Anthropic), model Claude Opus 5.5                                                                                        |
+| Scope        | `FriendsCard.tsx`, `api/hooks.ts`, `lib/friends.ts`, `AccountPage.tsx`, `GrovePage.tsx`, `FriendGrovePage.tsx`, `AppShell.tsx`, tests |
+| Status       | Completed; left uncommitted on branch `feat/friends-ui` for review                                                                    |
+
+### Request
+
+> Please implement step 3 of the frontend plan (friends: decline, cancel and unfriend, pending requests outside the Account page, the 429 message, and a clear page after unfriending), and explain how to check that it works before committing.
+
+### Clarifications provided
+
+- The Figma file has no frame for pending requests, so they appear as a notice on the Friends' groves card on My grove, linking to the Account page, rather than as a header count.
+- Unfriending is confirmed inline (**Remove** / **Keep**) rather than with a browser pop-up, so it is keyboard- and screen-reader-friendly and can be tested.
+- The branch was created from `feat/badges-ui`.
+
+### Deliverables
+
+- **`FriendsCard.tsx` (new):** send, accept, decline, cancel and unfriend, with the 429 message as an alert.
+- **Hooks:** five friend mutations that reload `['friends']`; `useFriends` checks the reply with `FriendsList`.
+- **My grove:** pending request notice with **Review →**. `AppShell` no longer scrolls to the top when a link targets a section, so the Friends card can scroll itself into view.
+- **Friend's grove:** "You're no longer friends" on 404, and the cheer 429 message.
+- **Tests:** 5 card cases, 2 helper cases, 1 page case.
+
+### Verification summary
+
+| Check                                                                                                                                                                 | Result       |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
+| Client tests                                                                                                                                                          | 91 / 91 pass |
+| Browser check (Chrome, two accounts): send, cancel, re-send, decline, re-send, accept, unfriend with confirm, then the old grove link says "You're no longer friends" | Pass         |
+| Browser check: the 11th request in an hour shows "Slow down a little and try again later"                                                                             | Pass         |
+| No sideways scroll on Account at 375px wide                                                                                                                           | Pass         |
+| ESLint, TypeScript (strict), Prettier, build                                                                                                                          | Pass         |
+
+### Human review required
+
+- **Privacy:** the server only stores a request when the email has an account, so "Requests you sent" shows real accounts and never shows made-up emails. That reveals which emails are registered, which the neutral "If that email has an account…" message was meant to hide. Fixing it needs a backend change (store requests by email, and match them when that email registers). Listed under Known issues in the changelog.
+- **Figma:** the request lists and the grove notice have no Figma frame.
+
+---
+
 ## Entry template
 
 ```markdown

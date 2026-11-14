@@ -2,9 +2,9 @@ import {
   Badge,
   Cheer,
   FriendGrove,
+  FriendsList,
   PublicUser,
   StreakSummary,
-  type FriendSummary,
   type LoginBody,
   type RegisterBody,
 } from '@btree/shared';
@@ -50,16 +50,43 @@ export function useLogout() {
   });
 }
 
+/** Friends, requests sent to you (`incoming`) and requests you sent (`outgoing`). */
 export function useFriends(enabled: boolean) {
   return useQuery({
     queryKey: ['friends'],
-    queryFn: () =>
-      api.get<{ friends: FriendSummary[]; incoming: { id: string; fromName: string }[] }>(
-        '/friends',
-      ),
+    queryFn: () => api.get('/friends', FriendsList),
     enabled,
   });
 }
+
+/** A friend-request action that changes the list, so the list is reloaded afterwards. */
+function useFriendsMutation<T>(mutationFn: (arg: T) => Promise<unknown>) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn,
+    onSuccess: () => void qc.invalidateQueries({ queryKey: ['friends'] }),
+  });
+}
+
+/**
+ * Always succeeds (202) whether or not the email has an account. Reloads the list anyway,
+ * because if they had already asked you, you are now friends.
+ */
+export const useSendFriendRequest = () =>
+  useFriendsMutation((email: string) => api.post('/friends/requests', { email }));
+
+export const useAcceptRequest = () =>
+  useFriendsMutation((id: string) => api.post(`/friends/requests/${id}/accept`));
+
+export const useDeclineRequest = () =>
+  useFriendsMutation((id: string) => api.post(`/friends/requests/${id}/decline`));
+
+/** Withdraw a request you sent. */
+export const useCancelRequest = () =>
+  useFriendsMutation((id: string) => api.delete(`/friends/requests/${id}`));
+
+/** Works from either side. Their grove is then 404 and cheers to them are refused. */
+export const useUnfriend = () => useFriendsMutation((id: string) => api.delete(`/friends/${id}`));
 
 export function useFriendGrove(id: string | undefined, enabled: boolean) {
   return useQuery({

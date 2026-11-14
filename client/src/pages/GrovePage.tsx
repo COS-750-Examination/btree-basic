@@ -193,7 +193,21 @@ export function GrovePage() {
                 </Link>{' '}
                 to visit friends&apos; groves. Guests&apos; progress stays on this device.
               </p>
-            ) : friends.data?.friends.length ? (
+            ) : null}
+            {me.data && Boolean(friends.data?.incoming.length) && (
+              <Link
+                to="/account#friends"
+                className="text-small mb-3 flex items-center justify-between gap-2 rounded-md bg-sky-100 p-3 font-bold hover:underline"
+              >
+                <span>
+                  {friends.data!.incoming.length === 1
+                    ? `${friends.data!.incoming[0]!.fromName} wants to be your friend`
+                    : `${friends.data!.incoming.length} friend requests waiting`}
+                </span>
+                <span aria-hidden>Review →</span>
+              </Link>
+            )}
+            {!me.data ? null : friends.data?.friends.length ? (
               <ul className="space-y-3">
                 {friends.data.friends.map((f) => (
                   <li key={f.id} className="flex items-center gap-3">

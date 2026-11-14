@@ -25,6 +25,14 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ### Added
 
+- **Friends** (FRONTEND_PLAN Task 3).
+  - The Account page's Friends card has three lists: **Requests for you** (**Accept** and **Decline**), **Requests you sent** (email, date sent and **Cancel request**) and **Your friends** (a link to their grove and **Unfriend**). Unfriending asks first ("Remove Sam from your friends?" with **Remove** / **Keep**). Every action reloads the list, so requests that cross show the two students as friends straight away.
+  - After sending a request the message stays neutral ("If that email has an account, they'll see your request.").
+  - **Pending requests on My grove:** the Friends' groves card shows "Lerato wants to be your friend" (or "2 friend requests waiting") with **Review →**, which opens the Friends card on the Account page and scrolls to it.
+  - **429 messages:** too many friend requests or cheers now show "Slow down a little and try again later" next to the button, instead of failing silently. Other failures show a general message.
+  - **After unfriending,** their grove link shows "You're no longer friends" with links back, not a broken page.
+  - New hooks: `useSendFriendRequest`, `useAcceptRequest`, `useDeclineRequest`, `useCancelRequest`, `useUnfriend` (each reloads `['friends']`); `useFriends` now checks the reply against `FriendsList`.
+  - Tests: `FriendsCard.test.tsx` (5 cases), `lib/friends.test.ts` and `FriendGrovePage.test.tsx`.
 - **Badges on Ready and My grove** (FRONTEND_PLAN Task 2).
   - A **Badges** card shows all four (Explorer, Splitter, Root Raiser, Lecture Ready) with how to earn each one and "1 of 4 earned". Earned badges show the date ("Earned 14 Nov 2026"); locked ones have a dashed outline, a lock icon and the word "Locked", so colour isn't the only signal. On Ready it sits under the objectives (two columns); on My grove it is a one-column list under the streak card. Guests see all four locked with "Sign in to earn badges".
   - Data comes from `GET /api/badges` (`useBadges`, query key `['badges']`). The progress store reloads it after a saved answer, module or warm-up, which are the saves that award badges, so a new badge appears without a reload.
@@ -124,7 +132,8 @@ All notable changes to this project are documented here. The format follows [Kee
 - Pixel pass of each screen against its Figma frame (layout and spacing; tokens are done).
 - Practice activity 4, **Build the tree** (objective O6), is a stub.
 - The ID lead should review the new lessons and quiz items (see the prompt log, Entry 004).
-- The client has no decline, cancel or unfriend buttons yet, no "Download my data" link, and doesn't show the 429 message. The server endpoints are ready.
+- The client has no "Download my data" link yet. The server endpoint is ready.
+- **"Requests you sent" reveals whether an email has an account.** The server only stores a request when the email belongs to a student, so a request to a made-up email never appears in the list. The 10-per-hour limit slows this down but doesn't stop it.
 - The client has no profile settings yet (name, password, theme per account). `PATCH /api/account` is ready.
 - Not planned for the prototype: password reset by email, revocable sessions (the 14-day sign-in cookie stays valid after a password change), and database backups.
 - Deployment (Vercel for the client, Render for the API and database) is not configured.

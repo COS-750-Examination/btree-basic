@@ -1,6 +1,7 @@
 import { DECORATIONS, GROWTH_STAGES, MODULES } from '@btree/shared';
 import { Link, useParams } from 'react-router';
 import { useCheers, useFriendGrove, useMe, useSendCheer } from '../api/hooks';
+import { friendErrorText, isNotFriends } from '../lib/friends';
 import { DecoIcon } from '../components/grove/DecoIcon';
 import { GroveTree } from '../components/grove/GroveTree';
 import { SceneBackdrop } from '../components/grove/SceneBackdrop';
@@ -33,6 +34,23 @@ export function FriendGrovePage() {
         <ButtonLink to="/login" className="mt-4">
           Sign in
         </ButtonLink>
+      </Card>
+    );
+  }
+  if (isNotFriends(grove.error)) {
+    return (
+      <Card className="mx-auto max-w-md text-center">
+        <h1 className="text-display-l">You&apos;re no longer friends</h1>
+        <p className="mt-2">
+          This grove is only visible to friends. Send a new request from your account if you want to
+          connect again.
+        </p>
+        <div className="mt-4 flex flex-wrap justify-center gap-3">
+          <ButtonLink to="/grove">← My grove</ButtonLink>
+          <ButtonLink to="/account#friends" variant="outline">
+            Your friends
+          </ButtonLink>
+        </div>
       </Card>
     );
   }
@@ -75,6 +93,11 @@ export function FriendGrovePage() {
         >
           {sendCheer.isSuccess ? 'Cheer sent!' : 'Send a cheer'}
         </Button>
+        {sendCheer.isError && (
+          <p role="alert" className="text-small text-danger-text basis-full text-right font-bold">
+            {friendErrorText(sendCheer.error)}
+          </p>
+        )}
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[1fr_340px]">
