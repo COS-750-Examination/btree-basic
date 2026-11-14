@@ -32,6 +32,7 @@ Tick items off as they land, and move finished work into the CHANGELOG.
 - [ ] Streak card: show the real streak from the server. It's currently computed on the client only. The server side is ready: `GET /api/streak` returns `{ days }`.
 - [ ] Show reward bonuses as soon as they're earned. `POST /api/attempts` now returns `bonuses` (streak +15, ready check +60), but the client ignores them, so they only appear in the leaf count after a reload.
 - [ ] Profile settings: change display name and password, and remember the Day/Dusk choice per account.
+- [ ] "Download my data" link on the Account page (`<a href="/api/account/export" download>`). The server side is ready.
 - [ ] Turn the mastery mini-lessons behind "Need more?" into real content. For now they just send the student back to the lesson.
 - [ ] Add an error boundary and an offline banner, so a failed save is shown to the student instead of failing silently.
 
@@ -56,7 +57,7 @@ Tick items off as they land, and move finished work into the CHANGELOG.
 
 - [x] Endpoints to decline a request, unfriend, and cancel a request you sent. Requests that cross now make the two students friends. Done 14 November 2026.
 - [x] Rate-limit cheers and friend requests to block spam: 10 friend requests and 20 cheers per student per hour. Done 14 November 2026.
-- [x] ~~Data export endpoint (POPIA right of access), alongside the account deletion that already exists.~~ Won't do: outside the project's scope (decided 14 November 2026).
+- [x] Data export endpoint (POPIA right of access), alongside the account deletion that already exists: `GET /api/account/export` downloads everything the app stores about the student as a JSON file. Done 14 November 2026.
 
 ### Account
 

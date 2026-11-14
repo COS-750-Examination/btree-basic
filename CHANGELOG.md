@@ -60,6 +60,12 @@ All notable changes to this project are documented here. The format follows [Kee
   - `GET /api/friends` also returns `outgoing`, the pending requests the student sent, with the email they typed. The response type is `FriendsList` in `@btree/shared`.
 - **Per-student rate limits:** 10 friend requests and 20 cheers per hour. Limits count per student, not per IP address, so a class on one network doesn't share them. Going over returns 429 with "Slow down a little and try again later".
 - Tests: 11 request-lifecycle cases in `friends.test.ts`, and `rateLimit.test.ts` (3 cases).
+- **Data export (POPIA right of access):** `GET /api/account/export` downloads everything the app stores about the student as `btree-basic-data-<date>.json`:
+  - their account details;
+  - progress, attempts, mastery, leaves, decorations, lecture questions, warm-ups, hints and badges;
+  - friendships and cheers, which show other students by display name only.
+  - The file never includes the password hash, any user id, or another student's email or answers. It sits alongside the existing account deletion.
+- Tests: `account.test.ts` (3 cases).
 
 ### Fixed
 
@@ -90,8 +96,7 @@ All notable changes to this project are documented here. The format follows [Kee
 - Practice activity 4, **Build the tree** (objective O6), is a stub.
 - The ID lead should review the new lessons and quiz items (see the prompt log, Entry 004).
 - The client doesn't show badges yet. The server awards them and `GET /api/badges` lists them.
-- The client has no decline, cancel or unfriend buttons yet, and doesn't show the 429 message. The server endpoints are ready.
-- No data export (POPIA right of access): outside the project's scope. Account deletion still removes everything.
+- The client has no decline, cancel or unfriend buttons yet, no "Download my data" link, and doesn't show the 429 message. The server endpoints are ready.
 - The client doesn't show reward bonuses (streak +15, ready check +60) until the page reloads, and the streak card doesn't use `GET /api/streak` yet.
 - Deployment (Vercel for the client, Render for the API and database) is not configured.
 

@@ -323,7 +323,7 @@ Rules (D2, as proposed):
 
 **Branch:** `feat/friends-privacy`
 
-**Status:** 4.1 and 4.2 done on `feat/friends-privacy` on 14 November 2026. 4.3 (data export) was dropped as outside the project's scope.
+**Status:** done on `feat/friends-privacy` on 14 November 2026 (4.1, 4.2 and 4.3).
 
 ### 4.1 Decline, cancel and unfriend
 
@@ -371,8 +371,6 @@ Rules (D2, as proposed):
 
 ### 4.3 Data export (POPIA right of access)
 
-**Dropped:** outside the project's scope (decided 14 November 2026). Not built.
-
 **Files:** Create `server/src/lib/export.ts`. Modify `server/src/routes/account.ts`. Test: `server/test/account.test.ts`.
 
 **Produces:**
@@ -383,19 +381,20 @@ Rules (D2, as proposed):
   - `modules`, `attempts`, `mastery`, `leaves`, `decorations`, `lectureQuestions`, `warmups`, `hintViews`, `badges`
   - `friendships`: `friendName`, `status`, `direction`, dates
   - `cheersSent` and `cheersReceived`, each with names only
-- `GET /api/account/export` returns 200 JSON with `Content-Disposition: attachment; filename="btree-basic-data-<YYYY-MM-DD>.json"`.
+- `GET /api/account/export` returns 200 JSON with `Content-Disposition: attachment; filename=btree-basic-data-<YYYY-MM-DD>.json` (Express quotes the name only when it needs to).
 
-- [ ] Tests:
+- [x] Tests:
   - every section is present
   - the export never contains `passwordHash`, any user id, or another student's email or attempts
   - a guest gets 401
-- [ ] Commit `feat(server): data export endpoint`
+- [x] Commit `feat(server): data export endpoint`
 
 **Frontend change required:**
 
 - Decline, cancel and unfriend buttons.
 - Pending requests shown outside the Account page.
 - Show 429 messages on the friend-request and cheer actions.
+- A "Download my data" link (`<a href="/api/account/export" download>`).
 
 **Before merging:** TODO, CHANGELOG, PROMPT_LOG entry (content from Kyle).
 
@@ -411,7 +410,7 @@ Rules (D2, as proposed):
 
 - Modify `server/prisma/schema.prisma`: add `enum Theme { day dusk }` and `User.theme Theme?`. Migration name: `user_theme`.
 - Modify `packages/shared/src/api.ts`: add `AccountPatchBody`, and add `PublicUser.theme: 'day' | 'dusk' | null`.
-- Modify `server/src/routes/account.ts` and `server/src/routes/auth.ts` (`toPublicUser`, and export `authLimiter`).
+- Modify `server/src/routes/account.ts`, `server/src/routes/auth.ts` (`toPublicUser`, and export `authLimiter`), and `server/src/lib/export.ts` (add `theme`).
 
 **Produces:**
 
@@ -503,6 +502,6 @@ Rules (D2, as proposed):
 | ---- | ----------------------------------------------------------------------------------------------------------------------------- |
 | 2    | Add `bonuses` from `/attempts` to the local ledger; streak card from `GET /api/streak`; `POST /hints` with `{ itemId, hint }` |
 | 3    | Badges on the Ready and Grove screens from `GET /api/badges`                                                                  |
-| 4    | Decline, cancel and unfriend buttons; pending requests outside Account; 429 messages                                          |
+| 4    | Decline, cancel and unfriend buttons; pending requests outside Account; 429 messages; "Download my data" link                 |
 | 5    | Profile settings (name, password); apply and save `theme` for each account                                                    |
 | 6    | `client/vercel.json`; Vercel project setup (optional)                                                                         |
