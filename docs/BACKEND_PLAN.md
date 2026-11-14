@@ -323,6 +323,8 @@ Rules (D2, as proposed):
 
 **Branch:** `feat/friends-privacy`
 
+**Status:** done on `feat/friends-privacy` on 14 November 2026 (4.1, 4.2 and 4.3).
+
 ### 4.1 Decline, cancel and unfriend
 
 **Files:** Modify `server/src/routes/friends.ts` and `packages/shared/src/api.ts` (`FriendsList`).
@@ -338,14 +340,14 @@ Rules (D2, as proposed):
   - if we are already friends, do nothing
   - the response is always 202, as now
 
-- [ ] Tests:
+- [x] Tests:
   - decline (a stranger declining gets 404)
   - cancel (the addressee cancelling gets 404)
   - unfriend from either side; afterwards the grove returns 404 and cheers return 403
   - `crossing requests make A and B friends with one row`
   - `already friends creates no row`
   - the `outgoing` list
-- [ ] Commit `feat(server): decline, cancel and unfriend; accept crossing requests`
+- [x] Commit `feat(server): decline, cancel and unfriend; accept crossing requests`
 
 ### 4.2 Rate limits on friend requests and cheers
 
@@ -361,11 +363,11 @@ Rules (D2, as proposed):
   - friend requests: **10 per hour**
   - cheers: **20 per hour**
 
-- [ ] Tests:
+- [x] Tests:
   - the 11th friend request gets 429 with that message
   - other students are not affected
   - the 21st cheer gets 429
-- [ ] Commit `feat(server): per-student rate limits on friend requests and cheers`
+- [x] Commit `feat(server): per-student rate limits on friend requests and cheers`
 
 ### 4.3 Data export (POPIA right of access)
 
@@ -379,13 +381,13 @@ Rules (D2, as proposed):
   - `modules`, `attempts`, `mastery`, `leaves`, `decorations`, `lectureQuestions`, `warmups`, `hintViews`, `badges`
   - `friendships`: `friendName`, `status`, `direction`, dates
   - `cheersSent` and `cheersReceived`, each with names only
-- `GET /api/account/export` returns 200 JSON with `Content-Disposition: attachment; filename="btree-basic-data-<YYYY-MM-DD>.json"`.
+- `GET /api/account/export` returns 200 JSON with `Content-Disposition: attachment; filename=btree-basic-data-<YYYY-MM-DD>.json` (Express quotes the name only when it needs to).
 
-- [ ] Tests:
+- [x] Tests:
   - every section is present
   - the export never contains `passwordHash`, any user id, or another student's email or attempts
   - a guest gets 401
-- [ ] Commit `feat(server): data export endpoint`
+- [x] Commit `feat(server): data export endpoint`
 
 **Frontend change required:**
 

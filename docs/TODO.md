@@ -28,10 +28,11 @@ Tick items off as they land, and move finished work into the CHANGELOG.
 - [ ] Practice activity 4, **Build the tree** (O6), is still a stub (`client/src/pages/PracticePage.tsx`).
 - [ ] Badges (Explorer, Splitter, Root Raiser, Lecture Ready): show them on the Ready and Grove screens. The server side is ready: `GET /api/badges` returns all four, with `awardedAt` (or null while locked).
 - [ ] Drag decorations into place on the grove. The server has `PUT /api/grove/placement`, but nothing on the client calls it.
-- [ ] Friend requests: add decline and unfriend buttons, and show pending requests outside the Account page.
+- [ ] Friend requests: add decline and unfriend buttons, and show pending requests outside the Account page. The server side is ready: `POST /api/friends/requests/:id/decline`, `DELETE /api/friends/requests/:id` (cancel), `DELETE /api/friends/:id` (unfriend), and `GET /api/friends` now also lists `outgoing` requests. Show the 429 message ("Slow down a little and try again later") when a student sends too many requests or cheers.
 - [ ] Streak card: show the real streak from the server. It's currently computed on the client only. The server side is ready: `GET /api/streak` returns `{ days }`.
 - [ ] Show reward bonuses as soon as they're earned. `POST /api/attempts` now returns `bonuses` (streak +15, ready check +60), but the client ignores them, so they only appear in the leaf count after a reload.
 - [ ] Profile settings: change display name and password, and remember the Day/Dusk choice per account.
+- [ ] "Download my data" link on the Account page (`<a href="/api/account/export" download>`). The server side is ready.
 - [ ] Turn the mastery mini-lessons behind "Need more?" into real content. For now they just send the student back to the lesson.
 - [ ] Add an error boundary and an offline banner, so a failed save is shown to the student instead of failing silently.
 
@@ -54,9 +55,9 @@ Tick items off as they land, and move finished work into the CHANGELOG.
 
 ### Friends and privacy
 
-- [ ] Endpoints to decline a request, unfriend, and cancel a request you sent.
-- [ ] Rate-limit cheers and friend requests to block spam.
-- [ ] Data export endpoint (POPIA right of access), alongside the account deletion that already exists.
+- [x] Endpoints to decline a request, unfriend, and cancel a request you sent. Requests that cross now make the two students friends. Done 14 November 2026.
+- [x] Rate-limit cheers and friend requests to block spam: 10 friend requests and 20 cheers per student per hour. Done 14 November 2026.
+- [x] Data export endpoint (POPIA right of access), alongside the account deletion that already exists: `GET /api/account/export` downloads everything the app stores about the student as a JSON file. Done 14 November 2026.
 
 ### Account
 

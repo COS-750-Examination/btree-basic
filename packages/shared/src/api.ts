@@ -157,6 +157,23 @@ export const FriendGrove = FriendSummary.extend({
 });
 export type FriendGrove = z.infer<typeof FriendGrove>;
 
+export const IncomingFriendRequest = z.object({ id: z.string(), fromName: z.string() });
+export type IncomingFriendRequest = z.infer<typeof IncomingFriendRequest>;
+
+export const OutgoingFriendRequest = z.object({
+  id: z.string(),
+  email: z.string(),
+  sentAt: z.string(),
+});
+export type OutgoingFriendRequest = z.infer<typeof OutgoingFriendRequest>;
+
+export const FriendsList = z.object({
+  friends: z.array(FriendSummary),
+  incoming: z.array(IncomingFriendRequest),
+  outgoing: z.array(OutgoingFriendRequest),
+});
+export type FriendsList = z.infer<typeof FriendsList>;
+
 export const CheerBody = z.object({
   message: z.string().trim().max(140).optional(),
   moduleId: z.number().int().min(1).max(MODULES.length).optional(),
