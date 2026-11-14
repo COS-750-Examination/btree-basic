@@ -1,4 +1,4 @@
-import '@fontsource/sniglet/800.css';
+import '@fontsource/coiny/400.css';
 import '@fontsource/atkinson-hyperlegible/400.css';
 import '@fontsource/atkinson-hyperlegible/400-italic.css';
 import '@fontsource/atkinson-hyperlegible/700.css';

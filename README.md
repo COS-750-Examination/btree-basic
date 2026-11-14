@@ -54,19 +54,19 @@ Step-by-step setup for macOS and Windows/WSL, plus troubleshooting, is in **[doc
 
 ## Tech stack
 
-| Layer       | Choice                                                                         |
-| ----------- | ------------------------------------------------------------------------------ |
-| Language    | TypeScript 6 (strict) everywhere                                               |
-| Client      | React 18, Vite 8, React Router 7, Tailwind CSS 4                               |
-| State/data  | Zustand 5 (guest progress in sessionStorage), TanStack Query 5                 |
-| Fonts       | Sniglet (display) and Atkinson Hyperlegible (body), self-hosted via Fontsource |
-| Animation   | SVG + Motion (honours _reduce motion_), Web Speech API for narration           |
-| Interaction | dnd-kit (drag-and-drop with keyboard support), html-to-image ("Snap a photo")  |
-| Server      | Node 22, Express 5, Zod 4 validation, helmet, rate limiting, pino logging      |
-| Database    | PostgreSQL 16, Prisma 7 (pg driver adapter)                                    |
-| Auth        | bcrypt (bcryptjs) hashes, JWT in an httpOnly SameSite cookie                   |
-| Testing     | Vitest 5, fast-check, React Testing Library, Supertest, Playwright, axe        |
-| Tooling     | ESLint 9, Prettier, GitHub Actions CI                                          |
+| Layer       | Choice                                                                        |
+| ----------- | ----------------------------------------------------------------------------- |
+| Language    | TypeScript 6 (strict) everywhere                                              |
+| Client      | React 18, Vite 8, React Router 7, Tailwind CSS 4                              |
+| State/data  | Zustand 5 (guest progress in sessionStorage), TanStack Query 5                |
+| Fonts       | Coiny (display) and Atkinson Hyperlegible (body), self-hosted via Fontsource  |
+| Animation   | SVG + Motion (honours _reduce motion_), Web Speech API for narration          |
+| Interaction | dnd-kit (drag-and-drop with keyboard support), html-to-image ("Snap a photo") |
+| Server      | Node 22, Express 5, Zod 4 validation, helmet, rate limiting, pino logging     |
+| Database    | PostgreSQL 16, Prisma 7 (pg driver adapter)                                   |
+| Auth        | bcrypt (bcryptjs) hashes, JWT in an httpOnly SameSite cookie                  |
+| Testing     | Vitest 5, fast-check, React Testing Library, Supertest, Playwright, axe       |
+| Tooling     | ESLint 9, Prettier, GitHub Actions CI                                         |
 
 ---
 
