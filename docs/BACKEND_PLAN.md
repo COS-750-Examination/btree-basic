@@ -323,6 +323,8 @@ Rules (D2, as proposed):
 
 **Branch:** `feat/friends-privacy`
 
+**Status:** 4.1 and 4.2 done on `feat/friends-privacy` on 14 November 2026. 4.3 (data export) was dropped as outside the project's scope.
+
 ### 4.1 Decline, cancel and unfriend
 
 **Files:** Modify `server/src/routes/friends.ts` and `packages/shared/src/api.ts` (`FriendsList`).
@@ -338,14 +340,14 @@ Rules (D2, as proposed):
   - if we are already friends, do nothing
   - the response is always 202, as now
 
-- [ ] Tests:
+- [x] Tests:
   - decline (a stranger declining gets 404)
   - cancel (the addressee cancelling gets 404)
   - unfriend from either side; afterwards the grove returns 404 and cheers return 403
   - `crossing requests make A and B friends with one row`
   - `already friends creates no row`
   - the `outgoing` list
-- [ ] Commit `feat(server): decline, cancel and unfriend; accept crossing requests`
+- [x] Commit `feat(server): decline, cancel and unfriend; accept crossing requests`
 
 ### 4.2 Rate limits on friend requests and cheers
 
@@ -361,13 +363,15 @@ Rules (D2, as proposed):
   - friend requests: **10 per hour**
   - cheers: **20 per hour**
 
-- [ ] Tests:
+- [x] Tests:
   - the 11th friend request gets 429 with that message
   - other students are not affected
   - the 21st cheer gets 429
-- [ ] Commit `feat(server): per-student rate limits on friend requests and cheers`
+- [x] Commit `feat(server): per-student rate limits on friend requests and cheers`
 
 ### 4.3 Data export (POPIA right of access)
+
+**Dropped:** outside the project's scope (decided 14 November 2026). Not built.
 
 **Files:** Create `server/src/lib/export.ts`. Modify `server/src/routes/account.ts`. Test: `server/test/account.test.ts`.
 
@@ -392,7 +396,6 @@ Rules (D2, as proposed):
 - Decline, cancel and unfriend buttons.
 - Pending requests shown outside the Account page.
 - Show 429 messages on the friend-request and cheer actions.
-- A "Download my data" link (`<a href="/api/account/export" download>`).
 
 **Before merging:** TODO, CHANGELOG, PROMPT_LOG entry (content from Kyle).
 
@@ -408,7 +411,7 @@ Rules (D2, as proposed):
 
 - Modify `server/prisma/schema.prisma`: add `enum Theme { day dusk }` and `User.theme Theme?`. Migration name: `user_theme`.
 - Modify `packages/shared/src/api.ts`: add `AccountPatchBody`, and add `PublicUser.theme: 'day' | 'dusk' | null`.
-- Modify `server/src/routes/account.ts`, `server/src/routes/auth.ts` (`toPublicUser`, and export `authLimiter`), and `server/src/lib/export.ts` (add `theme`).
+- Modify `server/src/routes/account.ts` and `server/src/routes/auth.ts` (`toPublicUser`, and export `authLimiter`).
 
 **Produces:**
 
@@ -500,6 +503,6 @@ Rules (D2, as proposed):
 | ---- | ----------------------------------------------------------------------------------------------------------------------------- |
 | 2    | Add `bonuses` from `/attempts` to the local ledger; streak card from `GET /api/streak`; `POST /hints` with `{ itemId, hint }` |
 | 3    | Badges on the Ready and Grove screens from `GET /api/badges`                                                                  |
-| 4    | Decline, cancel and unfriend buttons; pending requests outside Account; 429 messages; "Download my data" link                 |
+| 4    | Decline, cancel and unfriend buttons; pending requests outside Account; 429 messages                                          |
 | 5    | Profile settings (name, password); apply and save `theme` for each account                                                    |
 | 6    | `client/vercel.json`; Vercel project setup (optional)                                                                         |

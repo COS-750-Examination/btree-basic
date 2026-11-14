@@ -470,6 +470,63 @@ As in Task 2, declarations are defined in full, new functions throw `Not impleme
 
 ---
 
+## Entry 009: Friends and privacy scaffolding (BACKEND_PLAN Task 4)
+
+| Field        | Detail                                                                  |
+| ------------ | ----------------------------------------------------------------------- |
+| Date         | 14 November 2026                                                        |
+| Requested by | Kyle Liebenberg, backend owner                                          |
+| Tool         | Claude Code (Anthropic), model Claude Opus 5.5                          |
+| Scope        | `@btree/shared`, `server/src/lib/rateLimit.ts`, friends routes, tests   |
+| Status       | Completed; left uncommitted on branch `feat/friends-privacy` for review |
+
+### Request
+
+> Please implement the scaffolding for Task 4. Task 4.3, the data export (POPIA right of access), is to be ignored, as it falls outside the project's scope.
+
+### Clarifications provided
+
+None were needed. Task 4.3 was left out as instructed, and no database change was required. As in Tasks 2 and 3:
+
+- declarations are defined in full;
+- new endpoints return 501 until implemented;
+- tests have empty bodies.
+
+The one exception is `perUserLimiter`. Routes create it when the app starts, so a version that threw an error would stop the server. Its scaffold therefore lets every request through until it is implemented.
+
+### Deliverables
+
+- **`@btree/shared`:**
+  - schemas `IncomingFriendRequest`, `OutgoingFriendRequest` and `FriendsList`;
+  - constants `FRIEND_REQUESTS_PER_HOUR` (10) and `CHEERS_PER_HOUR` (20).
+- **New server module (stub):** `lib/rateLimit.ts`, with `perUserLimiter`, `PerUserLimit` and `RATE_LIMIT_MESSAGE`.
+- **Routes in `friends.ts`:**
+  - per-student limiters mounted on `POST /friends/requests` and `POST /friends/:id/cheers`;
+  - new endpoints, each returning 501 until implemented:
+    - `POST /friends/requests/:id/decline`;
+    - `DELETE /friends/requests/:id`;
+    - `DELETE /friends/:id`;
+  - `TODO(Task 4.1)` markers on `GET /friends` (the outgoing list) and `POST /friends/requests` (crossing requests and existing friends).
+- **Tests with empty bodies:**
+  - 11 request-lifecycle tests in `friends.test.ts`;
+  - 3 rate-limit tests in a new `rateLimit.test.ts`.
+
+### Verification summary
+
+| Check                                 | Result                                        |
+| ------------------------------------- | --------------------------------------------- |
+| Server tests against local PostgreSQL | 87 / 87 pass (14 new tests with empty bodies) |
+| Client tests                          | 43 / 43 pass                                  |
+| ESLint, TypeScript (strict), Prettier | Pass                                          |
+
+### Human review required
+
+- **Outgoing requests reveal accounts:** a request row exists only when the email belongs to an account, so the outgoing list tells the sender whether an address is registered. The rate limit slows this down but does not prevent it.
+- **Scaffolding markers:** remove each `void …; // scaffolding` line, the doc comments and the `TODO(Task 4.x)` markers when implementing.
+- **Empty tests pass:** fill in the 14 new tests before merging.
+
+---
+
 ## Entry template
 
 ```markdown

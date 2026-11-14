@@ -1,34 +1,34 @@
 import {
+  CHEERS_PER_HOUR,
   CheerBody,
+  FRIEND_REQUESTS_PER_HOUR,
   FriendRequestBody,
   MODULES,
   type FriendGrove,
+  type FriendsList,
   type FriendSummary,
 } from '@btree/shared';
 import { Router } from 'express';
 import { HttpError, notFound, param } from '../lib/http';
 import { prisma } from '../lib/prisma';
 import { stageOf, streakDays } from '../lib/progress';
+import { perUserLimiter } from '../lib/rateLimit';
 import { requireAuth, uid } from '../middleware/auth';
 import { validateBody } from '../middleware/validate';
 
-/**
- * Friends' groves: visit-only relatedness. No leaderboards or rankings, and a friend never
- * sees quiz answers, scores or hints (ID doc, Motivation & Engagement). Mounted at /api.
- */
 export const friendsRouter = Router();
 
-/** Accepted friendship between the two users, or null. */
+const HOUR_MS = 60 * 60 * 1000;
+const friendRequestLimiter = perUserLimiter({ windowMs: HOUR_MS, limit: FRIEND_REQUESTS_PER_HOUR });
+const cheerLimiter = perUserLimiter({ windowMs: HOUR_MS, limit: CHEERS_PER_HOUR });
+
+const between = (a: string, b: string) => [
+  { requesterId: a, addresseeId: b },
+  { requesterId: b, addresseeId: a },
+];
+
 async function friendship(a: string, b: string) {
-  return prisma.friendship.findFirst({
-    where: {
-      status: 'accepted',
-      OR: [
-        { requesterId: a, addresseeId: b },
-        { requesterId: b, addresseeId: a },
-      ],
-    },
-  });
+  return prisma.friendship.findFirst({ where: { status: 'accepted', OR: between(a, b) } });
 }
 
 async function summary(userId: string, since: Date): Promise<FriendSummary> {
@@ -49,7 +49,11 @@ friendsRouter.get('/friends', requireAuth, async (req, res) => {
   const me = uid(req);
   const rows = await prisma.friendship.findMany({
     where: { OR: [{ requesterId: me }, { addresseeId: me }] },
-    include: { requester: { select: { displayName: true } } },
+    include: {
+      requester: { select: { displayName: true } },
+      addressee: { select: { email: true } },
+    },
+    orderBy: { createdAt: 'asc' },
   });
   const friends = await Promise.all(
     rows
@@ -58,22 +62,42 @@ friendsRouter.get('/friends', requireAuth, async (req, res) => {
         summary(r.requesterId === me ? r.addresseeId : r.requesterId, r.acceptedAt ?? r.createdAt),
       ),
   );
-  const incoming = rows
-    .filter((r) => r.status === 'pending' && r.addresseeId === me)
-    .map((r) => ({ id: r.id, fromName: r.requester.displayName }));
-  res.json({ friends, incoming });
+  const pending = rows.filter((r) => r.status === 'pending');
+  const list: FriendsList = {
+    friends,
+    incoming: pending
+      .filter((r) => r.addresseeId === me)
+      .map((r) => ({ id: r.id, fromName: r.requester.displayName })),
+    outgoing: pending
+      .filter((r) => r.requesterId === me)
+      .map((r) => ({ id: r.id, email: r.addressee.email, sentAt: r.createdAt.toISOString() })),
+  };
+  res.json(list);
 });
 
 friendsRouter.post(
   '/friends/requests',
   requireAuth,
+  friendRequestLimiter,
   validateBody(FriendRequestBody),
   async (req, res) => {
     const me = uid(req);
     const { email } = req.body as FriendRequestBody;
     const other = await prisma.user.findUnique({ where: { email } });
-    // Do not reveal whether an email has an account.
     if (!other || other.id === me) {
+      res.status(202).json({ ok: true });
+      return;
+    }
+    const existing = await prisma.friendship.findFirst({ where: { OR: between(me, other.id) } });
+    if (existing?.status === 'accepted') {
+      res.status(202).json({ ok: true });
+      return;
+    }
+    if (existing && existing.requesterId === other.id) {
+      await prisma.friendship.update({
+        where: { id: existing.id },
+        data: { status: 'accepted', acceptedAt: new Date() },
+      });
       res.status(202).json({ ok: true });
       return;
     }
@@ -92,6 +116,30 @@ friendsRouter.post('/friends/requests/:id/accept', requireAuth, async (req, res)
     data: { status: 'accepted', acceptedAt: new Date() },
   });
   if (!count) throw notFound('Friend request not found');
+  res.status(204).end();
+});
+
+friendsRouter.post('/friends/requests/:id/decline', requireAuth, async (req, res) => {
+  const { count } = await prisma.friendship.deleteMany({
+    where: { id: param(req, 'id'), addresseeId: uid(req), status: 'pending' },
+  });
+  if (!count) throw notFound('Friend request not found');
+  res.status(204).end();
+});
+
+friendsRouter.delete('/friends/requests/:id', requireAuth, async (req, res) => {
+  const { count } = await prisma.friendship.deleteMany({
+    where: { id: param(req, 'id'), requesterId: uid(req), status: 'pending' },
+  });
+  if (!count) throw notFound('Friend request not found');
+  res.status(204).end();
+});
+
+friendsRouter.delete('/friends/:id', requireAuth, async (req, res) => {
+  const { count } = await prisma.friendship.deleteMany({
+    where: { status: 'accepted', OR: between(uid(req), param(req, 'id')) },
+  });
+  if (!count) throw notFound('Friend not found');
   res.status(204).end();
 });
 
@@ -126,6 +174,7 @@ friendsRouter.get('/friends/:id/grove', requireAuth, async (req, res) => {
 friendsRouter.post(
   '/friends/:id/cheers',
   requireAuth,
+  cheerLimiter,
   validateBody(CheerBody),
   async (req, res) => {
     const me = uid(req);
@@ -139,7 +188,6 @@ friendsRouter.post(
   },
 );
 
-/** Cheers sent to or by the current user, newest first. */
 friendsRouter.get('/cheers', requireAuth, async (req, res) => {
   const me = uid(req);
   const rows = await prisma.cheer.findMany({
