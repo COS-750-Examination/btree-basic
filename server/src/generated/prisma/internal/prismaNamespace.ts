@@ -1437,6 +1437,7 @@ export const UserScalarFieldEnum = {
   displayName: 'displayName',
   theme: 'theme',
   inviteCode: 'inviteCode',
+  requestsSeenAt: 'requestsSeenAt',
   plantedAt: 'plantedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'

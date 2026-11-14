@@ -25,6 +25,11 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ### Added
 
+- **Friend request notifications.** The round initials button (your account) shows a small red counter for new friend requests, e.g. "2", read to screen readers as "Account: Sam, 2 new friend requests". Requests are re-checked every minute.
+  - Opening the Account page clears the counter. Requests you leave unanswered are not counted again: later only requests that arrived after your last visit are counted.
+  - The "seen" time is saved on the account (`User.requestsSeenAt`, migration `20261115090000_requests_seen`), so it survives signing out and in, clearing site data and switching devices.
+  - `GET /api/friends` now returns `sentAt` on each incoming request and `requestsSeenAt`. New `POST /api/friends/requests/seen` with `{ upTo }` moves the seen time forward (never back, never into the future). The seen time is included in "Download my data".
+  - Tests: 3 server cases, `RequestNotifications.test.tsx` (4) and 2 helper cases.
 - **Cheer notifications.** A cheer used to appear only on the sender's and receiver's friend-grove pages, so the student who got it never noticed.
   - **My grove** in the header (and the phone menu button) shows a count of new cheers, e.g. "My grove 1", read to screen readers as "My grove, 1 new cheer". Cheers are re-checked every minute.
   - A **Cheers for you** card on My grove lists the latest five cheers you received (who, which module, any message, the date), with a **New** tag on ones you hadn't seen. Opening My grove marks them as seen, which clears the count. Seen times are kept on the device, per account.

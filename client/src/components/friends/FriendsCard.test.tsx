@@ -12,8 +12,9 @@ const list: FriendsList = {
   friends: [
     { id: 'f1', displayName: 'Sam Moyo', stage: 'sapling', modulesDone: 3, since: '2026-11-01' },
   ],
-  incoming: [{ id: 'in1', fromName: 'Lerato' }],
+  incoming: [{ id: 'in1', fromName: 'Lerato', sentAt: '2026-11-15T08:00:00.000Z' }],
   outgoing: [{ id: 'out1', email: 'thabo@tuks.co.za', sentAt: '2026-11-14T08:00:00.000Z' }],
+  requestsSeenAt: null,
 };
 
 function wrapper({ children }: { children: ReactNode }) {

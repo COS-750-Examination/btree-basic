@@ -97,7 +97,9 @@ describe.skipIf(!hasDb)('friends routes (database)', () => {
 
       expect(mine.body.friends).toHaveLength(1);
       expect(mine.body.friends[0]).toMatchObject({ id: b.id, displayName: 'Friend' });
-      expect(mine.body.incoming).toEqual([{ id: pending.id, fromName: 'Hopeful' }]);
+      expect(mine.body.incoming).toEqual([
+        { id: pending.id, fromName: 'Hopeful', sentAt: pending.createdAt.toISOString() },
+      ]);
 
       const theirs = await b.agent.get('/api/friends').expect(200);
       expect(theirs.body.friends.map((f: { id: string }) => f.id)).toEqual([a.id]);
@@ -130,6 +132,38 @@ describe.skipIf(!hasDb)('friends routes (database)', () => {
       const res = await a.agent.get(`/api/friends/${c.id}/grove`).expect(404);
 
       expect(res.body.error).toBe('Friend not found');
+    });
+  });
+
+  describe('requests seen', () => {
+    it('starts unseen and remembers the latest seen time on the account', async () => {
+      const a = await fresh('Seer');
+      expect((await a.agent.get('/api/friends').expect(200)).body.requestsSeenAt).toBeNull();
+
+      const upTo = new Date(Date.now() - 60_000).toISOString();
+      await a.agent.post('/api/friends/requests/seen').send({ upTo }).expect(204);
+      expect((await a.agent.get('/api/friends').expect(200)).body.requestsSeenAt).toBe(upTo);
+
+      await a.agent
+        .post('/api/friends/requests/seen')
+        .send({ upTo: new Date(Date.now() - 600_000).toISOString() })
+        .expect(204);
+      expect((await a.agent.get('/api/friends').expect(200)).body.requestsSeenAt).toBe(upTo);
+    });
+
+    it('never moves the seen time into the future', async () => {
+      const a = await fresh('Future');
+      await a.agent
+        .post('/api/friends/requests/seen')
+        .send({ upTo: new Date(Date.now() + 86_400_000).toISOString() })
+        .expect(204);
+      const seen = Date.parse((await a.agent.get('/api/friends').expect(200)).body.requestsSeenAt);
+      expect(seen).toBeLessThanOrEqual(Date.now());
+    });
+
+    it('rejects a body without a valid time', async () => {
+      const a = await fresh('Bad');
+      await a.agent.post('/api/friends/requests/seen').send({ upTo: 'yesterday' }).expect(400);
     });
   });
 
@@ -436,7 +470,9 @@ describe.skipIf(!hasDb)('friends routes (database)', () => {
 
         const theirs = await b.agent.get('/api/friends').expect(200);
         expect(theirs.body.outgoing).toEqual([]);
-        expect(theirs.body.incoming).toEqual([{ id: row.id, fromName: 'Outgoing' }]);
+        expect(theirs.body.incoming).toEqual([
+          { id: row.id, fromName: 'Outgoing', sentAt: row.createdAt.toISOString() },
+        ]);
       });
     });
   });

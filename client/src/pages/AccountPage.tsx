@@ -1,12 +1,14 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Download } from 'lucide-react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { api } from '../api/client';
-import { useLogout, useMe } from '../api/hooks';
+import { useFriends, useLogout, useMarkRequestsSeen, useMe } from '../api/hooks';
 import { AppearanceCard } from '../components/account/AppearanceCard';
 import { ProfileCard } from '../components/account/ProfileCard';
 import { FriendsCard } from '../components/friends/FriendsCard';
 import { Button, ButtonLink, Card, CardTitle, PageHeader } from '../components/ui';
+import { newRequests } from '../lib/friends';
 import { useProgressStore } from '../stores/progressStore';
 
 /** Account settings: appearance, friends, sign out and account deletion (FR10, POPIA). */
@@ -16,6 +18,16 @@ export function AccountPage() {
   const navigate = useNavigate();
   const qc = useQueryClient();
   const reset = useProgressStore((s) => s.reset);
+  const friends = useFriends(Boolean(me.data));
+  const { mutate: markSeen } = useMarkRequestsSeen();
+  const latestNew = newRequests(friends.data)
+    .map((r) => r.sentAt)
+    .sort()
+    .at(-1);
+
+  useEffect(() => {
+    if (latestNew) markSeen(latestNew);
+  }, [latestNew, markSeen]);
   const del = useMutation({
     mutationFn: () => api.delete('/account'),
     onSuccess: () => {

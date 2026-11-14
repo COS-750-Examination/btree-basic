@@ -2,7 +2,8 @@ import { GROWTH_STAGES } from '@btree/shared';
 import { Menu, Sprout, UserRound, X } from 'lucide-react';
 import { useState } from 'react';
 import { Link, NavLink } from 'react-router';
-import { useMe } from '../../api/hooks';
+import { useFriends, useMe } from '../../api/hooks';
+import { newRequests } from '../../lib/friends';
 import { useNewCheers } from '../../stores/cheersStore';
 import { useLocalReadiness } from '../../stores/progressStore';
 import { Avatar } from '../ui/Avatar';
@@ -62,6 +63,8 @@ export function Header() {
   const me = useMe();
   const stage = GROWTH_STAGES.find((s) => s.id === r.stage)?.label ?? 'Seed';
   const newCheers = useNewCheers().length;
+  const requests = newRequests(useFriends(Boolean(me.data)).data).length;
+  const requestText = requests === 1 ? '1 new friend request' : `${requests} new friend requests`;
   const countFor = (to: string) => (to === '/grove' ? newCheers : 0);
 
   return (
@@ -96,11 +99,15 @@ export function Header() {
           </Link>
           <NavLink
             to="/account"
-            aria-label={me.data ? `Account: ${me.data.displayName}` : 'Account'}
+            aria-label={
+              me.data
+                ? `Account: ${me.data.displayName}${requests ? `, ${requestText}` : ''}`
+                : 'Account'
+            }
             title="Account"
             className={({ isActive }) =>
               cn(
-                'shadow-paper-stack-sm rounded-pill grid h-10 w-10 place-items-center',
+                'shadow-paper-stack-sm rounded-pill relative grid h-10 w-10 place-items-center',
                 isActive ? 'bg-highlight text-on-highlight' : 'bg-paper',
               )
             }
@@ -109,6 +116,14 @@ export function Header() {
               <Avatar name={me.data.displayName} />
             ) : (
               <UserRound className="h-4 w-4" aria-hidden />
+            )}
+            {requests > 0 && (
+              <span
+                aria-hidden
+                className="bg-danger-text text-on-leaf rounded-pill border-paper absolute -top-1.5 -right-1.5 min-w-5 border-2 px-1 text-center text-[0.7rem] leading-4 font-bold"
+              >
+                {requests > 9 ? '9+' : requests}
+              </span>
             )}
           </NavLink>
           {!me.data && (

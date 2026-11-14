@@ -23,6 +23,7 @@ export async function exportUserData(userId: string) {
         displayName: true,
         theme: true,
         inviteCode: true,
+        requestsSeenAt: true,
         plantedAt: true,
         createdAt: true,
       },

@@ -59,6 +59,7 @@ export function useFriends(enabled: boolean) {
     queryKey: ['friends'],
     queryFn: () => api.get('/friends', FriendsList),
     enabled,
+    refetchInterval: 60_000,
   });
 }
 
@@ -166,5 +167,16 @@ export function useAcceptInvite(code: string) {
       void qc.invalidateQueries({ queryKey: ['friends'] });
       void qc.invalidateQueries({ queryKey: ['invite', code] });
     },
+  });
+}
+
+export function useMarkRequestsSeen() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (upTo: string) => api.post('/friends/requests/seen', { upTo }),
+    onSuccess: (_data, upTo) =>
+      qc.setQueryData<FriendsList>(['friends'], (old) =>
+        old && (old.requestsSeenAt ?? '') < upTo ? { ...old, requestsSeenAt: upTo } : old,
+      ),
   });
 }

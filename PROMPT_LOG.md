@@ -1066,6 +1066,46 @@ Several fonts were tried in turn at the requester's direction: Spectral, Gravita
 
 ---
 
+## Entry 022: Friend request notifications
+
+| Field        | Detail                                                                                                                                                             |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Date         | 15 November 2026                                                                                                                                                   |
+| Requested by | Taylor Sergel, frontend                                                                                                                                            |
+| Tool         | Claude Code (Anthropic), model Claude Opus 5.5                                                                                                                     |
+| Scope        | Prisma schema and migration, `routes/friends.ts`, `lib/export.ts`, shared friend schemas, `Header.tsx`, `AccountPage.tsx`, `api/hooks.ts`, `lib/friends.ts`, tests |
+| Status       | Completed; left uncommitted on branch `feat/ui-updates` for review                                                                                                 |
+
+### Request
+
+> Please show a small counter on the account (initials) button when the student has new friend requests. It should only disappear when they open the Account page, and stay cleared after signing out and back in. Later it should count only requests that arrived since, not older ones they ignored.
+
+### Clarifications provided
+
+- The seen time is stored on the account in the database rather than in the browser, so it holds across sign-out, cleared site data and other devices.
+- The counter shows up to "9+".
+
+### Deliverables
+
+- **Server:** `User.requestsSeenAt` and migration, `sentAt` and `requestsSeenAt` in `GET /api/friends`, `POST /api/friends/requests/seen`, export field.
+- **Client:** counter on the account button, `useMarkRequestsSeen` called from the Account page, `newRequests` helper, friends list re-checked every minute.
+- **Tests:** 3 server, 4 component and 2 helper cases.
+
+### Verification summary
+
+| Check                                                                                                                                                                                               | Result         |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------- |
+| Server tests                                                                                                                                                                                        | 114 / 114 pass |
+| Client tests                                                                                                                                                                                        | 124 / 124 pass |
+| Browser check (Chrome): 2 requests show "2"; opening Account clears it; it stays cleared after leaving, and after signing out, clearing storage and signing in; one more request shows "1", not "3" | Pass           |
+| ESLint, TypeScript (strict), Prettier, build                                                                                                                                                        | Pass           |
+
+### Human review required
+
+- **Backend owner:** a second new column and migration on `User`. Teammates need `npm run db:migrate` after pulling.
+
+---
+
 ## Entry template
 
 ```markdown
