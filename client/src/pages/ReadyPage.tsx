@@ -1,5 +1,6 @@
 import {
   GROWTH_STAGES,
+  MIN_COUNTED_FOR_MASTERY,
   MODULES,
   OBJECTIVES,
   ReadinessSummary,
@@ -12,6 +13,7 @@ import { useState, type FormEvent } from 'react';
 import { Link } from 'react-router';
 import { api } from '../api/client';
 import { useMe } from '../api/hooks';
+import { BadgeCard } from '../components/grove/BadgeCard';
 import {
   Button,
   ButtonLink,
@@ -22,6 +24,7 @@ import {
   ProgressBar,
   StatusBadge,
 } from '../components/ui';
+import { masteryHint } from '../lib/mastery';
 import { useLocalReadiness, useProgressStore } from '../stores/progressStore';
 
 /** Where to revisit when an objective is not yet mastered. */
@@ -97,8 +100,10 @@ export function ReadyPage() {
           <Card>
             <CardTitle>By learning objective</CardTitle>
             <p className="text-ink-muted text-small mb-4">
-              Mastery comes from practice and quiz answers on the first try without hints, not from
-              time spent.
+              Each bar is your progress toward mastering that objective. It counts practice and quiz
+              answers given on the first try without hints, out of at least{' '}
+              {MIN_COUNTED_FOR_MASTERY}, so one right answer is a third of the way. Reach{' '}
+              {READY_THRESHOLD * 100}% to master it.
             </p>
             <ol className="space-y-4">
               {r.objectives.map((o, i) => {
@@ -109,7 +114,14 @@ export function ReadyPage() {
                     className="grid grid-cols-[24px_1fr] items-center gap-x-3 gap-y-1 sm:grid-cols-[24px_1fr_160px_48px_110px]"
                   >
                     <span className="font-display">{i + 1}</span>
-                    <span>{meta.label}</span>
+                    <span>
+                      {meta.label}
+                      {o.status === 'getting-there' && (
+                        <span className="text-ink-muted text-small block">
+                          {masteryHint(o.score, o.counted)}
+                        </span>
+                      )}
+                    </span>
                     <ProgressBar
                       className="col-start-2 sm:col-start-auto"
                       value={o.score}
@@ -127,6 +139,8 @@ export function ReadyPage() {
               })}
             </ol>
           </Card>
+
+          <BadgeCard signedIn={Boolean(me.data)} />
         </div>
 
         <aside className="space-y-4">

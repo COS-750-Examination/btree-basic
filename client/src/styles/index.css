@@ -22,7 +22,7 @@
   h2,
   h3 {
     font-family: var(--font-display);
-    font-weight: 800;
+    font-weight: 400;
   }
   h1 {
     font-size: var(--text-display-xl);

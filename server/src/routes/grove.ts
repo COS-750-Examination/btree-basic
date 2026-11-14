@@ -1,6 +1,7 @@
 import {
   GROWTH_STAGES,
   LectureQuestionBody,
+  type Decoration,
   decorationMinStage,
   reachedStage,
 } from '@btree/shared';
@@ -34,10 +35,18 @@ groveRouter.get('/leaves', requireAuth, async (req, res) => {
 groveRouter.get('/decorations', requireAuth, async (req, res) => {
   const [all, owned] = await Promise.all([
     prisma.decoration.findMany({ orderBy: { cost: 'asc' } }),
-    prisma.userDecoration.findMany({ where: { userId: uid(req) }, select: { decorationId: true } }),
+    prisma.userDecoration.findMany({
+      where: { userId: uid(req) },
+      select: { decorationId: true, placed: true },
+    }),
   ]);
-  const ownedIds = new Set(owned.map((o) => o.decorationId));
-  res.json(all.map((d) => ({ ...d, owned: ownedIds.has(d.id) })));
+  const mine = new Map(owned.map((o) => [o.decorationId, o.placed]));
+  const rows: Decoration[] = all.map((d) => ({
+    ...d,
+    owned: mine.has(d.id),
+    placed: mine.get(d.id) ?? false,
+  }));
+  res.json(rows);
 });
 
 groveRouter.post('/decorations/:id/purchase', requireAuth, async (req, res) => {

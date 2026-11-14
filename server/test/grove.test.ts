@@ -61,12 +61,37 @@ describe.skipIf(!hasDb)('grove routes (database)', () => {
       await prisma.userDecoration.create({ data: { userId: s.id, decorationId: 'apples' } });
 
       const res = await s.agent.get('/api/decorations').expect(200);
-      const rows = res.body as { id: string; cost: number; owned: boolean }[];
+      const rows = res.body as { id: string; cost: number; owned: boolean; placed: boolean }[];
 
       expect(rows.map((d) => d.id).sort()).toEqual(DECORATIONS.map((d) => d.id).sort());
       expect(rows.filter((d) => d.owned).map((d) => d.id)).toEqual(['apples']);
+      expect(rows.filter((d) => d.placed).map((d) => d.id)).toEqual(['apples']);
       const costs = rows.map((d) => d.cost);
       expect(costs).toEqual([...costs].sort((x, y) => x - y));
+    });
+
+    it('reports a decoration taken off the tree as owned but not placed', async () => {
+      const s = await fresh('Unplacer');
+      await prisma.userDecoration.createMany({
+        data: [
+          { userId: s.id, decorationId: 'apples' },
+          { userId: s.id, decorationId: 'bunting' },
+        ],
+      });
+
+      await s.agent
+        .put('/api/grove/placement')
+        .send({ items: [{ decorationId: 'bunting', placed: false }] })
+        .expect(204);
+      const rows = (await s.agent.get('/api/decorations').expect(200)).body as {
+        id: string;
+        owned: boolean;
+        placed: boolean;
+      }[];
+
+      expect(rows.find((d) => d.id === 'apples')).toMatchObject({ owned: true, placed: true });
+      expect(rows.find((d) => d.id === 'bunting')).toMatchObject({ owned: true, placed: false });
+      expect(rows.find((d) => d.id === 'songbird')).toMatchObject({ owned: false, placed: false });
     });
   });
 

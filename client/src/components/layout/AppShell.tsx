@@ -4,11 +4,14 @@ import { Outlet, useLocation } from 'react-router';
 import { useMe } from '../../api/hooks';
 import { useProgressStore } from '../../stores/progressStore';
 import { applyTheme, useThemeStore } from '../../stores/themeStore';
+import { ErrorBoundary } from './ErrorBoundary';
 import { Header } from './Header';
+import { OfflineBanner } from './OfflineBanner';
+import { RewardToast } from './RewardToast';
 
 export function AppShell() {
-  const theme = useThemeStore((s) => s.theme);
-  const { pathname } = useLocation();
+  const { theme, setTheme } = useThemeStore();
+  const { pathname, hash } = useLocation();
   const me = useMe();
   const { setSignedIn, hydrateFromServer } = useProgressStore();
 
@@ -16,9 +19,16 @@ export function AppShell() {
     applyTheme(theme);
   }, [theme]);
   // Block body on purpose: newer browsers return a Promise from scrollTo, which must not be the cleanup.
+  // A link to a section (e.g. /account#friends) is left to that section to scroll into view.
   useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [pathname]);
+    if (!hash) window.scrollTo(0, 0);
+  }, [pathname, hash]);
+
+  // A signed-in student's theme follows their account (null until they pick one while signed in).
+  const accountTheme = me.data?.theme;
+  useEffect(() => {
+    if (accountTheme) setTheme(accountTheme);
+  }, [accountTheme, setTheme]);
 
   // Signed-in students get their saved progress back (FR11); guests keep session-only progress (FR12).
   useEffect(() => {
@@ -38,9 +48,14 @@ export function AppShell() {
         Skip to content
       </a>
       <Header />
+      <OfflineBanner />
       <main id="main" className="mx-auto max-w-6xl px-4 py-8">
-        <Outlet />
+        {/* Keyed by route: a crash on one screen is cleared by moving to another. */}
+        <ErrorBoundary key={pathname}>
+          <Outlet />
+        </ErrorBoundary>
       </main>
+      <RewardToast />
     </MotionConfig>
   );
 }

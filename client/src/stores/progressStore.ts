@@ -1,14 +1,19 @@
 import {
+  AttemptResult,
   LEAF_REWARDS,
   MODULES,
   readiness,
   type AttemptLike,
+  type AttemptRecord,
   type Confidence,
+  type LeafBonus,
   type LeafReason,
 } from '@btree/shared';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import { api } from '../api/client';
+import { queryClient } from '../api/queryClient';
+import { useSyncStore } from './syncStore';
 
 export interface LocalAttempt extends AttemptLike {
   itemId: string;
@@ -33,7 +38,11 @@ interface ProgressState {
   needsRecap: boolean | null;
   lectureQuestions: { id: string; text: string }[];
   ownedDecorations: string[];
+  /** Owned decorations the student took off the tree. Bought ones start on the tree. */
+  hiddenDecorations: string[];
   hintsRead: string[];
+  /** The latest server bonus (streak or ready check), shown once as a message. Not saved. */
+  lastBonus: (LeafBonus & { at: number }) | null;
 
   setSignedIn: (v: boolean) => void;
   hydrateFromServer: () => Promise<void>;
@@ -49,6 +58,9 @@ interface ProgressState {
   addLectureQuestion: (text: string) => void;
   removeLectureQuestion: (id: string) => void;
   buyDecoration: (id: string, cost: number) => boolean;
+  /** Puts an owned decoration on the tree or takes it off. */
+  toggleDecoration: (id: string) => void;
+  dismissBonus: () => void;
   reset: () => void;
 }
 
@@ -60,13 +72,18 @@ const initial = {
   needsRecap: null,
   lectureQuestions: [],
   ownedDecorations: [],
+  hiddenDecorations: [],
   hintsRead: [],
 };
 
-/** Fire-and-forget save; the app keeps working if the API is down (NFR7). */
-const save = (fn: () => Promise<unknown>) => {
-  fn().catch((e: unknown) => console.warn('Could not save progress:', e));
-};
+/**
+ * Fire-and-forget save; the app keeps working if the API is down (NFR7). A failed save is
+ * kept by the sync store, which shows the offline banner and sends it again later.
+ */
+const save = (fn: () => Promise<unknown>) => useSyncStore.getState().save(fn);
+
+/** The server awards badges while saving answers, modules and the warm-up, so reload them after. */
+const refreshBadges = () => void queryClient.invalidateQueries({ queryKey: ['badges'] });
 
 /**
  * Learner progress. Guests keep it in sessionStorage only (FR12); signed-in students also
@@ -81,28 +98,50 @@ export const useProgressStore = create<ProgressState>()(
           ledger: [{ amount: LEAF_REWARDS[reason], reason, at: Date.now() }, ...s.ledger],
         }));
 
+      /**
+       * The server decides the streak and ready-check bonuses, so they are added when its
+       * reply to an answer arrives. Guests never get them.
+       */
+      const applyAttemptResult = (result: AttemptResult | undefined) => {
+        for (const bonus of result?.bonuses ?? []) {
+          const at = Date.now();
+          set((s) => ({
+            leaves: s.leaves + bonus.amount,
+            ledger: [{ amount: bonus.amount, reason: bonus.reason, at }, ...s.ledger],
+            lastBonus: { ...bonus, at },
+          }));
+        }
+        void queryClient.invalidateQueries({ queryKey: ['streak'] });
+        refreshBadges();
+      };
+
       return {
         ...initial,
         signedIn: false,
+        lastBonus: null,
 
         setSignedIn: (signedIn) => set({ signedIn }),
 
         hydrateFromServer: async () => {
-          const [progress, leaves, questions, decorations] = await Promise.all([
+          const [progress, leaves, questions, decorations, attempts] = await Promise.all([
             api.get<{ modules: { moduleId: number; part: number; completed: boolean }[] }>(
               '/progress',
             ),
             api.get<{ balance: number }>('/leaves'),
             api.get<{ id: string; text: string }[]>('/lecture-questions'),
-            api.get<{ id: string; owned: boolean }[]>('/decorations'),
+            api.get<{ id: string; owned: boolean; placed: boolean }[]>('/decorations'),
+            api.get<AttemptRecord[]>('/attempts'),
           ]);
           set({
             modules: Object.fromEntries(
               progress.modules.map((m) => [m.moduleId, { part: m.part, completed: m.completed }]),
             ),
             leaves: leaves.balance,
+            // Past answers drive mastery (header %, Ready page) and which questions already paid leaves.
+            attempts: attempts.map(({ at, ...a }) => ({ ...a, at: Date.parse(at) })),
             lectureQuestions: questions,
             ownedDecorations: decorations.filter((d) => d.owned).map((d) => d.id),
+            hiddenDecorations: decorations.filter((d) => d.owned && !d.placed).map((d) => d.id),
           });
         },
 
@@ -113,9 +152,11 @@ export const useProgressStore = create<ProgressState>()(
           }));
           if (get().signedIn) {
             save(() =>
-              api.put('/progress', {
-                modules: [{ moduleId, part, completed: current?.completed ?? false }],
-              }),
+              api
+                .put('/progress', {
+                  modules: [{ moduleId, part, completed: current?.completed ?? false }],
+                })
+                .then(refreshBadges),
             );
           }
         },
@@ -129,9 +170,11 @@ export const useProgressStore = create<ProgressState>()(
           earn('lesson');
           if (get().signedIn) {
             save(() =>
-              api.put('/progress', {
-                modules: [{ moduleId, part: current?.part ?? 1, completed: true }],
-              }),
+              api
+                .put('/progress', {
+                  modules: [{ moduleId, part: current?.part ?? 1, completed: true }],
+                })
+                .then(refreshBadges),
             );
           }
         },
@@ -152,15 +195,21 @@ export const useProgressStore = create<ProgressState>()(
               misconception,
             } = a;
             save(() =>
-              api.post('/attempts', {
-                itemId,
-                objective,
-                correct,
-                firstAttempt,
-                hintsUsed,
-                confidence,
-                misconception,
-              }),
+              api
+                .post(
+                  '/attempts',
+                  {
+                    itemId,
+                    objective,
+                    correct,
+                    firstAttempt,
+                    hintsUsed,
+                    confidence,
+                    misconception,
+                  },
+                  AttemptResult,
+                )
+                .then(applyAttemptResult),
             );
           }
         },
@@ -176,7 +225,7 @@ export const useProgressStore = create<ProgressState>()(
 
         finishWarmup: (correct, total, answers) => {
           set({ needsRecap: correct < Math.ceil(total * 0.6) });
-          if (get().signedIn) save(() => api.post('/warmup', { answers }));
+          if (get().signedIn) save(() => api.post('/warmup', { answers }).then(refreshBadges));
         },
 
         addLectureQuestion: (text) => {
@@ -202,18 +251,41 @@ export const useProgressStore = create<ProgressState>()(
           return true;
         },
 
-        reset: () => set({ ...initial }),
+        toggleDecoration: (id) => {
+          const s = get();
+          if (!s.ownedDecorations.includes(id)) return;
+          const placed = s.hiddenDecorations.includes(id);
+          set({
+            hiddenDecorations: placed
+              ? s.hiddenDecorations.filter((x) => x !== id)
+              : [...s.hiddenDecorations, id],
+          });
+          if (s.signedIn)
+            save(() => api.put('/grove/placement', { items: [{ decorationId: id, placed }] }));
+        },
+
+        dismissBonus: () => set({ lastBonus: null }),
+
+        reset: () => {
+          useSyncStore.getState().clear();
+          set({ ...initial, lastBonus: null });
+        },
       };
     },
     {
       name: 'btree-progress',
       storage: createJSONStorage(() => sessionStorage),
-      partialize: ({ signedIn: _signedIn, ...rest }) => rest,
+      partialize: ({ signedIn: _signedIn, lastBonus: _lastBonus, ...rest }) => rest,
     },
   ),
 );
 
 /* ---------- Derived values ---------- */
+
+/** Owned decorations that are currently on the tree. */
+export const placedDecorations = (
+  s: Pick<ProgressState, 'ownedDecorations' | 'hiddenDecorations'>,
+) => s.ownedDecorations.filter((id) => !s.hiddenDecorations.includes(id));
 
 export const modulesDone = (s: Pick<ProgressState, 'modules'>) =>
   Object.values(s.modules).filter((m) => m.completed).length;

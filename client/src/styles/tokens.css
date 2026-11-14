@@ -9,9 +9,9 @@
 /* Fixed tokens. Tailwind's default scales are cleared, so only these values exist
    (a class like `rounded-xl` or `text-sm` does nothing). */
 @theme {
-  /* Figma type: Display = Sniglet ExtraBold (only the 800 face is loaded, so all display
-     text renders ExtraBold), Text = Atkinson Hyperlegible 400/700. */
-  --font-display: 'Sniglet', 'Arial Rounded MT Bold', 'Trebuchet MS', system-ui, sans-serif;
+  /* Figma type: Display = Coiny (a single 400 face, so display text is
+     never bolded), Text = Atkinson Hyperlegible 400/700. */
+  --font-display: 'Coiny', 'Arial Rounded MT Bold', 'Trebuchet MS', system-ui, sans-serif;
   --font-sans: 'Atkinson Hyperlegible', 'Verdana', 'Segoe UI', system-ui, -apple-system, sans-serif;
   --font-mono: 'JetBrains Mono Variable', ui-monospace, monospace;
 

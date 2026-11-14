@@ -6,6 +6,7 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ### Changed
 
+- **Display text uses Coiny instead of Sniglet ExtraBold.** Self-hosted through Fontsource (`@fontsource/coiny`), with a rounded sans-serif fallback. Coiny has a single 400 face, so headings are set to `font-weight: 400` to avoid faux bold. Sizes are unchanged.
 - **Design tokens now match Figma exactly.** Read through the Figma integration once file access was granted (Screens page, Day and Dusk frames).
   - Fonts: display text is **Sniglet ExtraBold** (H1 50px, H2 28px, H3 21px, buttons 18px). Body text is **Atkinson Hyperlegible** (body 17px, labels 15px, small 13.5px). Both are self-hosted through Fontsource. Bagel Fat One and Nunito are removed.
   - Colours: tokens are renamed to the Figma variable names (`--paper`, `--paper-back`, `--leaf`, `--leaf-dark`, `--highlight`, `--branch`, `--ink`, `--ink-muted`, `--sky-100`, `--sky-200`, …) with exact Day and Dusk values. Tailwind classes follow the same names (`bg-surface` is now `bg-paper`, `bg-primary` is `bg-leaf`, `bg-accent` is `bg-highlight`, `text-muted` is `text-ink-muted`, and so on).
@@ -24,6 +25,41 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ### Added
 
+- **Account settings** (FRONTEND_PLAN Task 4).
+  - **Profile** card on the Account page: change your **display name** (the header and friends see it at once) and your **password** (current, new and confirm). The length and matching checks run before anything is sent; "Current password is incorrect" and the 429 "Slow down a little and try again later" show inline. Other devices stay signed in after a password change (a known prototype decision).
+  - **Theme follows the account.** A signed-in student's Day/Dusk choice is saved with `PATCH /api/account`, and applied on sign-in, so it comes back on another device or after clearing site data. Guests keep it on the device only. The Appearance card says which applies.
+  - **Download my data:** a "Your data" card above "Delete account" downloads `btree-basic-data-<date>.json`, with a line explaining it is the student's right under POPIA.
+  - `api.patch` and `useUpdateAccount` (updates `['me']` from the reply). `themeStore` now uses the shared `Theme` type. The Appearance card moved to `components/account/`.
+  - Tests: `ProfileCard.test.tsx` (name, password success, wrong password, 429, client checks, theme saving for signed-in and guest) and `lib/account.test.ts`.
+- **Friends** (FRONTEND_PLAN Task 3).
+  - The Account page's Friends card has three lists: **Requests for you** (**Accept** and **Decline**), **Requests you sent** (email, date sent and **Cancel request**) and **Your friends** (a link to their grove and **Unfriend**). Unfriending asks first ("Remove Sam from your friends?" with **Remove** / **Keep**). Every action reloads the list, so requests that cross show the two students as friends straight away.
+  - After sending a request the message stays neutral ("If that email has an account, they'll see your request.").
+  - **Pending requests on My grove:** the Friends' groves card shows "Lerato wants to be your friend" (or "2 friend requests waiting") with **Review →**, which opens the Friends card on the Account page and scrolls to it.
+  - **429 messages:** too many friend requests or cheers now show "Slow down a little and try again later" next to the button, instead of failing silently. Other failures show a general message.
+  - **After unfriending,** their grove link shows "You're no longer friends" with links back, not a broken page.
+  - New hooks: `useSendFriendRequest`, `useAcceptRequest`, `useDeclineRequest`, `useCancelRequest`, `useUnfriend` (each reloads `['friends']`); `useFriends` now checks the reply against `FriendsList`.
+  - Tests: `FriendsCard.test.tsx` (5 cases), `lib/friends.test.ts` and `FriendGrovePage.test.tsx`.
+- **Badges on Ready and My grove** (FRONTEND_PLAN Task 2).
+  - A **Badges** card shows all four (Explorer, Splitter, Root Raiser, Lecture Ready) with how to earn each one and "1 of 4 earned". Earned badges show the date ("Earned 14 Nov 2026"); locked ones have a dashed outline, a lock icon and the word "Locked", so colour isn't the only signal. On Ready it sits under the objectives (two columns); on My grove it is a one-column list under the streak card. Guests see all four locked with "Sign in to earn badges".
+  - Data comes from `GET /api/badges` (`useBadges`, query key `['badges']`). The progress store reloads it after a saved answer, module or warm-up, which are the saves that award badges, so a new badge appears without a reload.
+  - **Split it yourself** now says "Splitter badge earned" once the student has the badge, instead of "3 more in a row earns the Splitter badge" after a later wrong answer.
+  - Badges are never shown on a friend's grove.
+  - Tests: `BadgeCard.test.tsx` (earned, locked, guest, error) and 3 store cases for the badge refresh.
+- **Reward feedback** (FRONTEND_PLAN Task 1).
+  - **Bonuses show straight away.** The client now reads the server's reply to `POST /api/attempts` and adds any `bonuses` (3-day streak +15, ready check +60) to the leaf count and ledger, so the header updates without a reload. A short message pops up at the bottom of the screen ("+15 leaves: 3-day practice streak!"), announced to screen readers, and closes after 6 seconds. The server alone decides these bonuses, so guests never get them.
+  - **Streak card** on My grove, under the leaf count, from `GET /api/streak`. It counts down to the 3-day bonus ("Practise 1 day more in a row for +15 leaves") and refreshes after every saved answer. Guests see "Sign in to keep a streak".
+  - **Practice streak text fixed.** It promised "the Apples decoration for free", which nothing awards. It now counts correct split answers in a row toward the **Splitter** badge ("2 of 3 splits right in a row"), using the same rule as the server (the latest O5 answers, quiz included), and only appears on **Split it yourself**.
+  - The query client moved to `client/src/api/queryClient.ts`, so stores can refresh server data.
+  - Tests: 3 store cases for bonuses, `lib/rewards.test.ts` (streak text and split run) and `RewardToast.test.tsx`.
+- **Take decorations off the tree and put them back.** Bought decorations still go straight onto the tree, but each owned tile in the craft drawer (**Decorate** on My grove) now has a **Take off** / **Add to tree** button, and says "in your tree" or "in your drawer". Nothing is refunded or lost: the decoration stays owned.
+  - Guests keep the choice in the browser session, like their leaves. Signed-in students save it with the existing `PUT /api/grove/placement` (`placed`), so it survives signing out and in.
+  - `GET /api/decorations` now also returns `placed` for each decoration (false when not owned). The shared `Decoration` schema has the new field.
+  - A friend's grove already shows only decorations that are on the tree.
+  - Tests: two server cases in `grove.test.ts`, five store cases in `progressStore.test.ts`.
+- **Offline banner and error boundary**, so a failed save is shown to the student instead of failing silently.
+  - A banner under the header says when the student is offline, or how many changes haven't saved yet, with a "Try again" button. Saves that failed because of the network or a server error are kept in order and sent again automatically when the connection returns (`client/src/stores/syncStore.ts`). The queue lives in memory only, so the browser warns before the tab is closed while saves are waiting.
+  - A save the server refuses (4xx) isn't retried. If the session expired (401), the banner says the student was signed out and offers **Sign in again**; for any other refusal it suggests signing out and back in.
+  - Each screen is wrapped in an error boundary. A crash shows a "This branch snapped" card with a reload button instead of a blank page, and a page that couldn't download (usually offline) says to check the connection. Moving to another page clears the error, and an outer boundary covers the header and shell.
 - **Grove art from Figma** (09 My grove, the Components page and the Dusk frames), replacing the placeholder SVG.
   - Scene: sky, sun, clouds and three hills redrawn from the Figma "Grove scene". In Dusk the sun becomes a moon and fireflies appear, using Figma's own tokens (transparent in Day), so no theme check is needed.
   - Tree: Seed, Sprout and Shrub are the Figma stage icons, scaled up on a soil mound. Sapling is the Figma scene tree exactly. Young tree and Full tree are the same tree, grown larger with extra canopy.
@@ -74,6 +110,8 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ### Fixed
 
+- **Readiness showed 0% after signing in again.** The header's stage and percentage are worked out from the student's answers, but past answers were never loaded from the server, so a fresh sign-in started from zero. New `GET /api/attempts` returns the student's saved answers (oldest first, shared `AttemptRecord` schema), and they're loaded on sign-in with the rest of the progress. This also fixes the known limit where an answer already paid on another device paid +10 leaves again.
+- **Mastery percentages now mean "progress toward mastery".** Before, an objective's percentage was plain accuracy, so one right answer showed 100% next to "Getting there", while 4 of 5 showed 80% and "Mastered". Now the score is right answers out of at least 3 (`objectiveMastery` in `@btree/shared`): one right answer is 33%, two are 67%, three are 100%, and after that it's the share answered correctly. An objective is mastered exactly when its bar reaches 80%, so the number and the label always agree, and the overall readiness (the average) no longer jumps high after a handful of answers. The mastery rule itself is unchanged, so badges are unaffected. The Ready page explains the rule, and each objective still in progress says what's left, e.g. "1 of 1 right so far. Answer 2 more questions to finish."
 - **"Tap the nodes" questions can now be answered.** `QuestionCard` had no answer controls for `trace-path` questions, so tapping did nothing and Next stayed disabled. This blocked the module 3 and 5 quizzes and the ready check. Students now tap the path, then press Check or Clear.
 - Completing a module in two requests at the same moment paid the +30 lesson leaves twice.
 - `POST /api/hints` paid +5 on every call, so leaves could be farmed without limit.
@@ -100,11 +138,8 @@ All notable changes to this project are documented here. The format follows [Kee
 - Pixel pass of each screen against its Figma frame (layout and spacing; tokens are done).
 - Practice activity 4, **Build the tree** (objective O6), is a stub.
 - The ID lead should review the new lessons and quiz items (see the prompt log, Entry 004).
-- The client doesn't show badges yet. The server awards them and `GET /api/badges` lists them.
-- The client has no decline, cancel or unfriend buttons yet, no "Download my data" link, and doesn't show the 429 message. The server endpoints are ready.
-- The client has no profile settings yet (name, password, theme per account). `PATCH /api/account` is ready.
+- **"Requests you sent" reveals whether an email has an account.** The server only stores a request when the email belongs to a student, so a request to a made-up email never appears in the list. The 10-per-hour limit slows this down but doesn't stop it.
 - Not planned for the prototype: password reset by email, revocable sessions (the 14-day sign-in cookie stays valid after a password change), and database backups.
-- The client doesn't show reward bonuses (streak +15, ready check +60) until the page reloads, and the streak card doesn't use `GET /api/streak` yet.
 - Deployment (Vercel for the client, Render for the API and database) is not configured.
 
 ## [0.1.0] - 2026-11-09
