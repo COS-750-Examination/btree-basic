@@ -148,8 +148,13 @@ export const Decoration = z.object({
   owned: z.boolean(),
   /** On the tree. Owned decorations can be taken off and put back; false when not owned. */
   placed: z.boolean(),
+  x: z.number().nullable(),
+  y: z.number().nullable(),
 });
 export type Decoration = z.infer<typeof Decoration>;
+
+export const DecorationPosition = z.object({ x: z.number(), y: z.number() });
+export type DecorationPosition = z.infer<typeof DecorationPosition>;
 
 export const LectureQuestionBody = z.object({ text: z.string().trim().min(1).max(280) });
 export type LectureQuestionBody = z.infer<typeof LectureQuestionBody>;
@@ -179,12 +184,17 @@ export const FriendGrove = FriendSummary.extend({
   plantedAt: z.string(),
   streakDays: z.number().int(),
   decorations: z.array(z.string()),
+  positions: z.record(z.string(), DecorationPosition),
   completedModules: z.array(z.number().int()),
   currentModule: z.number().int().nullable(),
 });
 export type FriendGrove = z.infer<typeof FriendGrove>;
 
-export const IncomingFriendRequest = z.object({ id: z.string(), fromName: z.string() });
+export const IncomingFriendRequest = z.object({
+  id: z.string(),
+  fromName: z.string(),
+  sentAt: z.string(),
+});
 export type IncomingFriendRequest = z.infer<typeof IncomingFriendRequest>;
 
 export const OutgoingFriendRequest = z.object({
@@ -198,8 +208,12 @@ export const FriendsList = z.object({
   friends: z.array(FriendSummary),
   incoming: z.array(IncomingFriendRequest),
   outgoing: z.array(OutgoingFriendRequest),
+  requestsSeenAt: z.string().nullable(),
 });
 export type FriendsList = z.infer<typeof FriendsList>;
+
+export const RequestsSeenBody = z.object({ upTo: z.iso.datetime() });
+export type RequestsSeenBody = z.infer<typeof RequestsSeenBody>;
 
 export const CheerBody = z.object({
   message: z.string().trim().max(140).optional(),
@@ -209,6 +223,8 @@ export type CheerBody = z.infer<typeof CheerBody>;
 
 export const Cheer = z.object({
   id: z.string(),
+  fromId: z.string(),
+  toId: z.string(),
   fromName: z.string(),
   toName: z.string(),
   message: z.string().nullable(),
@@ -222,3 +238,22 @@ export const ApiError = z.object({
   details: z.unknown().optional(),
 });
 export type ApiError = z.infer<typeof ApiError>;
+
+export const InviteCode = z.object({ code: z.string() });
+export type InviteCode = z.infer<typeof InviteCode>;
+
+export const InviteStatus = z.enum(['self', 'friends', 'sent', 'received', 'none']);
+export type InviteStatus = z.infer<typeof InviteStatus>;
+
+export const InvitePreview = z.object({
+  displayName: z.string(),
+  status: InviteStatus,
+  friendId: z.string().nullable(),
+});
+export type InvitePreview = z.infer<typeof InvitePreview>;
+
+export const InviteResult = z.object({
+  status: z.enum(['sent', 'friends']),
+  friendId: z.string().nullable(),
+});
+export type InviteResult = z.infer<typeof InviteResult>;

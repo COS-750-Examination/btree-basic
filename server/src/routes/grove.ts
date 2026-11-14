@@ -37,15 +37,20 @@ groveRouter.get('/decorations', requireAuth, async (req, res) => {
     prisma.decoration.findMany({ orderBy: { cost: 'asc' } }),
     prisma.userDecoration.findMany({
       where: { userId: uid(req) },
-      select: { decorationId: true, placed: true },
+      select: { decorationId: true, placed: true, x: true, y: true },
     }),
   ]);
-  const mine = new Map(owned.map((o) => [o.decorationId, o.placed]));
-  const rows: Decoration[] = all.map((d) => ({
-    ...d,
-    owned: mine.has(d.id),
-    placed: mine.get(d.id) ?? false,
-  }));
+  const mine = new Map(owned.map((o) => [o.decorationId, o]));
+  const rows: Decoration[] = all.map((d) => {
+    const o = mine.get(d.id);
+    return {
+      ...d,
+      owned: Boolean(o),
+      placed: o?.placed ?? false,
+      x: o?.x ?? null,
+      y: o?.y ?? null,
+    };
+  });
   res.json(rows);
 });
 
@@ -82,8 +87,8 @@ const Placement = z.object({
       z.object({
         decorationId: z.string(),
         placed: z.boolean(),
-        x: z.number().optional(),
-        y: z.number().optional(),
+        x: z.number().min(-832).max(832).nullable().optional(),
+        y: z.number().min(-480).max(480).nullable().optional(),
       }),
     )
     .max(50),

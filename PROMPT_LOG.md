@@ -947,6 +947,209 @@ Several fonts were tried in turn at the requester's direction: Spectral, Gravita
 
 ---
 
+## Entry 019: Friend invite links
+
+| Field        | Detail                                                                                                                                                                                                                 |
+| ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Date         | 14 November 2026                                                                                                                                                                                                       |
+| Requested by | Taylor Sergel, frontend                                                                                                                                                                                                |
+| Tool         | Claude Code (Anthropic), model Claude Opus 5.5                                                                                                                                                                         |
+| Scope        | Prisma schema and migration, `routes/invites.ts`, `lib/export.ts`, shared invite schemas, `InviteLink.tsx`, `FriendsCard.tsx`, `AddFriendPage.tsx`, `AuthPages.tsx`, `App.tsx`, `api/hooks.ts`, `lib/invite.ts`, tests |
+| Status       | Completed; left uncommitted on branch `feat/ui-updates` for review                                                                                                                                                     |
+
+### Request
+
+> Please make it possible to find friends while typing, like Instagram's search dropdown. After discussing the privacy trade-off, the requester chose instead: let students share a personal link that adds them as a friend.
+
+### Clarifications provided
+
+- A search over all accounts was not built, because it would list every student's name and email to anyone signed in, against the app's POPIA design of never revealing who has an account. The options offered were opt-in name search, invite links, or both; invite links were chosen.
+- Opening a link sends a friend request rather than making the two students friends at once, so a link that is passed on further can't add strangers without the owner accepting. **Make a new link** stops an old link working.
+- The work is on `feat/ui-updates`, and no code comments were added, both as the requester asked.
+
+### Deliverables
+
+- **Server:** `User.inviteCode` and migration; four `/api/invites` routes with rate limits; the code included in the data export.
+- **Shared:** `InviteCode`, `InvitePreview`, `InviteResult`, `InviteStatus` and invite constants.
+- **Client:** invite link section on the Friends card (copy, share, replace), the `/add/:code` page, `?next=` support on login and register, and four hooks.
+- **Tests:** 6 server, 6 page, 2 card and 2 helper cases.
+
+### Verification summary
+
+| Check                                                                                                                                                                                                             | Result         |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------- |
+| Server tests                                                                                                                                                                                                      | 111 / 111 pass |
+| Client tests                                                                                                                                                                                                      | 111 / 111 pass |
+| Browser check (Chrome, two accounts): copy the link; a guest opens it, registers and comes back to the invite; sends the request; the owner sees it on My grove and accepts; the link then says "Already friends" | Pass           |
+| Browser check: after **Make a new link** the old link says "This link doesn't work"; your own link says "This is your own link"                                                                                   | Pass           |
+| No sideways scroll on Account at 375px wide                                                                                                                                                                       | Pass           |
+| ESLint, TypeScript (strict), Prettier, build                                                                                                                                                                      | Pass           |
+
+### Human review required
+
+- **Backend owner:** this adds a column and migration to the shared database, and four routes. Teammates need `npm run db:migrate` after pulling.
+- **"Requests you sent" leak** (Entry 017) is still open and is separate from this change.
+- **Figma:** the invite section and add-friend page have no Figma frame.
+
+---
+
+## Entry 020: Profile view and edit modes; Friends card order
+
+| Field        | Detail                                                             |
+| ------------ | ------------------------------------------------------------------ |
+| Date         | 15 November 2026                                                   |
+| Requested by | Taylor Sergel, frontend                                            |
+| Tool         | Claude Code (Anthropic), model Claude Opus 5.5                     |
+| Scope        | `ProfileCard.tsx`, `FriendsCard.tsx`, `InviteLink.tsx`, tests      |
+| Status       | Completed; left uncommitted on branch `feat/ui-updates` for review |
+
+### Request
+
+> Please make the Account page show the student's details by default, with a small round pen (edit) button that switches the Profile card to the editing form, and **Cancel** and **Save changes** buttons at the bottom that return to the details view. Also place the invite link below the "Add by email" form.
+
+### Clarifications provided
+
+- The details view shows the name, email (which can't be changed) and a hidden password.
+- Name and password are saved in one request. The password fields are optional; filling in any of them requires all three.
+- After saving or cancelling, focus returns to the pen button for keyboard users; opening the form focuses the name field.
+
+### Deliverables
+
+- **`ProfileCard.tsx`:** details view with a round **Edit profile** button, and an edit form with **Cancel** and **Save changes**.
+- **Friends card:** "Add by email" first, then "Or share your invite link".
+- **Tests:** `ProfileCard.test.tsx` rewritten for both modes (7 profile cases).
+
+### Verification summary
+
+| Check                                                                                          | Result         |
+| ---------------------------------------------------------------------------------------------- | -------------- |
+| Client tests                                                                                   | 113 / 113 pass |
+| Browser check (Chrome): view, edit, save returns to view with the new name; Friends card order | Pass           |
+| ESLint, TypeScript (strict), Prettier, build                                                   | Pass           |
+
+---
+
+## Entry 021: Cheer notifications and My grove order
+
+| Field        | Detail                                                                                                                                                      |
+| ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Date         | 15 November 2026                                                                                                                                            |
+| Requested by | Taylor Sergel, frontend                                                                                                                                     |
+| Tool         | Claude Code (Anthropic), model Claude Opus 5.5                                                                                                              |
+| Scope        | `routes/friends.ts`, shared `Cheer`, `stores/cheersStore.ts`, `CheersCard.tsx`, `Header.tsx`, `GrovePage.tsx`, `FriendGrovePage.tsx`, `api/hooks.ts`, tests |
+| Status       | Completed; left uncommitted on branch `feat/ui-updates` for review                                                                                          |
+
+### Request
+
+> A student can send a friend a cheer, but the friend gets no notification anywhere. Please add one, and on My grove place Friends' groves above Badges.
+
+### Clarifications provided
+
+- The notification is a count on **My grove** in the header (and a dot on the phone menu button), plus a **Cheers for you** card on My grove. Opening My grove marks cheers as seen.
+- "Seen" is stored on the device per account, so no database change was needed. A student on a new device sees their recent cheers as new once.
+- Cheers are re-checked every minute while the app is open.
+
+### Deliverables
+
+- **Server and shared:** `fromId` and `toId` on each cheer.
+- **Client:** `cheersStore.ts` (seen times and the new-cheer count), header count, `CheersCard.tsx`, sidebar reorder, friend grove matching by id.
+- **Tests:** 3 store cases, 2 card cases, updated server cheers test.
+
+### Verification summary
+
+| Check                                                                                                                                | Result         |
+| ------------------------------------------------------------------------------------------------------------------------------------ | -------------- |
+| Client tests                                                                                                                         | 118 / 118 pass |
+| Server tests                                                                                                                         | 111 / 111 pass |
+| Browser check (Chrome, two friends): A cheers B; B's header shows "My grove 1"; My grove lists the cheer as New and the count clears | Pass           |
+| ESLint, TypeScript (strict), Prettier, build                                                                                         | Pass           |
+
+---
+
+## Entry 022: Friend request notifications
+
+| Field        | Detail                                                                                                                                                             |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Date         | 15 November 2026                                                                                                                                                   |
+| Requested by | Taylor Sergel, frontend                                                                                                                                            |
+| Tool         | Claude Code (Anthropic), model Claude Opus 5.5                                                                                                                     |
+| Scope        | Prisma schema and migration, `routes/friends.ts`, `lib/export.ts`, shared friend schemas, `Header.tsx`, `AccountPage.tsx`, `api/hooks.ts`, `lib/friends.ts`, tests |
+| Status       | Completed; left uncommitted on branch `feat/ui-updates` for review                                                                                                 |
+
+### Request
+
+> Please show a small counter on the account (initials) button when the student has new friend requests. It should only disappear when they open the Account page, and stay cleared after signing out and back in. Later it should count only requests that arrived since, not older ones they ignored.
+
+### Clarifications provided
+
+- The seen time is stored on the account in the database rather than in the browser, so it holds across sign-out, cleared site data and other devices.
+- The counter shows up to "9+".
+
+### Deliverables
+
+- **Server:** `User.requestsSeenAt` and migration, `sentAt` and `requestsSeenAt` in `GET /api/friends`, `POST /api/friends/requests/seen`, export field.
+- **Client:** counter on the account button, `useMarkRequestsSeen` called from the Account page, `newRequests` helper, friends list re-checked every minute.
+- **Tests:** 3 server, 4 component and 2 helper cases.
+
+### Verification summary
+
+| Check                                                                                                                                                                                               | Result         |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------- |
+| Server tests                                                                                                                                                                                        | 114 / 114 pass |
+| Client tests                                                                                                                                                                                        | 124 / 124 pass |
+| Browser check (Chrome): 2 requests show "2"; opening Account clears it; it stays cleared after leaving, and after signing out, clearing storage and signing in; one more request shows "1", not "3" | Pass           |
+| ESLint, TypeScript (strict), Prettier, build                                                                                                                                                        | Pass           |
+
+### Human review required
+
+- **Backend owner:** a second new column and migration on `User`. Teammates need `npm run db:migrate` after pulling.
+
+---
+
+## Entry 023: Mini-lessons (O1–O8) and dragging decorations
+
+| Field        | Detail                                                                                                                                                                                                                                                                                                                    |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Date         | 15 November 2026                                                                                                                                                                                                                                                                                                          |
+| Requested by | Taylor Sergel, frontend                                                                                                                                                                                                                                                                                                   |
+| Tool         | Claude Code (Anthropic), model Claude Opus 5.5                                                                                                                                                                                                                                                                            |
+| Scope        | `content/mini-lessons/*.md`, `MiniLessonPage.tsx`, `lib/miniLessons.ts`, `lib/content.ts`, `QuizPage.tsx`, `PracticePage.tsx`, `ReadyPage.tsx`, `GroveTree.tsx`, `GrovePage.tsx`, `FriendGrovePage.tsx`, `progressStore.ts`, `styles/index.css`, `routes/grove.ts`, `routes/friends.ts`, shared decoration schemas, tests |
+| Status       | Completed; left uncommitted on branch `feat/ui-updates` for review                                                                                                                                                                                                                                                        |
+
+### Request
+
+> Please do steps 6 and 7 together: write the "Need more?" mini-lessons for objectives O1–O8 (the ID team does not have time), and let students drag decorations into place on their grove, including the backend change.
+
+### Clarifications provided
+
+- The requester asked Claude to write the mini-lesson text. It follows the existing lessons' trees, wording and rules, and every worked example was checked against the B-tree engine. One calculation in the O7 draft was wrong (it said a 1,000-key 2-3 tree is at most 10 levels; it is 9) and was corrected before checking in.
+- Moving decorations is only switched on while the craft drawer is open, so the scene is not accidentally changed and stays a plain picture for screen readers otherwise.
+- Each decoration moves as one piece (for example all the apples together).
+
+### Deliverables
+
+- **Mini-lessons:** 8 Markdown files, the `/mini-lessons/:objective` page with a hidden answer, and links from Quiz, Practice and Ready.
+- **Decorations:** pointer dragging and arrow-key moving in `GroveTree`, positions in the progress store, **Move back**, and positions on a friend's grove.
+- **Server:** positions returned by `GET /api/decorations` and the friend grove; placement accepts `null` to reset and rejects positions outside the scene.
+- **Tests:** 6 engine-checked content cases, 5 page cases, 5 scene cases, 2 store cases, 3 server cases.
+
+### Verification summary
+
+| Check                                                                                                                              | Result         |
+| ---------------------------------------------------------------------------------------------------------------------------------- | -------------- |
+| Client tests                                                                                                                       | 142 / 142 pass |
+| Server tests                                                                                                                       | 117 / 117 pass |
+| Browser check (Chrome): drag the songbird with the mouse; move the apples with Shift+arrows; positions saved and kept after reload | Pass           |
+| Browser check: quiz "Need more?" opens the mini-lesson for the question's objective; **Show answer** and **Back** work             | Pass           |
+| ESLint, TypeScript (strict), Prettier, build                                                                                       | Pass           |
+
+### Human review required
+
+- **ID team:** please review the eight mini-lessons in `client/src/content/mini-lessons/` for tone and level before the demo.
+- **Figma:** neither the mini-lesson page nor the moving controls have a Figma frame.
+
+---
+
 ## Entry template
 
 ```markdown

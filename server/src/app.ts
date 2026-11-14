@@ -11,6 +11,7 @@ import { authRouter } from './routes/auth';
 import { friendsRouter } from './routes/friends';
 import { groveRouter } from './routes/grove';
 import { healthRouter } from './routes/health';
+import { invitesRouter } from './routes/invites';
 import { progressRouter } from './routes/progress';
 
 /** Builds the Express app without listening, so tests can drive it with Supertest. */
@@ -44,6 +45,7 @@ export function createApp() {
   app.use('/api', progressRouter);
   app.use('/api', groveRouter);
   app.use('/api', friendsRouter);
+  app.use('/api', invitesRouter);
 
   app.use(notFoundHandler);
   app.use(errorHandler);

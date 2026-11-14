@@ -26,7 +26,6 @@ describe('BadgeCard', () => {
     for (const label of ['Splitter', 'Root Raiser', 'Lecture Ready']) {
       expect(within(tile(label)).getByText('Locked')).toBeInTheDocument();
     }
-    // The description says how to earn each one.
     expect(screen.getByText(/split an overflowing node correctly 3 times/i)).toBeInTheDocument();
   });
 

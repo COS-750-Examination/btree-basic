@@ -10,10 +10,10 @@ import {
 } from '../../api/hooks';
 import { friendErrorText, sentDate } from '../../lib/friends';
 import { Avatar, Button, Card, CardTitle } from '../ui';
+import { InviteLink } from './InviteLink';
 
 const row = 'text-small flex flex-wrap items-center gap-2 rounded-md bg-sky-100 p-3';
 
-/** Account page: send, accept, decline and cancel friend requests, and unfriend. */
 export function FriendsCard() {
   const friends = useFriends(true);
   const send = useSendFriendRequest();
@@ -25,7 +25,6 @@ export function FriendsCard() {
   const [confirming, setConfirming] = useState<string | null>(null);
   const { hash } = useLocation();
 
-  // "Review →" on My grove links to /account#friends.
   useEffect(() => {
     if (hash === '#friends')
       document.getElementById('friends')?.scrollIntoView?.({ block: 'start' });
@@ -36,7 +35,6 @@ export function FriendsCard() {
     send.mutate(email, { onSuccess: () => setEmail('') });
   };
 
-  // The latest failure among the list actions (accept, decline, cancel, unfriend).
   const listError = [accept, decline, cancel, unfriend].find((m) => m.isError)?.error;
   const busy = accept.isPending || decline.isPending || cancel.isPending || unfriend.isPending;
   const { friends: list = [], incoming = [], outgoing = [] } = friends.data ?? {};
@@ -44,6 +42,7 @@ export function FriendsCard() {
   return (
     <Card id="friends">
       <CardTitle>Friends</CardTitle>
+      <h3 className="text-label mb-2 font-bold">Add by email</h3>
       <form onSubmit={submit} className="flex gap-2">
         <label htmlFor="friend-email" className="sr-only">
           Friend&apos;s email
@@ -73,6 +72,10 @@ export function FriendsCard() {
           {friendErrorText(send.error)}
         </p>
       )}
+
+      <div className="mt-5">
+        <InviteLink />
+      </div>
 
       {friends.isError && (
         <p role="alert" className="text-small mt-4">
@@ -134,7 +137,9 @@ export function FriendsCard() {
         <h3 className="text-label mb-2 font-bold">Your friends</h3>
         {list.length === 0 ? (
           <p className="text-ink-muted text-small">
-            {friends.isPending ? 'Loading…' : 'No friends yet. Send a request by email above.'}
+            {friends.isPending
+              ? 'Loading…'
+              : 'No friends yet. Share your invite link or add someone by email.'}
           </p>
         ) : (
           <ul className="space-y-2">

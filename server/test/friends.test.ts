@@ -97,7 +97,9 @@ describe.skipIf(!hasDb)('friends routes (database)', () => {
 
       expect(mine.body.friends).toHaveLength(1);
       expect(mine.body.friends[0]).toMatchObject({ id: b.id, displayName: 'Friend' });
-      expect(mine.body.incoming).toEqual([{ id: pending.id, fromName: 'Hopeful' }]);
+      expect(mine.body.incoming).toEqual([
+        { id: pending.id, fromName: 'Hopeful', sentAt: pending.createdAt.toISOString() },
+      ]);
 
       const theirs = await b.agent.get('/api/friends').expect(200);
       expect(theirs.body.friends.map((f: { id: string }) => f.id)).toEqual([a.id]);
@@ -130,6 +132,38 @@ describe.skipIf(!hasDb)('friends routes (database)', () => {
       const res = await a.agent.get(`/api/friends/${c.id}/grove`).expect(404);
 
       expect(res.body.error).toBe('Friend not found');
+    });
+  });
+
+  describe('requests seen', () => {
+    it('starts unseen and remembers the latest seen time on the account', async () => {
+      const a = await fresh('Seer');
+      expect((await a.agent.get('/api/friends').expect(200)).body.requestsSeenAt).toBeNull();
+
+      const upTo = new Date(Date.now() - 60_000).toISOString();
+      await a.agent.post('/api/friends/requests/seen').send({ upTo }).expect(204);
+      expect((await a.agent.get('/api/friends').expect(200)).body.requestsSeenAt).toBe(upTo);
+
+      await a.agent
+        .post('/api/friends/requests/seen')
+        .send({ upTo: new Date(Date.now() - 600_000).toISOString() })
+        .expect(204);
+      expect((await a.agent.get('/api/friends').expect(200)).body.requestsSeenAt).toBe(upTo);
+    });
+
+    it('never moves the seen time into the future', async () => {
+      const a = await fresh('Future');
+      await a.agent
+        .post('/api/friends/requests/seen')
+        .send({ upTo: new Date(Date.now() + 86_400_000).toISOString() })
+        .expect(204);
+      const seen = Date.parse((await a.agent.get('/api/friends').expect(200)).body.requestsSeenAt);
+      expect(seen).toBeLessThanOrEqual(Date.now());
+    });
+
+    it('rejects a body without a valid time', async () => {
+      const a = await fresh('Bad');
+      await a.agent.post('/api/friends/requests/seen').send({ upTo: 'yesterday' }).expect(400);
     });
   });
 
@@ -185,8 +219,20 @@ describe.skipIf(!hasDb)('friends routes (database)', () => {
       const res = await a.agent.get('/api/cheers').expect(200);
 
       expect(res.body).toHaveLength(2);
-      expect(res.body[0]).toMatchObject({ message: 'newer', fromName: 'Alpha', toName: 'Beta' });
-      expect(res.body[1]).toMatchObject({ message: 'older', fromName: 'Beta', toName: 'Alpha' });
+      expect(res.body[0]).toMatchObject({
+        message: 'newer',
+        fromId: a.id,
+        toId: b.id,
+        fromName: 'Alpha',
+        toName: 'Beta',
+      });
+      expect(res.body[1]).toMatchObject({
+        message: 'older',
+        fromId: b.id,
+        toId: a.id,
+        fromName: 'Beta',
+        toName: 'Alpha',
+      });
     });
   });
 
@@ -235,6 +281,24 @@ describe.skipIf(!hasDb)('friends routes (database)', () => {
       expect(body).not.toContain('secret');
       expect(body).not.toContain(b.email);
       expect(res.body.decorations).toEqual(['apples']);
+      expect(res.body.positions).toEqual({});
+    });
+
+    it('friend grove shows where decorations were moved to', async () => {
+      const a = await fresh('Looker');
+      const b = await fresh('Decorator');
+      await befriend(a, b);
+      await prisma.userDecoration.createMany({
+        data: [
+          { userId: b.id, decorationId: 'apples', x: 24, y: -16 },
+          { userId: b.id, decorationId: 'bunting' },
+          { userId: b.id, decorationId: 'songbird', placed: false, x: 5, y: 5 },
+        ],
+      });
+
+      const res = await a.agent.get(`/api/friends/${b.id}/grove`).expect(200);
+      expect(res.body.decorations.sort()).toEqual(['apples', 'bunting']);
+      expect(res.body.positions).toEqual({ apples: { x: 24, y: -16 } });
     });
 
     it('friend grove never includes badges', async () => {
@@ -424,7 +488,9 @@ describe.skipIf(!hasDb)('friends routes (database)', () => {
 
         const theirs = await b.agent.get('/api/friends').expect(200);
         expect(theirs.body.outgoing).toEqual([]);
-        expect(theirs.body.incoming).toEqual([{ id: row.id, fromName: 'Outgoing' }]);
+        expect(theirs.body.incoming).toEqual([
+          { id: row.id, fromName: 'Outgoing', sentAt: row.createdAt.toISOString() },
+        ]);
       });
     });
   });

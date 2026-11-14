@@ -13,7 +13,7 @@ import {
   type BTreeNode,
   type NodeSpec,
 } from '@btree/engine';
-import { SPLITTER_RUN, type ObjectiveId, type QuizItem } from '@btree/shared';
+import { OBJECTIVES, SPLITTER_RUN, type ObjectiveId, type QuizItem } from '@btree/shared';
 import { Award } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router';
@@ -29,6 +29,7 @@ import {
   cn,
 } from '../components/ui';
 import { useBadges } from '../api/hooks';
+import { miniLessonPath } from '../lib/miniLessons';
 import { splitRun } from '../lib/rewards';
 import { useProgressStore } from '../stores/progressStore';
 
@@ -66,7 +67,6 @@ export function PracticePage() {
   const recordAttempt = useProgressStore((s) => s.recordAttempt);
   const signedIn = useProgressStore((s) => s.signedIn);
   const run = useProgressStore((s) => splitRun(s.attempts));
-  // Badges are kept once earned, so a later wrong answer must not make it look locked again.
   const hasSplitter = Boolean(
     useBadges(signedIn).data?.find((b) => b.id === 'splitter')?.awardedAt,
   );
@@ -184,6 +184,16 @@ export function PracticePage() {
           <Card>
             <CardTitle>Stuck?</CardTitle>
             <ul className="text-label space-y-3 font-bold">
+              <li>
+                <Link
+                  to={miniLessonPath(meta.objective, `/practice/${activity}`)}
+                  className="flex gap-2 hover:underline"
+                >
+                  <LeafIcon className="h-4 w-4 shrink-0" />
+                  Mini-lesson:{' '}
+                  {OBJECTIVES.find((o) => o.id === meta.objective)?.label.toLowerCase()} (3 min)
+                </Link>
+              </li>
               <li>
                 <Link to="/visualiser" className="flex gap-2 hover:underline">
                   <LeafIcon className="h-4 w-4 shrink-0" />
