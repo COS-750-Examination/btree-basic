@@ -5,6 +5,7 @@ import {
   FriendsList,
   PublicUser,
   StreakSummary,
+  type AccountPatchBody,
   type LoginBody,
   type RegisterBody,
 } from '@btree/shared';
@@ -130,5 +131,17 @@ export function useBadges(enabled: boolean) {
     queryKey: ['badges'],
     queryFn: () => api.get('/badges', z.array(Badge)),
     enabled,
+  });
+}
+
+/**
+ * Change the display name, password or theme. The reply is the updated user, so the header
+ * (and anything else reading `['me']`) updates at once.
+ */
+export function useUpdateAccount() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (body: AccountPatchBody) => api.patch('/account', body, PublicUser),
+    onSuccess: (user) => qc.setQueryData(['me'], user),
   });
 }

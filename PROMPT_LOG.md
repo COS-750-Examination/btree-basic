@@ -899,6 +899,54 @@ Several fonts were tried in turn at the requester's direction: Spectral, Gravita
 
 ---
 
+## Entry 018: Account settings (FRONTEND_PLAN Task 4)
+
+| Field        | Detail                                                                                                                                                |
+| ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Date         | 14 November 2026                                                                                                                                      |
+| Requested by | Taylor Sergel, frontend                                                                                                                               |
+| Tool         | Claude Code (Anthropic), model Claude Opus 5.5                                                                                                        |
+| Scope        | `ProfileCard.tsx`, `AppearanceCard.tsx`, `AccountPage.tsx`, `AppShell.tsx`, `themeStore.ts`, `api/client.ts`, `api/hooks.ts`, `lib/account.ts`, tests |
+| Status       | Completed; left uncommitted on branch `feat/account-settings-ui` for review                                                                           |
+
+### Request
+
+> Please implement step 4 of the frontend plan (change display name and password, save the Day/Dusk theme per account, and a "Download my data" link), and explain how to check that it works before committing.
+
+### Clarifications provided
+
+- Name and password are two forms in one Profile card, each with its own Save button and messages, so a wrong password never blocks a name change.
+- The "Download my data" link sits in its own "Your data" card just above "Delete account".
+- If saving the theme to the account fails, the theme still changes on the device and a short message says so.
+- The branch was created from `feat/friends-ui`.
+
+### Deliverables
+
+- **`ProfileCard.tsx` (new):** display name and change password, validated with the shared `AccountPatchBody` before sending.
+- **`AppearanceCard.tsx` (moved and extended):** saves the theme to the account when signed in.
+- **`AppShell.tsx`:** applies `me.theme` on sign-in when it isn't null.
+- **Account page:** "Your data" card with **Download my data**.
+- **`api.patch`, `useUpdateAccount`, `lib/account.ts`** (error text).
+- **Tests:** 8 card cases and 3 helper cases.
+
+### Verification summary
+
+| Check                                                                                                                           | Result         |
+| ------------------------------------------------------------------------------------------------------------------------------- | -------------- |
+| Client tests                                                                                                                    | 101 / 101 pass |
+| Browser check (Chrome): rename updates the page and the server; wrong current password shows the message; password change works | Pass           |
+| Browser check: pick Dusk, then sign in from a fresh browser with a light system theme, and the app opens in Dusk                | Pass           |
+| Browser check: **Download my data** saves `btree-basic-data-2026-11-14.json` with account, progress, badges and friends         | Pass           |
+| No sideways scroll on Account at 375px wide                                                                                     | Pass           |
+| ESLint, TypeScript (strict), Prettier, build                                                                                    | Pass           |
+
+### Human review required
+
+- **Figma:** the Profile and Your data cards have no Figma frame.
+- A guest who picked a theme and then signs in to an account with no saved theme keeps the guest's choice on that device; it is saved to the account the next time they pick one.
+
+---
+
 ## Entry template
 
 ```markdown

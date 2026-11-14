@@ -1,55 +1,18 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Moon, Sun } from 'lucide-react';
+import { Download } from 'lucide-react';
 import { useNavigate } from 'react-router';
 import { api } from '../api/client';
 import { useLogout, useMe } from '../api/hooks';
+import { AppearanceCard } from '../components/account/AppearanceCard';
+import { ProfileCard } from '../components/account/ProfileCard';
 import { FriendsCard } from '../components/friends/FriendsCard';
-import { Button, ButtonLink, Card, CardTitle, PageHeader, cn } from '../components/ui';
+import { Button, ButtonLink, Card, CardTitle, PageHeader } from '../components/ui';
 import { useProgressStore } from '../stores/progressStore';
-import { useThemeStore, type Theme } from '../stores/themeStore';
 
-const THEMES: { id: Theme; label: string; Icon: typeof Sun }[] = [
-  { id: 'day', label: 'Day', Icon: Sun },
-  { id: 'dusk', label: 'Dusk', Icon: Moon },
-];
-
-/** Day / Dusk theme picker. Saved on this device, so guests can use it too. */
-function AppearanceCard() {
-  const { theme, setTheme } = useThemeStore();
-  return (
-    <Card>
-      <CardTitle>Appearance</CardTitle>
-      <fieldset>
-        <legend className="text-ink-muted text-small mb-3">
-          Pick a theme. It is saved on this device.
-        </legend>
-        <div className="flex gap-2">
-          {THEMES.map(({ id, label, Icon }) => (
-            <label
-              key={id}
-              className={cn(
-                'shadow-paper-stack-sm has-[:focus-visible]:outline-yarn flex cursor-pointer items-center gap-2 rounded-md px-4 py-2 font-bold has-[:focus-visible]:outline-2',
-                theme === id ? 'bg-highlight text-on-highlight' : 'bg-paper',
-              )}
-            >
-              <input
-                type="radio"
-                name="theme"
-                className="sr-only"
-                checked={theme === id}
-                onChange={() => setTheme(id)}
-              />
-              <Icon className="h-4 w-4" aria-hidden />
-              {label}
-            </label>
-          ))}
-        </div>
-      </fieldset>
-    </Card>
-  );
-}
-
-/** Account settings: appearance, friends, sign out and account deletion (FR10, POPIA). */
+/**
+ * Account settings: profile, appearance, friends, sign out, a copy of your data and account
+ * deletion (FR10, POPIA).
+ */
 export function AccountPage() {
   const me = useMe();
   const logout = useLogout();
@@ -78,7 +41,7 @@ export function AccountPage() {
             </ButtonLink>
           </div>
         </Card>
-        <AppearanceCard />
+        <AppearanceCard signedIn={false} />
       </div>
     );
   }
@@ -86,7 +49,8 @@ export function AccountPage() {
   return (
     <div className="mx-auto max-w-2xl space-y-6">
       <PageHeader title="Your account" subtitle={`${me.data.displayName} · ${me.data.email}`} />
-      <AppearanceCard />
+      <ProfileCard user={me.data} />
+      <AppearanceCard signedIn />
       <FriendsCard />
       <Card>
         <CardTitle>Session</CardTitle>
@@ -103,6 +67,21 @@ export function AccountPage() {
         >
           Sign out
         </Button>
+      </Card>
+      <Card>
+        <CardTitle>Your data</CardTitle>
+        <p className="text-ink-muted text-small mb-3">
+          Download a copy of everything B-Tree Basic stores about you (your account, progress,
+          answers, leaves, badges and friends) as a JSON file. This is your right under POPIA.
+        </p>
+        <a
+          href="/api/account/export"
+          download
+          className="border-ink text-label font-display inline-flex items-center gap-2 rounded-lg border-2 px-3 py-1.5"
+        >
+          <Download className="h-4 w-4" aria-hidden />
+          Download my data
+        </a>
       </Card>
       <Card>
         <CardTitle>Delete account</CardTitle>

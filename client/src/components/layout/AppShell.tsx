@@ -10,7 +10,7 @@ import { OfflineBanner } from './OfflineBanner';
 import { RewardToast } from './RewardToast';
 
 export function AppShell() {
-  const theme = useThemeStore((s) => s.theme);
+  const { theme, setTheme } = useThemeStore();
   const { pathname, hash } = useLocation();
   const me = useMe();
   const { setSignedIn, hydrateFromServer } = useProgressStore();
@@ -23,6 +23,12 @@ export function AppShell() {
   useEffect(() => {
     if (!hash) window.scrollTo(0, 0);
   }, [pathname, hash]);
+
+  // A signed-in student's theme follows their account (null until they pick one while signed in).
+  const accountTheme = me.data?.theme;
+  useEffect(() => {
+    if (accountTheme) setTheme(accountTheme);
+  }, [accountTheme, setTheme]);
 
   // Signed-in students get their saved progress back (FR11); guests keep session-only progress (FR12).
   useEffect(() => {

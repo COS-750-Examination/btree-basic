@@ -25,6 +25,12 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ### Added
 
+- **Account settings** (FRONTEND_PLAN Task 4).
+  - **Profile** card on the Account page: change your **display name** (the header and friends see it at once) and your **password** (current, new and confirm). The length and matching checks run before anything is sent; "Current password is incorrect" and the 429 "Slow down a little and try again later" show inline. Other devices stay signed in after a password change (a known prototype decision).
+  - **Theme follows the account.** A signed-in student's Day/Dusk choice is saved with `PATCH /api/account`, and applied on sign-in, so it comes back on another device or after clearing site data. Guests keep it on the device only. The Appearance card says which applies.
+  - **Download my data:** a "Your data" card above "Delete account" downloads `btree-basic-data-<date>.json`, with a line explaining it is the student's right under POPIA.
+  - `api.patch` and `useUpdateAccount` (updates `['me']` from the reply). `themeStore` now uses the shared `Theme` type. The Appearance card moved to `components/account/`.
+  - Tests: `ProfileCard.test.tsx` (name, password success, wrong password, 429, client checks, theme saving for signed-in and guest) and `lib/account.test.ts`.
 - **Friends** (FRONTEND_PLAN Task 3).
   - The Account page's Friends card has three lists: **Requests for you** (**Accept** and **Decline**), **Requests you sent** (email, date sent and **Cancel request**) and **Your friends** (a link to their grove and **Unfriend**). Unfriending asks first ("Remove Sam from your friends?" with **Remove** / **Keep**). Every action reloads the list, so requests that cross show the two students as friends straight away.
   - After sending a request the message stays neutral ("If that email has an account, they'll see your request.").
@@ -132,9 +138,7 @@ All notable changes to this project are documented here. The format follows [Kee
 - Pixel pass of each screen against its Figma frame (layout and spacing; tokens are done).
 - Practice activity 4, **Build the tree** (objective O6), is a stub.
 - The ID lead should review the new lessons and quiz items (see the prompt log, Entry 004).
-- The client has no "Download my data" link yet. The server endpoint is ready.
 - **"Requests you sent" reveals whether an email has an account.** The server only stores a request when the email belongs to a student, so a request to a made-up email never appears in the list. The 10-per-hour limit slows this down but doesn't stop it.
-- The client has no profile settings yet (name, password, theme per account). `PATCH /api/account` is ready.
 - Not planned for the prototype: password reset by email, revocable sessions (the 14-day sign-in cookie stays valid after a password change), and database backups.
 - Deployment (Vercel for the client, Render for the API and database) is not configured.
 
