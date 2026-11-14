@@ -1,4 +1,5 @@
 import {
+  Badge,
   Cheer,
   FriendGrove,
   PublicUser,
@@ -89,6 +90,18 @@ export function useStreak(enabled: boolean) {
   return useQuery({
     queryKey: ['streak'],
     queryFn: () => api.get('/streak', StreakSummary),
+    enabled,
+  });
+}
+
+/**
+ * The four badges, earned or locked (signed-in only; badges are private). The progress
+ * store refreshes this after the saves that can award one: answers, modules and the warm-up.
+ */
+export function useBadges(enabled: boolean) {
+  return useQuery({
+    queryKey: ['badges'],
+    queryFn: () => api.get('/badges', z.array(Badge)),
     enabled,
   });
 }

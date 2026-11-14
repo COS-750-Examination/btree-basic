@@ -25,6 +25,12 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ### Added
 
+- **Badges on Ready and My grove** (FRONTEND_PLAN Task 2).
+  - A **Badges** card shows all four (Explorer, Splitter, Root Raiser, Lecture Ready) with how to earn each one and "1 of 4 earned". Earned badges show the date ("Earned 14 Nov 2026"); locked ones have a dashed outline, a lock icon and the word "Locked", so colour isn't the only signal. On Ready it sits under the objectives (two columns); on My grove it is a one-column list under the streak card. Guests see all four locked with "Sign in to earn badges".
+  - Data comes from `GET /api/badges` (`useBadges`, query key `['badges']`). The progress store reloads it after a saved answer, module or warm-up, which are the saves that award badges, so a new badge appears without a reload.
+  - **Split it yourself** now says "Splitter badge earned" once the student has the badge, instead of "3 more in a row earns the Splitter badge" after a later wrong answer.
+  - Badges are never shown on a friend's grove.
+  - Tests: `BadgeCard.test.tsx` (earned, locked, guest, error) and 3 store cases for the badge refresh.
 - **Reward feedback** (FRONTEND_PLAN Task 1).
   - **Bonuses show straight away.** The client now reads the server's reply to `POST /api/attempts` and adds any `bonuses` (3-day streak +15, ready check +60) to the leaf count and ledger, so the header updates without a reload. A short message pops up at the bottom of the screen ("+15 leaves: 3-day practice streak!"), announced to screen readers, and closes after 6 seconds. The server alone decides these bonuses, so guests never get them.
   - **Streak card** on My grove, under the leaf count, from `GET /api/streak`. It counts down to the 3-day bonus ("Practise 1 day more in a row for +15 leaves") and refreshes after every saved answer. Guests see "Sign in to keep a streak".
@@ -118,11 +124,9 @@ All notable changes to this project are documented here. The format follows [Kee
 - Pixel pass of each screen against its Figma frame (layout and spacing; tokens are done).
 - Practice activity 4, **Build the tree** (objective O6), is a stub.
 - The ID lead should review the new lessons and quiz items (see the prompt log, Entry 004).
-- The client doesn't show badges yet. The server awards them and `GET /api/badges` lists them.
 - The client has no decline, cancel or unfriend buttons yet, no "Download my data" link, and doesn't show the 429 message. The server endpoints are ready.
 - The client has no profile settings yet (name, password, theme per account). `PATCH /api/account` is ready.
 - Not planned for the prototype: password reset by email, revocable sessions (the 14-day sign-in cookie stays valid after a password change), and database backups.
-- The client doesn't show reward bonuses (streak +15, ready check +60) until the page reloads, and the streak card doesn't use `GET /api/streak` yet.
 - Deployment (Vercel for the client, Render for the API and database) is not configured.
 
 ## [0.1.0] - 2026-11-09

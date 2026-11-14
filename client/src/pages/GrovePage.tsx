@@ -3,6 +3,7 @@ import { toPng } from 'html-to-image';
 import { useRef, useState } from 'react';
 import { Link } from 'react-router';
 import { useFriends, useMe } from '../api/hooks';
+import { BadgeCard } from '../components/grove/BadgeCard';
 import { DecoIcon } from '../components/grove/DecoIcon';
 import { GroveTree } from '../components/grove/GroveTree';
 import { GrowthStrip } from '../components/grove/GrowthStrip';
@@ -170,6 +171,8 @@ export function GrovePage() {
           </Card>
 
           <StreakCard signedIn={Boolean(me.data)} />
+
+          <BadgeCard signedIn={Boolean(me.data)} compact />
 
           <Card>
             <div className="mb-3 flex items-center justify-between">

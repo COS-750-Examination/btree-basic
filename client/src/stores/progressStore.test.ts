@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { api } from '../api/client';
+import { queryClient } from '../api/queryClient';
 import { placedDecorations, useProgressStore } from './progressStore';
 
 const correct = { itemId: 'm5-q2', objective: 'O3' as const, firstAttempt: true, hintsUsed: 0 };
@@ -174,5 +175,51 @@ describe('progress store server bonuses', () => {
 
     expect(post).not.toHaveBeenCalled();
     expect(useProgressStore.getState().leaves).toBe(10);
+  });
+});
+
+describe('progress store badge refresh', () => {
+  const flush = () => new Promise((r) => setTimeout(r, 0));
+  const refreshedBadges = (spy: { mock: { calls: unknown[][] } }) =>
+    spy.mock.calls.some(([f]) => JSON.stringify(f) === JSON.stringify({ queryKey: ['badges'] }));
+
+  beforeEach(() => useProgressStore.getState().setSignedIn(true));
+
+  it('reloads badges after an answer is saved', async () => {
+    vi.spyOn(api, 'post').mockResolvedValue({
+      objective: 'O3',
+      score: 1,
+      counted: 1,
+      status: 'getting-there',
+      bonuses: [],
+    });
+    const invalidate = vi.spyOn(queryClient, 'invalidateQueries');
+    useProgressStore.getState().recordAttempt({ ...correct, correct: true });
+    await flush();
+    expect(refreshedBadges(invalidate)).toBe(true);
+  });
+
+  it('reloads badges after a module and the warm-up are saved', async () => {
+    vi.spyOn(api, 'put').mockResolvedValue({});
+    vi.spyOn(api, 'post').mockResolvedValue({});
+    const invalidate = vi.spyOn(queryClient, 'invalidateQueries');
+
+    useProgressStore.getState().completeModule(1);
+    await flush();
+    expect(refreshedBadges(invalidate)).toBe(true);
+
+    invalidate.mockClear();
+    useProgressStore.getState().finishWarmup(3, 5, []);
+    await flush();
+    expect(refreshedBadges(invalidate)).toBe(true);
+  });
+
+  it('does not reload badges when the save failed', async () => {
+    vi.spyOn(console, 'warn').mockImplementation(() => {});
+    vi.spyOn(api, 'put').mockRejectedValue(new TypeError('offline'));
+    const invalidate = vi.spyOn(queryClient, 'invalidateQueries');
+    useProgressStore.getState().completeModule(1);
+    await flush();
+    expect(refreshedBadges(invalidate)).toBe(false);
   });
 });

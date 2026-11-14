@@ -812,6 +812,48 @@ Several fonts were tried in turn at the requester's direction: Spectral, Gravita
 
 ---
 
+## Entry 016: Badges on Ready and My grove (FRONTEND_PLAN Task 2)
+
+| Field        | Detail                                                                                                                            |
+| ------------ | --------------------------------------------------------------------------------------------------------------------------------- |
+| Date         | 14 November 2026                                                                                                                  |
+| Requested by | Taylor Sergel, frontend                                                                                                           |
+| Tool         | Claude Code (Anthropic), model Claude Opus 5.5                                                                                    |
+| Scope        | `BadgeCard.tsx`, `api/hooks.ts`, `progressStore.ts`, `lib/badges.ts`, `ReadyPage.tsx`, `GrovePage.tsx`, `PracticePage.tsx`, tests |
+| Status       | Completed; left uncommitted on branch `feat/badges-ui` for review                                                                 |
+
+### Request
+
+> Please implement step 2 of the frontend plan (show the four badges on the Ready and My grove screens), and explain how to check that it works before committing.
+
+### Clarifications provided
+
+- The Figma file has no badge layers, so placement was chosen to fit the existing layout: a two-column card under the objectives on Ready, and a one-column list under the streak card on My grove.
+- The Splitter text on Split it yourself, flagged in Entry 015, now says the badge is earned once the server has awarded it.
+- The branch was created from `feat/rewards-ui`, whose pull request wasn't merged yet.
+
+### Deliverables
+
+- **`BadgeCard.tsx` (new):** all four badges with description, earned date or "Locked" (dashed outline and lock icon), an "n of 4 earned" count, a guest sign-in prompt and an error message.
+- **`useBadges`** (query key `['badges']`), reloaded by the progress store after a saved answer, module or warm-up.
+- **`lib/badges.ts` (new):** the locked list for guests and the date format.
+- **Tests:** `BadgeCard.test.tsx` (3 cases) and 3 store cases.
+
+### Verification summary
+
+| Check                                                                                                                                                       | Result       |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
+| Client tests                                                                                                                                                | 83 / 83 pass |
+| Browser check (Chrome): guest sees 4 locked; a test account with 3 right splits sees Splitter earned on My grove, and Practice says "Splitter badge earned" | Pass         |
+| No sideways scroll on Ready at 375px wide                                                                                                                   | Pass         |
+| ESLint, TypeScript (strict), Prettier, build                                                                                                                | Pass         |
+
+### Human review required
+
+- **Figma:** the badge card has no Figma frame. The ID or design team may want to check the icons (compass, scissors, sprout, graduation cap) and placement.
+
+---
+
 ## Entry template
 
 ```markdown

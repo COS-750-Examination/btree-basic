@@ -82,6 +82,9 @@ const initial = {
  */
 const save = (fn: () => Promise<unknown>) => useSyncStore.getState().save(fn);
 
+/** The server awards badges while saving answers, modules and the warm-up, so reload them after. */
+const refreshBadges = () => void queryClient.invalidateQueries({ queryKey: ['badges'] });
+
 /**
  * Learner progress. Guests keep it in sessionStorage only (FR12); signed-in students also
  * save every change to the API and reload it on sign-in.
@@ -109,6 +112,7 @@ export const useProgressStore = create<ProgressState>()(
           }));
         }
         void queryClient.invalidateQueries({ queryKey: ['streak'] });
+        refreshBadges();
       };
 
       return {
@@ -148,9 +152,11 @@ export const useProgressStore = create<ProgressState>()(
           }));
           if (get().signedIn) {
             save(() =>
-              api.put('/progress', {
-                modules: [{ moduleId, part, completed: current?.completed ?? false }],
-              }),
+              api
+                .put('/progress', {
+                  modules: [{ moduleId, part, completed: current?.completed ?? false }],
+                })
+                .then(refreshBadges),
             );
           }
         },
@@ -164,9 +170,11 @@ export const useProgressStore = create<ProgressState>()(
           earn('lesson');
           if (get().signedIn) {
             save(() =>
-              api.put('/progress', {
-                modules: [{ moduleId, part: current?.part ?? 1, completed: true }],
-              }),
+              api
+                .put('/progress', {
+                  modules: [{ moduleId, part: current?.part ?? 1, completed: true }],
+                })
+                .then(refreshBadges),
             );
           }
         },
@@ -217,7 +225,7 @@ export const useProgressStore = create<ProgressState>()(
 
         finishWarmup: (correct, total, answers) => {
           set({ needsRecap: correct < Math.ceil(total * 0.6) });
-          if (get().signedIn) save(() => api.post('/warmup', { answers }));
+          if (get().signedIn) save(() => api.post('/warmup', { answers }).then(refreshBadges));
         },
 
         addLectureQuestion: (text) => {

@@ -13,6 +13,7 @@ import { useState, type FormEvent } from 'react';
 import { Link } from 'react-router';
 import { api } from '../api/client';
 import { useMe } from '../api/hooks';
+import { BadgeCard } from '../components/grove/BadgeCard';
 import {
   Button,
   ButtonLink,
@@ -138,6 +139,8 @@ export function ReadyPage() {
               })}
             </ol>
           </Card>
+
+          <BadgeCard signedIn={Boolean(me.data)} />
         </div>
 
         <aside className="space-y-4">

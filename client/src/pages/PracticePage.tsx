@@ -28,6 +28,7 @@ import {
   ProgressSegments,
   cn,
 } from '../components/ui';
+import { useBadges } from '../api/hooks';
 import { splitRun } from '../lib/rewards';
 import { useProgressStore } from '../stores/progressStore';
 
@@ -65,6 +66,10 @@ export function PracticePage() {
   const recordAttempt = useProgressStore((s) => s.recordAttempt);
   const signedIn = useProgressStore((s) => s.signedIn);
   const run = useProgressStore((s) => splitRun(s.attempts));
+  // Badges are kept once earned, so a later wrong answer must not make it look locked again.
+  const hasSplitter = Boolean(
+    useBadges(signedIn).data?.find((b) => b.id === 'splitter')?.awardedAt,
+  );
   const [exercise, setExercise] = useState(1);
   const [seed, setSeed] = useState(() => Math.floor(Math.random() * 1e6));
   const [result, setResult] = useState<Result | null>(null);
@@ -207,11 +212,13 @@ export function PracticePage() {
                   {Math.min(run, SPLITTER_RUN)} of {SPLITTER_RUN} splits right in a row
                 </p>
                 <p className="text-small">
-                  {run >= SPLITTER_RUN
-                    ? signedIn
-                      ? 'You have earned the Splitter badge. Keep going!'
-                      : 'That is a Splitter run! Sign in to earn the badge.'
-                    : `${SPLITTER_RUN - run} more in a row ${signedIn ? 'earns' : 'would earn'} the Splitter badge${signedIn ? '' : ' (sign in to collect it)'}.`}
+                  {hasSplitter
+                    ? 'Splitter badge earned. Keep practising to stay sharp!'
+                    : run >= SPLITTER_RUN
+                      ? signedIn
+                        ? 'You have earned the Splitter badge. Keep going!'
+                        : 'That is a Splitter run! Sign in to earn the badge.'
+                      : `${SPLITTER_RUN - run} more in a row ${signedIn ? 'earns' : 'would earn'} the Splitter badge${signedIn ? '' : ' (sign in to collect it)'}.`}
                 </p>
               </div>
             </Card>
