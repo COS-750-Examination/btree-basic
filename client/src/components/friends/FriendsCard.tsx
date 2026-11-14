@@ -42,8 +42,7 @@ export function FriendsCard() {
   return (
     <Card id="friends">
       <CardTitle>Friends</CardTitle>
-      <InviteLink />
-      <h3 className="text-label mt-5 mb-2 font-bold">Or add by email</h3>
+      <h3 className="text-label mb-2 font-bold">Add by email</h3>
       <form onSubmit={submit} className="flex gap-2">
         <label htmlFor="friend-email" className="sr-only">
           Friend&apos;s email
@@ -73,6 +72,10 @@ export function FriendsCard() {
           {friendErrorText(send.error)}
         </p>
       )}
+
+      <div className="mt-5">
+        <InviteLink />
+      </div>
 
       {friends.isError && (
         <p role="alert" className="text-small mt-4">

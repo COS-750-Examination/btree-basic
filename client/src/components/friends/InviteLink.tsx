@@ -34,7 +34,7 @@ export function InviteLink() {
   return (
     <section aria-labelledby="invite-heading">
       <h3 id="invite-heading" className="text-label font-bold">
-        Your invite link
+        Or share your invite link
       </h3>
       <p className="text-ink-muted text-small mb-2">
         Share it with classmates. Opening it lets them send you a friend request, which you then

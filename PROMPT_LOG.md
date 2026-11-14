@@ -993,6 +993,42 @@ Several fonts were tried in turn at the requester's direction: Spectral, Gravita
 
 ---
 
+## Entry 020: Profile view and edit modes; Friends card order
+
+| Field        | Detail                                                             |
+| ------------ | ------------------------------------------------------------------ |
+| Date         | 15 November 2026                                                   |
+| Requested by | Taylor Sergel, frontend                                            |
+| Tool         | Claude Code (Anthropic), model Claude Opus 5.5                     |
+| Scope        | `ProfileCard.tsx`, `FriendsCard.tsx`, `InviteLink.tsx`, tests      |
+| Status       | Completed; left uncommitted on branch `feat/ui-updates` for review |
+
+### Request
+
+> Please make the Account page show the student's details by default, with a small round pen (edit) button that switches the Profile card to the editing form, and **Cancel** and **Save changes** buttons at the bottom that return to the details view. Also place the invite link below the "Add by email" form.
+
+### Clarifications provided
+
+- The details view shows the name, email (which can't be changed) and a hidden password.
+- Name and password are saved in one request. The password fields are optional; filling in any of them requires all three.
+- After saving or cancelling, focus returns to the pen button for keyboard users; opening the form focuses the name field.
+
+### Deliverables
+
+- **`ProfileCard.tsx`:** details view with a round **Edit profile** button, and an edit form with **Cancel** and **Save changes**.
+- **Friends card:** "Add by email" first, then "Or share your invite link".
+- **Tests:** `ProfileCard.test.tsx` rewritten for both modes (7 profile cases).
+
+### Verification summary
+
+| Check                                                                                          | Result         |
+| ---------------------------------------------------------------------------------------------- | -------------- |
+| Client tests                                                                                   | 113 / 113 pass |
+| Browser check (Chrome): view, edit, save returns to view with the new name; Friends card order | Pass           |
+| ESLint, TypeScript (strict), Prettier, build                                                   | Pass           |
+
+---
+
 ## Entry template
 
 ```markdown
