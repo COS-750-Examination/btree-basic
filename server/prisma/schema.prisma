@@ -25,6 +25,7 @@ model User {
   lectureQuestions LectureQuestion[]
   warmups          WarmupResult[]
   hintViews        HintView[]
+  badges           UserBadge[]
   friendsRequested Friendship[]      @relation("requester")
   friendsReceived  Friendship[]      @relation("addressee")
   cheersSent       Cheer[]           @relation("cheerFrom")
@@ -142,6 +143,23 @@ model WarmupResult {
   needsRecap Boolean
   createdAt  DateTime @default(now())
   user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+enum BadgeId {
+  explorer
+  splitter
+  rootRaiser
+  lectureReady
+}
+
+model UserBadge {
+  id        String   @id @default(cuid())
+  userId    String
+  badge     BadgeId
+  awardedAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, badge])
 }
 
 enum FriendshipStatus {

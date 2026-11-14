@@ -246,6 +246,23 @@ export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedFloatNullableFilter<$PrismaModel>
 }
 
+export type EnumBadgeIdFilter<$PrismaModel = never> = {
+  equals?: $Enums.BadgeId | Prisma.EnumBadgeIdFieldRefInput<$PrismaModel>
+  in?: $Enums.BadgeId[] | Prisma.ListEnumBadgeIdFieldRefInput<$PrismaModel>
+  notIn?: $Enums.BadgeId[] | Prisma.ListEnumBadgeIdFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumBadgeIdFilter<$PrismaModel> | $Enums.BadgeId
+}
+
+export type EnumBadgeIdWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.BadgeId | Prisma.EnumBadgeIdFieldRefInput<$PrismaModel>
+  in?: $Enums.BadgeId[] | Prisma.ListEnumBadgeIdFieldRefInput<$PrismaModel>
+  notIn?: $Enums.BadgeId[] | Prisma.ListEnumBadgeIdFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumBadgeIdWithAggregatesFilter<$PrismaModel> | $Enums.BadgeId
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumBadgeIdFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumBadgeIdFilter<$PrismaModel>
+}
+
 export type EnumFriendshipStatusFilter<$PrismaModel = never> = {
   equals?: $Enums.FriendshipStatus | Prisma.EnumFriendshipStatusFieldRefInput<$PrismaModel>
   in?: $Enums.FriendshipStatus[] | Prisma.ListEnumFriendshipStatusFieldRefInput<$PrismaModel>
@@ -522,6 +539,23 @@ export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
   _sum?: Prisma.NestedFloatNullableFilter<$PrismaModel>
   _min?: Prisma.NestedFloatNullableFilter<$PrismaModel>
   _max?: Prisma.NestedFloatNullableFilter<$PrismaModel>
+}
+
+export type NestedEnumBadgeIdFilter<$PrismaModel = never> = {
+  equals?: $Enums.BadgeId | Prisma.EnumBadgeIdFieldRefInput<$PrismaModel>
+  in?: $Enums.BadgeId[] | Prisma.ListEnumBadgeIdFieldRefInput<$PrismaModel>
+  notIn?: $Enums.BadgeId[] | Prisma.ListEnumBadgeIdFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumBadgeIdFilter<$PrismaModel> | $Enums.BadgeId
+}
+
+export type NestedEnumBadgeIdWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.BadgeId | Prisma.EnumBadgeIdFieldRefInput<$PrismaModel>
+  in?: $Enums.BadgeId[] | Prisma.ListEnumBadgeIdFieldRefInput<$PrismaModel>
+  notIn?: $Enums.BadgeId[] | Prisma.ListEnumBadgeIdFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumBadgeIdWithAggregatesFilter<$PrismaModel> | $Enums.BadgeId
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumBadgeIdFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumBadgeIdFilter<$PrismaModel>
 }
 
 export type NestedEnumFriendshipStatusFilter<$PrismaModel = never> = {

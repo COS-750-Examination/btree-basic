@@ -1,5 +1,11 @@
 import { z } from 'zod';
-import { CONFIDENCE_LEVELS, GROWTH_STAGE_IDS, MODULES, OBJECTIVE_IDS } from './constants';
+import {
+  BADGE_IDS,
+  CONFIDENCE_LEVELS,
+  GROWTH_STAGE_IDS,
+  MODULES,
+  OBJECTIVE_IDS,
+} from './constants';
 
 export const RegisterBody = z.object({
   email: z.string().trim().toLowerCase().max(254).pipe(z.email()),
@@ -82,6 +88,16 @@ export type AttemptResult = z.infer<typeof AttemptResult>;
 
 export const StreakSummary = z.object({ days: z.number().int().min(0) });
 export type StreakSummary = z.infer<typeof StreakSummary>;
+
+export const BadgeIdSchema = z.enum(BADGE_IDS);
+
+export const Badge = z.object({
+  id: BadgeIdSchema,
+  label: z.string(),
+  description: z.string(),
+  awardedAt: z.string().nullable(),
+});
+export type Badge = z.infer<typeof Badge>;
 
 export const WarmupBody = z.object({
   answers: z

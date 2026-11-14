@@ -408,6 +408,68 @@ None were asked. The request was interpreted as follows:
 
 ---
 
+## Entry 008: Badges scaffolding (BACKEND_PLAN Task 3)
+
+| Field        | Detail                                                                                           |
+| ------------ | ------------------------------------------------------------------------------------------------ |
+| Date         | 14 November 2026                                                                                 |
+| Requested by | Kyle Liebenberg, backend owner                                                                   |
+| Tool         | Claude Code (Anthropic), model Claude Opus 5.5                                                   |
+| Scope        | Prisma schema and migration, `@btree/shared`, `server/src/lib/badges.ts`, progress routes, tests |
+| Status       | Completed; left uncommitted on branch `feat/badges` for review                                   |
+
+### Request
+
+> Please refer to Task 3 in `docs/BACKEND_PLAN.md` and implement the scaffolding for Task 3 in the same way as for Task 2. I will implement the method bodies myself.
+
+### Clarifications provided
+
+None were needed. The badge rules are the ones agreed in the plan (decision D2):
+
+| Badge         | Rule                                                       |
+| ------------- | ---------------------------------------------------------- |
+| Explorer      | warm-up done and module 1 complete                         |
+| Splitter      | the three latest O5 answers all correct                    |
+| Root Raiser   | O6 mastered                                                |
+| Lecture Ready | ready check passed, reusing `passedReadyCheck` from Task 2 |
+
+As in Task 2, declarations are defined in full, new functions throw `Not implemented`, and tests have empty bodies.
+
+### Deliverables
+
+- **Database:** migration `badges`, with a `BadgeId` enum and a `UserBadge` table. Each badge is unique per user and deleted along with the user. The Prisma client was regenerated.
+- **`@btree/shared`:**
+  - `BADGES`: the id, label and description of each badge;
+  - `BadgeId`, `BADGE_IDS` and `SPLITTER_RUN` (3);
+  - the `BadgeIdSchema` and `Badge` schemas.
+- **New server module (stubs):** `lib/badges.ts`, with:
+  - `earnedExplorer`, `earnedSplitter` and `earnedRootRaiser`;
+  - `BADGE_RULES`, with Lecture Ready wired to `passedReadyCheck`;
+  - `checkBadges` and `badgesFor`.
+- **Routes:**
+  - new `GET /api/badges`, which returns 501 until implemented;
+  - `TODO(Task 3.2)` markers where `checkBadges` runs: `PUT /progress`, `POST /attempts` and `POST /warmup`.
+- **Tests with empty bodies:**
+  - `server/test/badges.test.ts` (13): an earned and a not-yet case for each badge, once-only awarding, and `GET /api/badges`;
+  - one privacy test in `friends.test.ts`: the friend grove never includes badges.
+
+### Verification summary
+
+| Check                                               | Result                                        |
+| --------------------------------------------------- | --------------------------------------------- |
+| Server tests against local PostgreSQL               | 73 / 73 pass (14 new tests with empty bodies) |
+| Client tests                                        | 43 / 43 pass                                  |
+| Schema drift between migrations and `schema.prisma` | None                                          |
+| ESLint, TypeScript (strict), Prettier               | Pass                                          |
+
+### Human review required
+
+- **Badge wording:** the descriptions in `BADGES` are student-facing. The ID lead should check them.
+- **Scaffolding markers:** remove each `void …; // scaffolding` line, the doc comments and the `TODO(Task 3.x)` markers when implementing.
+- **Empty tests pass:** fill in the 14 new tests before merging.
+
+---
+
 ## Entry template
 
 ```markdown

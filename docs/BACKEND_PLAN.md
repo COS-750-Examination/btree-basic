@@ -150,6 +150,14 @@ These tests describe existing behaviour, so they should pass straight away. Any 
 
 **Branch:** `feat/rewards`
 
+**Status:** done on `feat/rewards` on 14 November 2026, not merged yet.
+
+**Changes from the plan**, agreed during review:
+
+- Correct-answer leaves are paid once per question (dedupe key `answer:<itemId>`). Retakes still count toward mastery.
+- Hint leaves are paid once per question and hint (`hint:<itemId>:<hint>`), not once per day.
+- The client was updated in the same branch: the leaf count follows the once-per-question rule, `readHint` sends `{ itemId, hint }`, "tap the nodes" (`trace-path`) questions can be answered, and multiple-choice options are shuffled once per page load.
+
 ### 2.1 Pay each reward once, and use South African days
 
 **Files:**
@@ -168,11 +176,11 @@ These tests describe existing behaviour, so they should pass straight away. Any 
 - `streakDays(userId, now = new Date())`: the same rule as now, but days come from `dayKey`.
 - Lesson leaves use the dedupe key `lesson:<moduleId>`.
 
-- [ ] Tests (write them, watch them fail, implement, watch them pass):
+- [x] Tests (write them, watch them fail, implement, watch them pass):
   - `dayKey(new Date('2026-11-12T22:30:00Z')) === '2026-11-13'`
   - `addDays('2026-11-01', -1) === '2026-10-31'`
   - `parallel module completion pays lesson leaves once`: run two `PUT /progress` calls with `completed: true` in `Promise.all`; the balance is `30`.
-- [ ] Commit `feat(server): idempotent leaf awards; streak days in SAST`
+- [x] Commit `feat(server): idempotent leaf awards; streak days in SAST`
 
 ### 2.2 3-day streak bonus
 
@@ -188,12 +196,12 @@ These tests describe existing behaviour, so they should pass straight away. Any 
 - `POST /api/attempts` now returns `201 AttemptResult`. This only adds a field, and the client ignores the body today.
 - `GET /api/streak` returns `StreakSummary`.
 
-- [ ] Tests:
+- [x] Tests:
   - `pays +15 once when a 3-day streak is reached`: backdate attempts by 1 and 2 days with Prisma, then post one today. `bonuses` is `[{ reason: 'streak', amount: 15 }]`, and a second post the same day returns `[]`.
   - `no bonus for a 2-day streak`
   - `pays again after the streak breaks and is rebuilt`
   - `GET /streak returns { days: 3 }`
-- [ ] Commit `feat(server): 3-day streak bonus and GET /streak`
+- [x] Commit `feat(server): 3-day streak bonus and GET /streak`
 
 ### 2.3 Check first tries and hints on the server
 
@@ -217,14 +225,14 @@ These tests describe existing behaviour, so they should pass straight away. Any 
 - `POST /attempts` stores and scores the **trusted** values (mastery and `firstTry`/`withHint` leaves).
 - `POST /hints` (body `HintBody`) writes a `HintView` row and pays `hintRead` with the dedupe key `hint:<itemId>:<hint>:<dayKey>`.
 
-- [ ] Tests:
+- [x] Tests:
   - `a retry after a wrong answer cannot claim firstAttempt`: `counted` stays 0, and the leaves are paid as `withHint`.
   - `a hint viewed before answering counts even when the client sends hintsUsed 0`
   - `retaking an item after answering it correctly counts again`
   - `an attempt after the 30-minute gap counts again`
   - `POST /hints pays once per item, hint and day`: sending it 5 times gives a balance of 5.
   - `POST /hints without itemId → 400`
-- [ ] Commit `feat(server): verify firstAttempt and hintsUsed on the server`
+- [x] Commit `feat(server): verify firstAttempt and hintsUsed on the server`
 
 Put this limit in the CHANGELOG: the server holds no answer keys, so a student who sends hand-made requests can still fake correct answers. This sub-task only closes the easy route of replaying an answer after a hint or a wrong try.
 
@@ -243,13 +251,13 @@ Put this limit in the CHANGELOG: the server holds no answer keys, so a student w
 - `passedReadyCheck(userId): Promise<boolean>`: true when at least 7 of the 8 ready-check items have a stored attempt that is correct, a first attempt, and used no hints.
 - `awardReadyCheckBonus(userId): Promise<LeafBonus | null>`: dedupe key `readyCheck`. It is only called when the attempt's `itemId` is a ready-check item.
 
-- [ ] Tests:
+- [x] Tests:
   - `7 of 8 pays +60 once`
   - `6 of 8 pays nothing`
   - `answers that used hints do not count`
   - `other items never pay readyCheck`
-- [ ] Run `npm test -w server && npm test -w client`. Expected: PASS.
-- [ ] Commit `feat(server): ready-check bonus at 80%`
+- [x] Run `npm test -w server && npm test -w client`. Expected: PASS.
+- [x] Commit `feat(server): ready-check bonus at 80%`
 
 **Frontend change required:**
 
@@ -264,6 +272,8 @@ Put this limit in the CHANGELOG: the server holds no answer keys, so a student w
 ## Task 3: Badges — `frontend change required`
 
 **Branch:** `feat/badges` (after Task 2 is merged)
+
+**Status:** done on `feat/badges` on 14 November 2026. The rules are as in the table below, with no changes from the plan.
 
 Rules (D2, as proposed):
 
@@ -287,8 +297,8 @@ Rules (D2, as proposed):
 - `BADGE_RULES: Record<BadgeId, (userId: string) => Promise<boolean>>`
 - `checkBadges(userId): Promise<BadgeId[]>`: creates any missing `UserBadge` rows whose rule passes. A unique violation counts as already awarded.
 
-- [ ] Tests: for each badge, one "earned" case and one "not yet" case, plus `each badge is awarded once`.
-- [ ] Commit `feat(server): badge model and award rules`
+- [x] Tests: for each badge, one "earned" case and one "not yet" case, plus `each badge is awarded once`.
+- [x] Commit `feat(server): badge model and award rules`
 
 ### 3.2 Award and read badges
 
@@ -300,8 +310,8 @@ Rules (D2, as proposed):
 - `checkBadges` runs after `PUT /progress`, `POST /attempts` and `POST /warmup`.
 - `GET /api/badges` returns all four badges in `BADGES` order.
 
-- [ ] Tests: badges are awarded through the API, and `the friend grove does not include badges` (an extension of the privacy test from 1.3).
-- [ ] Commit `feat(server): award badges and GET /badges`
+- [x] Tests: badges are awarded through the API, and `the friend grove does not include badges` (an extension of the privacy test from 1.3).
+- [x] Commit `feat(server): award badges and GET /badges`
 
 **Frontend change required:** show earned and locked badges on the Ready and Grove screens, using `GET /api/badges`.
 

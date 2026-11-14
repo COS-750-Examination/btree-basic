@@ -43,6 +43,16 @@ All notable changes to this project are documented here. The format follows [Kee
 - `POST /api/attempts` also returns `bonuses`, the streak and ready-check bonuses that answer earned.
 - Payouts can be made once-only: a nullable `dedupeKey` on `LeafTransaction`, unique per user (migration `leaf_dedupe_key`).
 - Tests: `days.test.ts`, `rewards.test.ts` and `attempts.test.ts` on the server; `progressStore.test.ts`, `QuestionCard.test.tsx` and `shuffle.test.ts` on the client; a check that the ready-check question ids match `READY_CHECK_ITEM_IDS`.
+- **Badges**, awarded by the server and kept for good:
+  - **Explorer:** the warm-up is done and module 1 is complete.
+  - **Splitter:** the three latest answers on splitting a node (O5) are all correct.
+  - **Root Raiser:** splits that reach the root (O6) are mastered.
+  - **Lecture Ready:** the ready check is passed, with 7 of 8 right on the first try without hints.
+  - Badges are checked after saving progress, answering a question and finishing the warm-up. Each is awarded once, even if two requests arrive at the same moment.
+  - New `UserBadge` table, deleted along with the user (migration `badges`). The badge list (`BADGES`) and the `Badge` schema are in `@btree/shared`.
+  - Friends never see each other's badges.
+- `GET /api/badges` returns all four badges in order, with `awardedAt`, or null while a badge is locked.
+- Tests: `badges.test.ts` (13 cases), and a privacy test that a friend's grove has no badges.
 
 ### Fixed
 
@@ -71,7 +81,7 @@ All notable changes to this project are documented here. The format follows [Kee
 - Pixel pass of each screen against its Figma frame (layout and spacing; tokens are done).
 - Practice activity 4, **Build the tree** (objective O6), is a stub.
 - The ID lead should review the new lessons and quiz items (see the prompt log, Entry 004).
-- Badges (Explorer, Splitter, Root Raiser, Lecture Ready) are not implemented yet. Leaf rewards and growth stages are.
+- The client doesn't show badges yet. The server awards them and `GET /api/badges` lists them.
 - The client doesn't show reward bonuses (streak +15, ready check +60) until the page reloads, and the streak card doesn't use `GET /api/streak` yet.
 - Deployment (Vercel for the client, Render for the API and database) is not configured.
 
