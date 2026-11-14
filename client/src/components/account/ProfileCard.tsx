@@ -23,7 +23,6 @@ function Feedback({ ok, error }: { ok?: string; error?: string | null }) {
   return null;
 }
 
-/** Display name and password (signed-in only). */
 export function ProfileCard({ user }: { user: PublicUser }) {
   return (
     <Card>

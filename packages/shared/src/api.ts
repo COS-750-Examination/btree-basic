@@ -222,3 +222,22 @@ export const ApiError = z.object({
   details: z.unknown().optional(),
 });
 export type ApiError = z.infer<typeof ApiError>;
+
+export const InviteCode = z.object({ code: z.string() });
+export type InviteCode = z.infer<typeof InviteCode>;
+
+export const InviteStatus = z.enum(['self', 'friends', 'sent', 'received', 'none']);
+export type InviteStatus = z.infer<typeof InviteStatus>;
+
+export const InvitePreview = z.object({
+  displayName: z.string(),
+  status: InviteStatus,
+  friendId: z.string().nullable(),
+});
+export type InvitePreview = z.infer<typeof InvitePreview>;
+
+export const InviteResult = z.object({
+  status: z.enum(['sent', 'friends']),
+  friendId: z.string().nullable(),
+});
+export type InviteResult = z.infer<typeof InviteResult>;

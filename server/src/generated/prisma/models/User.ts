@@ -30,6 +30,7 @@ export type UserMinAggregateOutputType = {
   passwordHash: string | null
   displayName: string | null
   theme: $Enums.Theme | null
+  inviteCode: string | null
   plantedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -41,6 +42,7 @@ export type UserMaxAggregateOutputType = {
   passwordHash: string | null
   displayName: string | null
   theme: $Enums.Theme | null
+  inviteCode: string | null
   plantedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -52,6 +54,7 @@ export type UserCountAggregateOutputType = {
   passwordHash: number
   displayName: number
   theme: number
+  inviteCode: number
   plantedAt: number
   createdAt: number
   updatedAt: number
@@ -65,6 +68,7 @@ export type UserMinAggregateInputType = {
   passwordHash?: true
   displayName?: true
   theme?: true
+  inviteCode?: true
   plantedAt?: true
   createdAt?: true
   updatedAt?: true
@@ -76,6 +80,7 @@ export type UserMaxAggregateInputType = {
   passwordHash?: true
   displayName?: true
   theme?: true
+  inviteCode?: true
   plantedAt?: true
   createdAt?: true
   updatedAt?: true
@@ -87,6 +92,7 @@ export type UserCountAggregateInputType = {
   passwordHash?: true
   displayName?: true
   theme?: true
+  inviteCode?: true
   plantedAt?: true
   createdAt?: true
   updatedAt?: true
@@ -171,6 +177,7 @@ export type UserGroupByOutputType = {
   passwordHash: string
   displayName: string
   theme: $Enums.Theme | null
+  inviteCode: string | null
   plantedAt: Date
   createdAt: Date
   updatedAt: Date
@@ -203,6 +210,7 @@ export type UserWhereInput = {
   passwordHash?: Prisma.StringFilter<"User"> | string
   displayName?: Prisma.StringFilter<"User"> | string
   theme?: Prisma.EnumThemeNullableFilter<"User"> | $Enums.Theme | null
+  inviteCode?: Prisma.StringNullableFilter<"User"> | string | null
   plantedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
@@ -227,6 +235,7 @@ export type UserOrderByWithRelationInput = {
   passwordHash?: Prisma.SortOrder
   displayName?: Prisma.SortOrder
   theme?: Prisma.SortOrderInput | Prisma.SortOrder
+  inviteCode?: Prisma.SortOrderInput | Prisma.SortOrder
   plantedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -248,6 +257,7 @@ export type UserOrderByWithRelationInput = {
 export type UserWhereUniqueInput = Prisma.AtLeast<{
   id?: string
   email?: string
+  inviteCode?: string
   AND?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   OR?: Prisma.UserWhereInput[]
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
@@ -270,7 +280,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   friendsReceived?: Prisma.FriendshipListRelationFilter
   cheersSent?: Prisma.CheerListRelationFilter
   cheersReceived?: Prisma.CheerListRelationFilter
-}, "id" | "email">
+}, "id" | "email" | "inviteCode">
 
 export type UserOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -278,6 +288,7 @@ export type UserOrderByWithAggregationInput = {
   passwordHash?: Prisma.SortOrder
   displayName?: Prisma.SortOrder
   theme?: Prisma.SortOrderInput | Prisma.SortOrder
+  inviteCode?: Prisma.SortOrderInput | Prisma.SortOrder
   plantedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -295,6 +306,7 @@ export type UserScalarWhereWithAggregatesInput = {
   passwordHash?: Prisma.StringWithAggregatesFilter<"User"> | string
   displayName?: Prisma.StringWithAggregatesFilter<"User"> | string
   theme?: Prisma.EnumThemeNullableWithAggregatesFilter<"User"> | $Enums.Theme | null
+  inviteCode?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   plantedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
@@ -306,6 +318,7 @@ export type UserCreateInput = {
   passwordHash: string
   displayName: string
   theme?: $Enums.Theme | null
+  inviteCode?: string | null
   plantedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -330,6 +343,7 @@ export type UserUncheckedCreateInput = {
   passwordHash: string
   displayName: string
   theme?: $Enums.Theme | null
+  inviteCode?: string | null
   plantedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -354,6 +368,7 @@ export type UserUpdateInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
   theme?: Prisma.NullableEnumThemeFieldUpdateOperationsInput | $Enums.Theme | null
+  inviteCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   plantedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -378,6 +393,7 @@ export type UserUncheckedUpdateInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
   theme?: Prisma.NullableEnumThemeFieldUpdateOperationsInput | $Enums.Theme | null
+  inviteCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   plantedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -402,6 +418,7 @@ export type UserCreateManyInput = {
   passwordHash: string
   displayName: string
   theme?: $Enums.Theme | null
+  inviteCode?: string | null
   plantedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -413,6 +430,7 @@ export type UserUpdateManyMutationInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
   theme?: Prisma.NullableEnumThemeFieldUpdateOperationsInput | $Enums.Theme | null
+  inviteCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   plantedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -424,6 +442,7 @@ export type UserUncheckedUpdateManyInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
   theme?: Prisma.NullableEnumThemeFieldUpdateOperationsInput | $Enums.Theme | null
+  inviteCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   plantedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -435,6 +454,7 @@ export type UserCountOrderByAggregateInput = {
   passwordHash?: Prisma.SortOrder
   displayName?: Prisma.SortOrder
   theme?: Prisma.SortOrder
+  inviteCode?: Prisma.SortOrder
   plantedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -446,6 +466,7 @@ export type UserMaxOrderByAggregateInput = {
   passwordHash?: Prisma.SortOrder
   displayName?: Prisma.SortOrder
   theme?: Prisma.SortOrder
+  inviteCode?: Prisma.SortOrder
   plantedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -457,6 +478,7 @@ export type UserMinOrderByAggregateInput = {
   passwordHash?: Prisma.SortOrder
   displayName?: Prisma.SortOrder
   theme?: Prisma.SortOrder
+  inviteCode?: Prisma.SortOrder
   plantedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -473,6 +495,10 @@ export type StringFieldUpdateOperationsInput = {
 
 export type NullableEnumThemeFieldUpdateOperationsInput = {
   set?: $Enums.Theme | null
+}
+
+export type NullableStringFieldUpdateOperationsInput = {
+  set?: string | null
 }
 
 export type DateTimeFieldUpdateOperationsInput = {
@@ -667,6 +693,7 @@ export type UserCreateWithoutModulesInput = {
   passwordHash: string
   displayName: string
   theme?: $Enums.Theme | null
+  inviteCode?: string | null
   plantedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -690,6 +717,7 @@ export type UserUncheckedCreateWithoutModulesInput = {
   passwordHash: string
   displayName: string
   theme?: $Enums.Theme | null
+  inviteCode?: string | null
   plantedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -729,6 +757,7 @@ export type UserUpdateWithoutModulesInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
   theme?: Prisma.NullableEnumThemeFieldUpdateOperationsInput | $Enums.Theme | null
+  inviteCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   plantedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -752,6 +781,7 @@ export type UserUncheckedUpdateWithoutModulesInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
   theme?: Prisma.NullableEnumThemeFieldUpdateOperationsInput | $Enums.Theme | null
+  inviteCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   plantedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -775,6 +805,7 @@ export type UserCreateWithoutAttemptsInput = {
   passwordHash: string
   displayName: string
   theme?: $Enums.Theme | null
+  inviteCode?: string | null
   plantedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -798,6 +829,7 @@ export type UserUncheckedCreateWithoutAttemptsInput = {
   passwordHash: string
   displayName: string
   theme?: $Enums.Theme | null
+  inviteCode?: string | null
   plantedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -837,6 +869,7 @@ export type UserUpdateWithoutAttemptsInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
   theme?: Prisma.NullableEnumThemeFieldUpdateOperationsInput | $Enums.Theme | null
+  inviteCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   plantedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -860,6 +893,7 @@ export type UserUncheckedUpdateWithoutAttemptsInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
   theme?: Prisma.NullableEnumThemeFieldUpdateOperationsInput | $Enums.Theme | null
+  inviteCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   plantedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -883,6 +917,7 @@ export type UserCreateWithoutMasteryInput = {
   passwordHash: string
   displayName: string
   theme?: $Enums.Theme | null
+  inviteCode?: string | null
   plantedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -906,6 +941,7 @@ export type UserUncheckedCreateWithoutMasteryInput = {
   passwordHash: string
   displayName: string
   theme?: $Enums.Theme | null
+  inviteCode?: string | null
   plantedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -945,6 +981,7 @@ export type UserUpdateWithoutMasteryInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
   theme?: Prisma.NullableEnumThemeFieldUpdateOperationsInput | $Enums.Theme | null
+  inviteCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   plantedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -968,6 +1005,7 @@ export type UserUncheckedUpdateWithoutMasteryInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
   theme?: Prisma.NullableEnumThemeFieldUpdateOperationsInput | $Enums.Theme | null
+  inviteCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   plantedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -991,6 +1029,7 @@ export type UserCreateWithoutLeavesInput = {
   passwordHash: string
   displayName: string
   theme?: $Enums.Theme | null
+  inviteCode?: string | null
   plantedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1014,6 +1053,7 @@ export type UserUncheckedCreateWithoutLeavesInput = {
   passwordHash: string
   displayName: string
   theme?: $Enums.Theme | null
+  inviteCode?: string | null
   plantedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1053,6 +1093,7 @@ export type UserUpdateWithoutLeavesInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
   theme?: Prisma.NullableEnumThemeFieldUpdateOperationsInput | $Enums.Theme | null
+  inviteCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   plantedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1076,6 +1117,7 @@ export type UserUncheckedUpdateWithoutLeavesInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
   theme?: Prisma.NullableEnumThemeFieldUpdateOperationsInput | $Enums.Theme | null
+  inviteCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   plantedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1099,6 +1141,7 @@ export type UserCreateWithoutDecorationsInput = {
   passwordHash: string
   displayName: string
   theme?: $Enums.Theme | null
+  inviteCode?: string | null
   plantedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1122,6 +1165,7 @@ export type UserUncheckedCreateWithoutDecorationsInput = {
   passwordHash: string
   displayName: string
   theme?: $Enums.Theme | null
+  inviteCode?: string | null
   plantedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1161,6 +1205,7 @@ export type UserUpdateWithoutDecorationsInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
   theme?: Prisma.NullableEnumThemeFieldUpdateOperationsInput | $Enums.Theme | null
+  inviteCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   plantedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1184,6 +1229,7 @@ export type UserUncheckedUpdateWithoutDecorationsInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
   theme?: Prisma.NullableEnumThemeFieldUpdateOperationsInput | $Enums.Theme | null
+  inviteCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   plantedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1207,6 +1253,7 @@ export type UserCreateWithoutLectureQuestionsInput = {
   passwordHash: string
   displayName: string
   theme?: $Enums.Theme | null
+  inviteCode?: string | null
   plantedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1230,6 +1277,7 @@ export type UserUncheckedCreateWithoutLectureQuestionsInput = {
   passwordHash: string
   displayName: string
   theme?: $Enums.Theme | null
+  inviteCode?: string | null
   plantedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1269,6 +1317,7 @@ export type UserUpdateWithoutLectureQuestionsInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
   theme?: Prisma.NullableEnumThemeFieldUpdateOperationsInput | $Enums.Theme | null
+  inviteCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   plantedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1292,6 +1341,7 @@ export type UserUncheckedUpdateWithoutLectureQuestionsInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
   theme?: Prisma.NullableEnumThemeFieldUpdateOperationsInput | $Enums.Theme | null
+  inviteCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   plantedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1315,6 +1365,7 @@ export type UserCreateWithoutHintViewsInput = {
   passwordHash: string
   displayName: string
   theme?: $Enums.Theme | null
+  inviteCode?: string | null
   plantedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1338,6 +1389,7 @@ export type UserUncheckedCreateWithoutHintViewsInput = {
   passwordHash: string
   displayName: string
   theme?: $Enums.Theme | null
+  inviteCode?: string | null
   plantedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1377,6 +1429,7 @@ export type UserUpdateWithoutHintViewsInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
   theme?: Prisma.NullableEnumThemeFieldUpdateOperationsInput | $Enums.Theme | null
+  inviteCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   plantedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1400,6 +1453,7 @@ export type UserUncheckedUpdateWithoutHintViewsInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
   theme?: Prisma.NullableEnumThemeFieldUpdateOperationsInput | $Enums.Theme | null
+  inviteCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   plantedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1423,6 +1477,7 @@ export type UserCreateWithoutWarmupsInput = {
   passwordHash: string
   displayName: string
   theme?: $Enums.Theme | null
+  inviteCode?: string | null
   plantedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1446,6 +1501,7 @@ export type UserUncheckedCreateWithoutWarmupsInput = {
   passwordHash: string
   displayName: string
   theme?: $Enums.Theme | null
+  inviteCode?: string | null
   plantedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1485,6 +1541,7 @@ export type UserUpdateWithoutWarmupsInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
   theme?: Prisma.NullableEnumThemeFieldUpdateOperationsInput | $Enums.Theme | null
+  inviteCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   plantedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1508,6 +1565,7 @@ export type UserUncheckedUpdateWithoutWarmupsInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
   theme?: Prisma.NullableEnumThemeFieldUpdateOperationsInput | $Enums.Theme | null
+  inviteCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   plantedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1531,6 +1589,7 @@ export type UserCreateWithoutBadgesInput = {
   passwordHash: string
   displayName: string
   theme?: $Enums.Theme | null
+  inviteCode?: string | null
   plantedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1554,6 +1613,7 @@ export type UserUncheckedCreateWithoutBadgesInput = {
   passwordHash: string
   displayName: string
   theme?: $Enums.Theme | null
+  inviteCode?: string | null
   plantedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1593,6 +1653,7 @@ export type UserUpdateWithoutBadgesInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
   theme?: Prisma.NullableEnumThemeFieldUpdateOperationsInput | $Enums.Theme | null
+  inviteCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   plantedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1616,6 +1677,7 @@ export type UserUncheckedUpdateWithoutBadgesInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
   theme?: Prisma.NullableEnumThemeFieldUpdateOperationsInput | $Enums.Theme | null
+  inviteCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   plantedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1639,6 +1701,7 @@ export type UserCreateWithoutFriendsRequestedInput = {
   passwordHash: string
   displayName: string
   theme?: $Enums.Theme | null
+  inviteCode?: string | null
   plantedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1662,6 +1725,7 @@ export type UserUncheckedCreateWithoutFriendsRequestedInput = {
   passwordHash: string
   displayName: string
   theme?: $Enums.Theme | null
+  inviteCode?: string | null
   plantedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1690,6 +1754,7 @@ export type UserCreateWithoutFriendsReceivedInput = {
   passwordHash: string
   displayName: string
   theme?: $Enums.Theme | null
+  inviteCode?: string | null
   plantedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1713,6 +1778,7 @@ export type UserUncheckedCreateWithoutFriendsReceivedInput = {
   passwordHash: string
   displayName: string
   theme?: $Enums.Theme | null
+  inviteCode?: string | null
   plantedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1752,6 +1818,7 @@ export type UserUpdateWithoutFriendsRequestedInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
   theme?: Prisma.NullableEnumThemeFieldUpdateOperationsInput | $Enums.Theme | null
+  inviteCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   plantedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1775,6 +1842,7 @@ export type UserUncheckedUpdateWithoutFriendsRequestedInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
   theme?: Prisma.NullableEnumThemeFieldUpdateOperationsInput | $Enums.Theme | null
+  inviteCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   plantedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1809,6 +1877,7 @@ export type UserUpdateWithoutFriendsReceivedInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
   theme?: Prisma.NullableEnumThemeFieldUpdateOperationsInput | $Enums.Theme | null
+  inviteCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   plantedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1832,6 +1901,7 @@ export type UserUncheckedUpdateWithoutFriendsReceivedInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
   theme?: Prisma.NullableEnumThemeFieldUpdateOperationsInput | $Enums.Theme | null
+  inviteCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   plantedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1855,6 +1925,7 @@ export type UserCreateWithoutCheersSentInput = {
   passwordHash: string
   displayName: string
   theme?: $Enums.Theme | null
+  inviteCode?: string | null
   plantedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1878,6 +1949,7 @@ export type UserUncheckedCreateWithoutCheersSentInput = {
   passwordHash: string
   displayName: string
   theme?: $Enums.Theme | null
+  inviteCode?: string | null
   plantedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1906,6 +1978,7 @@ export type UserCreateWithoutCheersReceivedInput = {
   passwordHash: string
   displayName: string
   theme?: $Enums.Theme | null
+  inviteCode?: string | null
   plantedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1929,6 +2002,7 @@ export type UserUncheckedCreateWithoutCheersReceivedInput = {
   passwordHash: string
   displayName: string
   theme?: $Enums.Theme | null
+  inviteCode?: string | null
   plantedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1968,6 +2042,7 @@ export type UserUpdateWithoutCheersSentInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
   theme?: Prisma.NullableEnumThemeFieldUpdateOperationsInput | $Enums.Theme | null
+  inviteCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   plantedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1991,6 +2066,7 @@ export type UserUncheckedUpdateWithoutCheersSentInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
   theme?: Prisma.NullableEnumThemeFieldUpdateOperationsInput | $Enums.Theme | null
+  inviteCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   plantedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2025,6 +2101,7 @@ export type UserUpdateWithoutCheersReceivedInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
   theme?: Prisma.NullableEnumThemeFieldUpdateOperationsInput | $Enums.Theme | null
+  inviteCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   plantedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2048,6 +2125,7 @@ export type UserUncheckedUpdateWithoutCheersReceivedInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
   theme?: Prisma.NullableEnumThemeFieldUpdateOperationsInput | $Enums.Theme | null
+  inviteCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   plantedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2210,6 +2288,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   passwordHash?: boolean
   displayName?: boolean
   theme?: boolean
+  inviteCode?: boolean
   plantedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -2235,6 +2314,7 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   passwordHash?: boolean
   displayName?: boolean
   theme?: boolean
+  inviteCode?: boolean
   plantedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -2246,6 +2326,7 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   passwordHash?: boolean
   displayName?: boolean
   theme?: boolean
+  inviteCode?: boolean
   plantedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -2257,12 +2338,13 @@ export type UserSelectScalar = {
   passwordHash?: boolean
   displayName?: boolean
   theme?: boolean
+  inviteCode?: boolean
   plantedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "passwordHash" | "displayName" | "theme" | "plantedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "passwordHash" | "displayName" | "theme" | "inviteCode" | "plantedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   modules?: boolean | Prisma.User$modulesArgs<ExtArgs>
   attempts?: boolean | Prisma.User$attemptsArgs<ExtArgs>
@@ -2305,6 +2387,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     passwordHash: string
     displayName: string
     theme: $Enums.Theme | null
+    inviteCode: string | null
     plantedAt: Date
     createdAt: Date
     updatedAt: Date
@@ -2749,6 +2832,7 @@ export interface UserFieldRefs {
   readonly passwordHash: Prisma.FieldRef<"User", 'String'>
   readonly displayName: Prisma.FieldRef<"User", 'String'>
   readonly theme: Prisma.FieldRef<"User", 'Theme'>
+  readonly inviteCode: Prisma.FieldRef<"User", 'String'>
   readonly plantedAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>

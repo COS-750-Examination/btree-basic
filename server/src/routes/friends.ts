@@ -19,7 +19,10 @@ import { validateBody } from '../middleware/validate';
 export const friendsRouter = Router();
 
 const HOUR_MS = 60 * 60 * 1000;
-const friendRequestLimiter = perUserLimiter({ windowMs: HOUR_MS, limit: FRIEND_REQUESTS_PER_HOUR });
+export const friendRequestLimiter = perUserLimiter({
+  windowMs: HOUR_MS,
+  limit: FRIEND_REQUESTS_PER_HOUR,
+});
 const cheerLimiter = perUserLimiter({ windowMs: HOUR_MS, limit: CHEERS_PER_HOUR });
 
 const between = (a: string, b: string) => [

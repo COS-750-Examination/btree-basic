@@ -66,7 +66,6 @@ export function PracticePage() {
   const recordAttempt = useProgressStore((s) => s.recordAttempt);
   const signedIn = useProgressStore((s) => s.signedIn);
   const run = useProgressStore((s) => splitRun(s.attempts));
-  // Badges are kept once earned, so a later wrong answer must not make it look locked again.
   const hasSplitter = Boolean(
     useBadges(signedIn).data?.find((b) => b.id === 'splitter')?.awardedAt,
   );

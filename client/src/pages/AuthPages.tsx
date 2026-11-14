@@ -1,9 +1,10 @@
 import { LoginBody, RegisterBody } from '@btree/shared';
 import { useState, type FormEvent } from 'react';
-import { Link, useNavigate } from 'react-router';
+import { Link, useNavigate, useSearchParams } from 'react-router';
 import { ApiRequestError } from '../api/client';
 import { useLogin, useRegister } from '../api/hooks';
 import { Button, Card } from '../components/ui';
+import { safeNext } from '../lib/invite';
 
 const input = 'mt-1 w-full rounded-lg border-2 border-ink bg-paper px-3 py-2.5';
 
@@ -14,6 +15,7 @@ function errorText(e: unknown): string {
 
 export function LoginPage() {
   const navigate = useNavigate();
+  const next = safeNext(useSearchParams()[0].get('next'));
   const login = useLogin();
   const [error, setError] = useState<string | null>(null);
 
@@ -22,7 +24,7 @@ export function LoginPage() {
     const parsed = LoginBody.safeParse(Object.fromEntries(new FormData(e.currentTarget)));
     if (!parsed.success) return setError('Enter your email and password.');
     login.mutate(parsed.data, {
-      onSuccess: () => navigate('/lessons'),
+      onSuccess: () => navigate(next ?? '/lessons'),
       onError: (err) => setError(errorText(err)),
     });
   };
@@ -59,7 +61,10 @@ export function LoginPage() {
       </form>
       <p className="text-small mt-4">
         New here?{' '}
-        <Link to="/register" className="font-bold underline">
+        <Link
+          to={next ? `/register?next=${encodeURIComponent(next)}` : '/register'}
+          className="font-bold underline"
+        >
           Create an account
         </Link>{' '}
         or{' '}
@@ -74,6 +79,7 @@ export function LoginPage() {
 
 export function RegisterPage() {
   const navigate = useNavigate();
+  const next = safeNext(useSearchParams()[0].get('next'));
   const register = useRegister();
   const [error, setError] = useState<string | null>(null);
 
@@ -82,7 +88,7 @@ export function RegisterPage() {
     const parsed = RegisterBody.safeParse(Object.fromEntries(new FormData(e.currentTarget)));
     if (!parsed.success) return setError(parsed.error.issues[0]?.message ?? 'Check the form.');
     register.mutate(parsed.data, {
-      onSuccess: () => navigate('/warm-up'),
+      onSuccess: () => navigate(next ?? '/warm-up'),
       onError: (err) => setError(errorText(err)),
     });
   };
@@ -135,7 +141,10 @@ export function RegisterPage() {
       </form>
       <p className="text-small mt-4">
         Already have one?{' '}
-        <Link to="/login" className="font-bold underline">
+        <Link
+          to={next ? `/login?next=${encodeURIComponent(next)}` : '/login'}
+          className="font-bold underline"
+        >
           Sign in
         </Link>
         .

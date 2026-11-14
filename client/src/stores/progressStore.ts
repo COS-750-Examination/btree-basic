@@ -41,7 +41,6 @@ interface ProgressState {
   /** Owned decorations the student took off the tree. Bought ones start on the tree. */
   hiddenDecorations: string[];
   hintsRead: string[];
-  /** The latest server bonus (streak or ready check), shown once as a message. Not saved. */
   lastBonus: (LeafBonus & { at: number }) | null;
 
   setSignedIn: (v: boolean) => void;
@@ -82,7 +81,6 @@ const initial = {
  */
 const save = (fn: () => Promise<unknown>) => useSyncStore.getState().save(fn);
 
-/** The server awards badges while saving answers, modules and the warm-up, so reload them after. */
 const refreshBadges = () => void queryClient.invalidateQueries({ queryKey: ['badges'] });
 
 /**
@@ -98,10 +96,6 @@ export const useProgressStore = create<ProgressState>()(
           ledger: [{ amount: LEAF_REWARDS[reason], reason, at: Date.now() }, ...s.ledger],
         }));
 
-      /**
-       * The server decides the streak and ready-check bonuses, so they are added when its
-       * reply to an answer arrives. Guests never get them.
-       */
       const applyAttemptResult = (result: AttemptResult | undefined) => {
         for (const bonus of result?.bonuses ?? []) {
           const at = Date.now();

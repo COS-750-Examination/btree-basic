@@ -141,6 +141,9 @@ export const READY_CHECK_PASS = Math.ceil(READY_THRESHOLD * READY_CHECK_ITEM_IDS
 export const SPLITTER_RUN = 3;
 
 export const FRIEND_REQUESTS_PER_HOUR = 10;
+export const INVITE_LOOKUPS_PER_HOUR = 30;
+export const INVITE_CODE_ALPHABET = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
+export const INVITE_CODE_LENGTH = 8;
 export const CHEERS_PER_HOUR = 20;
 
 export const BADGES = [

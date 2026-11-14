@@ -9,10 +9,7 @@ import { FriendsCard } from '../components/friends/FriendsCard';
 import { Button, ButtonLink, Card, CardTitle, PageHeader } from '../components/ui';
 import { useProgressStore } from '../stores/progressStore';
 
-/**
- * Account settings: profile, appearance, friends, sign out, a copy of your data and account
- * deletion (FR10, POPIA).
- */
+/** Account settings: appearance, friends, sign out and account deletion (FR10, POPIA). */
 export function AccountPage() {
   const me = useMe();
   const logout = useLogout();

@@ -947,6 +947,52 @@ Several fonts were tried in turn at the requester's direction: Spectral, Gravita
 
 ---
 
+## Entry 019: Friend invite links
+
+| Field        | Detail                                                                                                                                                                                                                 |
+| ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Date         | 14 November 2026                                                                                                                                                                                                       |
+| Requested by | Taylor Sergel, frontend                                                                                                                                                                                                |
+| Tool         | Claude Code (Anthropic), model Claude Opus 5.5                                                                                                                                                                         |
+| Scope        | Prisma schema and migration, `routes/invites.ts`, `lib/export.ts`, shared invite schemas, `InviteLink.tsx`, `FriendsCard.tsx`, `AddFriendPage.tsx`, `AuthPages.tsx`, `App.tsx`, `api/hooks.ts`, `lib/invite.ts`, tests |
+| Status       | Completed; left uncommitted on branch `feat/ui-updates` for review                                                                                                                                                     |
+
+### Request
+
+> Please make it possible to find friends while typing, like Instagram's search dropdown. After discussing the privacy trade-off, the requester chose instead: let students share a personal link that adds them as a friend.
+
+### Clarifications provided
+
+- A search over all accounts was not built, because it would list every student's name and email to anyone signed in, against the app's POPIA design of never revealing who has an account. The options offered were opt-in name search, invite links, or both; invite links were chosen.
+- Opening a link sends a friend request rather than making the two students friends at once, so a link that is passed on further can't add strangers without the owner accepting. **Make a new link** stops an old link working.
+- The work is on `feat/ui-updates`, and no code comments were added, both as the requester asked.
+
+### Deliverables
+
+- **Server:** `User.inviteCode` and migration; four `/api/invites` routes with rate limits; the code included in the data export.
+- **Shared:** `InviteCode`, `InvitePreview`, `InviteResult`, `InviteStatus` and invite constants.
+- **Client:** invite link section on the Friends card (copy, share, replace), the `/add/:code` page, `?next=` support on login and register, and four hooks.
+- **Tests:** 6 server, 6 page, 2 card and 2 helper cases.
+
+### Verification summary
+
+| Check                                                                                                                                                                                                             | Result         |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------- |
+| Server tests                                                                                                                                                                                                      | 111 / 111 pass |
+| Client tests                                                                                                                                                                                                      | 111 / 111 pass |
+| Browser check (Chrome, two accounts): copy the link; a guest opens it, registers and comes back to the invite; sends the request; the owner sees it on My grove and accepts; the link then says "Already friends" | Pass           |
+| Browser check: after **Make a new link** the old link says "This link doesn't work"; your own link says "This is your own link"                                                                                   | Pass           |
+| No sideways scroll on Account at 375px wide                                                                                                                                                                       | Pass           |
+| ESLint, TypeScript (strict), Prettier, build                                                                                                                                                                      | Pass           |
+
+### Human review required
+
+- **Backend owner:** this adds a column and migration to the shared database, and four routes. Teammates need `npm run db:migrate` after pulling.
+- **"Requests you sent" leak** (Entry 017) is still open and is separate from this change.
+- **Figma:** the invite section and add-friend page have no Figma frame.
+
+---
+
 ## Entry template
 
 ```markdown

@@ -8,10 +8,8 @@ const MESSAGE = {
   readyCheck: "You're ready for the lecture!",
 } as const;
 
-/** How long a bonus message stays before it closes itself. */
 export const TOAST_MS = 6000;
 
-/** A short message when the server pays a bonus, so the jump in leaves makes sense. */
 export function RewardToast() {
   const bonus = useProgressStore((s) => s.lastBonus);
   const dismiss = useProgressStore((s) => s.dismissBonus);
@@ -23,7 +21,6 @@ export function RewardToast() {
   }, [bonus, dismiss]);
 
   return (
-    // Always mounted, so screen readers announce the message when it appears.
     <div
       role="status"
       aria-live="polite"

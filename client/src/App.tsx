@@ -17,6 +17,7 @@ const QuizPage = named(() => import('./pages/QuizPage'), 'QuizPage');
 const ReadyPage = named(() => import('./pages/ReadyPage'), 'ReadyPage');
 const GrovePage = named(() => import('./pages/GrovePage'), 'GrovePage');
 const FriendGrovePage = named(() => import('./pages/FriendGrovePage'), 'FriendGrovePage');
+const AddFriendPage = named(() => import('./pages/AddFriendPage'), 'AddFriendPage');
 const LoginPage = named(() => import('./pages/AuthPages'), 'LoginPage');
 const RegisterPage = named(() => import('./pages/AuthPages'), 'RegisterPage');
 const AccountPage = named(() => import('./pages/AccountPage'), 'AccountPage');
@@ -46,6 +47,7 @@ export function App() {
             <Route path="ready" element={<ReadyPage />} />
             <Route path="grove" element={<GrovePage />} />
             <Route path="grove/:friendId" element={<FriendGrovePage />} />
+            <Route path="add/:code" element={<AddFriendPage />} />
             <Route path="login" element={<LoginPage />} />
             <Route path="register" element={<RegisterPage />} />
             <Route path="account" element={<AccountPage />} />

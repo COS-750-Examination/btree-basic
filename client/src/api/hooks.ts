@@ -3,6 +3,9 @@ import {
   Cheer,
   FriendGrove,
   FriendsList,
+  InviteCode,
+  InvitePreview,
+  InviteResult,
   PublicUser,
   StreakSummary,
   type AccountPatchBody,
@@ -51,7 +54,6 @@ export function useLogout() {
   });
 }
 
-/** Friends, requests sent to you (`incoming`) and requests you sent (`outgoing`). */
 export function useFriends(enabled: boolean) {
   return useQuery({
     queryKey: ['friends'],
@@ -60,7 +62,6 @@ export function useFriends(enabled: boolean) {
   });
 }
 
-/** A friend-request action that changes the list, so the list is reloaded afterwards. */
 function useFriendsMutation<T>(mutationFn: (arg: T) => Promise<unknown>) {
   const qc = useQueryClient();
   return useMutation({
@@ -69,10 +70,6 @@ function useFriendsMutation<T>(mutationFn: (arg: T) => Promise<unknown>) {
   });
 }
 
-/**
- * Always succeeds (202) whether or not the email has an account. Reloads the list anyway,
- * because if they had already asked you, you are now friends.
- */
 export const useSendFriendRequest = () =>
   useFriendsMutation((email: string) => api.post('/friends/requests', { email }));
 
@@ -82,11 +79,9 @@ export const useAcceptRequest = () =>
 export const useDeclineRequest = () =>
   useFriendsMutation((id: string) => api.post(`/friends/requests/${id}/decline`));
 
-/** Withdraw a request you sent. */
 export const useCancelRequest = () =>
   useFriendsMutation((id: string) => api.delete(`/friends/requests/${id}`));
 
-/** Works from either side. Their grove is then 404 and cheers to them are refused. */
 export const useUnfriend = () => useFriendsMutation((id: string) => api.delete(`/friends/${id}`));
 
 export function useFriendGrove(id: string | undefined, enabled: boolean) {
@@ -113,7 +108,6 @@ export function useSendCheer(friendId: string) {
   });
 }
 
-/** The student's day streak (signed-in only). Refreshed after every saved answer. */
 export function useStreak(enabled: boolean) {
   return useQuery({
     queryKey: ['streak'],
@@ -122,10 +116,6 @@ export function useStreak(enabled: boolean) {
   });
 }
 
-/**
- * The four badges, earned or locked (signed-in only; badges are private). The progress
- * store refreshes this after the saves that can award one: answers, modules and the warm-up.
- */
 export function useBadges(enabled: boolean) {
   return useQuery({
     queryKey: ['badges'],
@@ -134,14 +124,46 @@ export function useBadges(enabled: boolean) {
   });
 }
 
-/**
- * Change the display name, password or theme. The reply is the updated user, so the header
- * (and anything else reading `['me']`) updates at once.
- */
 export function useUpdateAccount() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (body: AccountPatchBody) => api.patch('/account', body, PublicUser),
     onSuccess: (user) => qc.setQueryData(['me'], user),
+  });
+}
+
+export function useMyInvite(enabled: boolean) {
+  return useQuery({
+    queryKey: ['invite'],
+    queryFn: () => api.get('/invites/mine', InviteCode),
+    enabled,
+  });
+}
+
+export function useResetInvite() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: () => api.post('/invites/mine/reset', {}, InviteCode),
+    onSuccess: (data) => qc.setQueryData(['invite'], data),
+  });
+}
+
+export function useInvitePreview(code: string, enabled: boolean) {
+  return useQuery({
+    queryKey: ['invite', code],
+    queryFn: () => api.get(`/invites/${code}`, InvitePreview),
+    enabled,
+    retry: false,
+  });
+}
+
+export function useAcceptInvite(code: string) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: () => api.post(`/invites/${code}`, {}, InviteResult),
+    onSuccess: () => {
+      void qc.invalidateQueries({ queryKey: ['friends'] });
+      void qc.invalidateQueries({ queryKey: ['invite', code] });
+    },
   });
 }

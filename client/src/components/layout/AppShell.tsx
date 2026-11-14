@@ -19,12 +19,10 @@ export function AppShell() {
     applyTheme(theme);
   }, [theme]);
   // Block body on purpose: newer browsers return a Promise from scrollTo, which must not be the cleanup.
-  // A link to a section (e.g. /account#friends) is left to that section to scroll into view.
   useEffect(() => {
     if (!hash) window.scrollTo(0, 0);
   }, [pathname, hash]);
 
-  // A signed-in student's theme follows their account (null until they pick one while signed in).
   const accountTheme = me.data?.theme;
   useEffect(() => {
     if (accountTheme) setTheme(accountTheme);
