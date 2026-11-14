@@ -29,6 +29,7 @@ export type UserMinAggregateOutputType = {
   email: string | null
   passwordHash: string | null
   displayName: string | null
+  theme: $Enums.Theme | null
   plantedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -39,6 +40,7 @@ export type UserMaxAggregateOutputType = {
   email: string | null
   passwordHash: string | null
   displayName: string | null
+  theme: $Enums.Theme | null
   plantedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -49,6 +51,7 @@ export type UserCountAggregateOutputType = {
   email: number
   passwordHash: number
   displayName: number
+  theme: number
   plantedAt: number
   createdAt: number
   updatedAt: number
@@ -61,6 +64,7 @@ export type UserMinAggregateInputType = {
   email?: true
   passwordHash?: true
   displayName?: true
+  theme?: true
   plantedAt?: true
   createdAt?: true
   updatedAt?: true
@@ -71,6 +75,7 @@ export type UserMaxAggregateInputType = {
   email?: true
   passwordHash?: true
   displayName?: true
+  theme?: true
   plantedAt?: true
   createdAt?: true
   updatedAt?: true
@@ -81,6 +86,7 @@ export type UserCountAggregateInputType = {
   email?: true
   passwordHash?: true
   displayName?: true
+  theme?: true
   plantedAt?: true
   createdAt?: true
   updatedAt?: true
@@ -164,6 +170,7 @@ export type UserGroupByOutputType = {
   email: string
   passwordHash: string
   displayName: string
+  theme: $Enums.Theme | null
   plantedAt: Date
   createdAt: Date
   updatedAt: Date
@@ -195,6 +202,7 @@ export type UserWhereInput = {
   email?: Prisma.StringFilter<"User"> | string
   passwordHash?: Prisma.StringFilter<"User"> | string
   displayName?: Prisma.StringFilter<"User"> | string
+  theme?: Prisma.EnumThemeNullableFilter<"User"> | $Enums.Theme | null
   plantedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
@@ -206,6 +214,7 @@ export type UserWhereInput = {
   lectureQuestions?: Prisma.LectureQuestionListRelationFilter
   warmups?: Prisma.WarmupResultListRelationFilter
   hintViews?: Prisma.HintViewListRelationFilter
+  badges?: Prisma.UserBadgeListRelationFilter
   friendsRequested?: Prisma.FriendshipListRelationFilter
   friendsReceived?: Prisma.FriendshipListRelationFilter
   cheersSent?: Prisma.CheerListRelationFilter
@@ -217,6 +226,7 @@ export type UserOrderByWithRelationInput = {
   email?: Prisma.SortOrder
   passwordHash?: Prisma.SortOrder
   displayName?: Prisma.SortOrder
+  theme?: Prisma.SortOrderInput | Prisma.SortOrder
   plantedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -228,6 +238,7 @@ export type UserOrderByWithRelationInput = {
   lectureQuestions?: Prisma.LectureQuestionOrderByRelationAggregateInput
   warmups?: Prisma.WarmupResultOrderByRelationAggregateInput
   hintViews?: Prisma.HintViewOrderByRelationAggregateInput
+  badges?: Prisma.UserBadgeOrderByRelationAggregateInput
   friendsRequested?: Prisma.FriendshipOrderByRelationAggregateInput
   friendsReceived?: Prisma.FriendshipOrderByRelationAggregateInput
   cheersSent?: Prisma.CheerOrderByRelationAggregateInput
@@ -242,6 +253,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   passwordHash?: Prisma.StringFilter<"User"> | string
   displayName?: Prisma.StringFilter<"User"> | string
+  theme?: Prisma.EnumThemeNullableFilter<"User"> | $Enums.Theme | null
   plantedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
@@ -253,6 +265,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   lectureQuestions?: Prisma.LectureQuestionListRelationFilter
   warmups?: Prisma.WarmupResultListRelationFilter
   hintViews?: Prisma.HintViewListRelationFilter
+  badges?: Prisma.UserBadgeListRelationFilter
   friendsRequested?: Prisma.FriendshipListRelationFilter
   friendsReceived?: Prisma.FriendshipListRelationFilter
   cheersSent?: Prisma.CheerListRelationFilter
@@ -264,6 +277,7 @@ export type UserOrderByWithAggregationInput = {
   email?: Prisma.SortOrder
   passwordHash?: Prisma.SortOrder
   displayName?: Prisma.SortOrder
+  theme?: Prisma.SortOrderInput | Prisma.SortOrder
   plantedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -280,6 +294,7 @@ export type UserScalarWhereWithAggregatesInput = {
   email?: Prisma.StringWithAggregatesFilter<"User"> | string
   passwordHash?: Prisma.StringWithAggregatesFilter<"User"> | string
   displayName?: Prisma.StringWithAggregatesFilter<"User"> | string
+  theme?: Prisma.EnumThemeNullableWithAggregatesFilter<"User"> | $Enums.Theme | null
   plantedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
@@ -290,6 +305,7 @@ export type UserCreateInput = {
   email: string
   passwordHash: string
   displayName: string
+  theme?: $Enums.Theme | null
   plantedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -301,6 +317,7 @@ export type UserCreateInput = {
   lectureQuestions?: Prisma.LectureQuestionCreateNestedManyWithoutUserInput
   warmups?: Prisma.WarmupResultCreateNestedManyWithoutUserInput
   hintViews?: Prisma.HintViewCreateNestedManyWithoutUserInput
+  badges?: Prisma.UserBadgeCreateNestedManyWithoutUserInput
   friendsRequested?: Prisma.FriendshipCreateNestedManyWithoutRequesterInput
   friendsReceived?: Prisma.FriendshipCreateNestedManyWithoutAddresseeInput
   cheersSent?: Prisma.CheerCreateNestedManyWithoutFromInput
@@ -312,6 +329,7 @@ export type UserUncheckedCreateInput = {
   email: string
   passwordHash: string
   displayName: string
+  theme?: $Enums.Theme | null
   plantedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -323,6 +341,7 @@ export type UserUncheckedCreateInput = {
   lectureQuestions?: Prisma.LectureQuestionUncheckedCreateNestedManyWithoutUserInput
   warmups?: Prisma.WarmupResultUncheckedCreateNestedManyWithoutUserInput
   hintViews?: Prisma.HintViewUncheckedCreateNestedManyWithoutUserInput
+  badges?: Prisma.UserBadgeUncheckedCreateNestedManyWithoutUserInput
   friendsRequested?: Prisma.FriendshipUncheckedCreateNestedManyWithoutRequesterInput
   friendsReceived?: Prisma.FriendshipUncheckedCreateNestedManyWithoutAddresseeInput
   cheersSent?: Prisma.CheerUncheckedCreateNestedManyWithoutFromInput
@@ -334,6 +353,7 @@ export type UserUpdateInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
+  theme?: Prisma.NullableEnumThemeFieldUpdateOperationsInput | $Enums.Theme | null
   plantedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -345,6 +365,7 @@ export type UserUpdateInput = {
   lectureQuestions?: Prisma.LectureQuestionUpdateManyWithoutUserNestedInput
   warmups?: Prisma.WarmupResultUpdateManyWithoutUserNestedInput
   hintViews?: Prisma.HintViewUpdateManyWithoutUserNestedInput
+  badges?: Prisma.UserBadgeUpdateManyWithoutUserNestedInput
   friendsRequested?: Prisma.FriendshipUpdateManyWithoutRequesterNestedInput
   friendsReceived?: Prisma.FriendshipUpdateManyWithoutAddresseeNestedInput
   cheersSent?: Prisma.CheerUpdateManyWithoutFromNestedInput
@@ -356,6 +377,7 @@ export type UserUncheckedUpdateInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
+  theme?: Prisma.NullableEnumThemeFieldUpdateOperationsInput | $Enums.Theme | null
   plantedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -367,6 +389,7 @@ export type UserUncheckedUpdateInput = {
   lectureQuestions?: Prisma.LectureQuestionUncheckedUpdateManyWithoutUserNestedInput
   warmups?: Prisma.WarmupResultUncheckedUpdateManyWithoutUserNestedInput
   hintViews?: Prisma.HintViewUncheckedUpdateManyWithoutUserNestedInput
+  badges?: Prisma.UserBadgeUncheckedUpdateManyWithoutUserNestedInput
   friendsRequested?: Prisma.FriendshipUncheckedUpdateManyWithoutRequesterNestedInput
   friendsReceived?: Prisma.FriendshipUncheckedUpdateManyWithoutAddresseeNestedInput
   cheersSent?: Prisma.CheerUncheckedUpdateManyWithoutFromNestedInput
@@ -378,6 +401,7 @@ export type UserCreateManyInput = {
   email: string
   passwordHash: string
   displayName: string
+  theme?: $Enums.Theme | null
   plantedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -388,6 +412,7 @@ export type UserUpdateManyMutationInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
+  theme?: Prisma.NullableEnumThemeFieldUpdateOperationsInput | $Enums.Theme | null
   plantedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -398,6 +423,7 @@ export type UserUncheckedUpdateManyInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
+  theme?: Prisma.NullableEnumThemeFieldUpdateOperationsInput | $Enums.Theme | null
   plantedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -408,6 +434,7 @@ export type UserCountOrderByAggregateInput = {
   email?: Prisma.SortOrder
   passwordHash?: Prisma.SortOrder
   displayName?: Prisma.SortOrder
+  theme?: Prisma.SortOrder
   plantedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -418,6 +445,7 @@ export type UserMaxOrderByAggregateInput = {
   email?: Prisma.SortOrder
   passwordHash?: Prisma.SortOrder
   displayName?: Prisma.SortOrder
+  theme?: Prisma.SortOrder
   plantedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -428,6 +456,7 @@ export type UserMinOrderByAggregateInput = {
   email?: Prisma.SortOrder
   passwordHash?: Prisma.SortOrder
   displayName?: Prisma.SortOrder
+  theme?: Prisma.SortOrder
   plantedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -440,6 +469,10 @@ export type UserScalarRelationFilter = {
 
 export type StringFieldUpdateOperationsInput = {
   set?: string
+}
+
+export type NullableEnumThemeFieldUpdateOperationsInput = {
+  set?: $Enums.Theme | null
 }
 
 export type DateTimeFieldUpdateOperationsInput = {
@@ -558,6 +591,20 @@ export type UserUpdateOneRequiredWithoutWarmupsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutWarmupsInput, Prisma.UserUpdateWithoutWarmupsInput>, Prisma.UserUncheckedUpdateWithoutWarmupsInput>
 }
 
+export type UserCreateNestedOneWithoutBadgesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutBadgesInput, Prisma.UserUncheckedCreateWithoutBadgesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutBadgesInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutBadgesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutBadgesInput, Prisma.UserUncheckedCreateWithoutBadgesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutBadgesInput
+  upsert?: Prisma.UserUpsertWithoutBadgesInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutBadgesInput, Prisma.UserUpdateWithoutBadgesInput>, Prisma.UserUncheckedUpdateWithoutBadgesInput>
+}
+
 export type UserCreateNestedOneWithoutFriendsRequestedInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutFriendsRequestedInput, Prisma.UserUncheckedCreateWithoutFriendsRequestedInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutFriendsRequestedInput
@@ -619,6 +666,7 @@ export type UserCreateWithoutModulesInput = {
   email: string
   passwordHash: string
   displayName: string
+  theme?: $Enums.Theme | null
   plantedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -629,6 +677,7 @@ export type UserCreateWithoutModulesInput = {
   lectureQuestions?: Prisma.LectureQuestionCreateNestedManyWithoutUserInput
   warmups?: Prisma.WarmupResultCreateNestedManyWithoutUserInput
   hintViews?: Prisma.HintViewCreateNestedManyWithoutUserInput
+  badges?: Prisma.UserBadgeCreateNestedManyWithoutUserInput
   friendsRequested?: Prisma.FriendshipCreateNestedManyWithoutRequesterInput
   friendsReceived?: Prisma.FriendshipCreateNestedManyWithoutAddresseeInput
   cheersSent?: Prisma.CheerCreateNestedManyWithoutFromInput
@@ -640,6 +689,7 @@ export type UserUncheckedCreateWithoutModulesInput = {
   email: string
   passwordHash: string
   displayName: string
+  theme?: $Enums.Theme | null
   plantedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -650,6 +700,7 @@ export type UserUncheckedCreateWithoutModulesInput = {
   lectureQuestions?: Prisma.LectureQuestionUncheckedCreateNestedManyWithoutUserInput
   warmups?: Prisma.WarmupResultUncheckedCreateNestedManyWithoutUserInput
   hintViews?: Prisma.HintViewUncheckedCreateNestedManyWithoutUserInput
+  badges?: Prisma.UserBadgeUncheckedCreateNestedManyWithoutUserInput
   friendsRequested?: Prisma.FriendshipUncheckedCreateNestedManyWithoutRequesterInput
   friendsReceived?: Prisma.FriendshipUncheckedCreateNestedManyWithoutAddresseeInput
   cheersSent?: Prisma.CheerUncheckedCreateNestedManyWithoutFromInput
@@ -677,6 +728,7 @@ export type UserUpdateWithoutModulesInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
+  theme?: Prisma.NullableEnumThemeFieldUpdateOperationsInput | $Enums.Theme | null
   plantedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -687,6 +739,7 @@ export type UserUpdateWithoutModulesInput = {
   lectureQuestions?: Prisma.LectureQuestionUpdateManyWithoutUserNestedInput
   warmups?: Prisma.WarmupResultUpdateManyWithoutUserNestedInput
   hintViews?: Prisma.HintViewUpdateManyWithoutUserNestedInput
+  badges?: Prisma.UserBadgeUpdateManyWithoutUserNestedInput
   friendsRequested?: Prisma.FriendshipUpdateManyWithoutRequesterNestedInput
   friendsReceived?: Prisma.FriendshipUpdateManyWithoutAddresseeNestedInput
   cheersSent?: Prisma.CheerUpdateManyWithoutFromNestedInput
@@ -698,6 +751,7 @@ export type UserUncheckedUpdateWithoutModulesInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
+  theme?: Prisma.NullableEnumThemeFieldUpdateOperationsInput | $Enums.Theme | null
   plantedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -708,6 +762,7 @@ export type UserUncheckedUpdateWithoutModulesInput = {
   lectureQuestions?: Prisma.LectureQuestionUncheckedUpdateManyWithoutUserNestedInput
   warmups?: Prisma.WarmupResultUncheckedUpdateManyWithoutUserNestedInput
   hintViews?: Prisma.HintViewUncheckedUpdateManyWithoutUserNestedInput
+  badges?: Prisma.UserBadgeUncheckedUpdateManyWithoutUserNestedInput
   friendsRequested?: Prisma.FriendshipUncheckedUpdateManyWithoutRequesterNestedInput
   friendsReceived?: Prisma.FriendshipUncheckedUpdateManyWithoutAddresseeNestedInput
   cheersSent?: Prisma.CheerUncheckedUpdateManyWithoutFromNestedInput
@@ -719,6 +774,7 @@ export type UserCreateWithoutAttemptsInput = {
   email: string
   passwordHash: string
   displayName: string
+  theme?: $Enums.Theme | null
   plantedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -729,6 +785,7 @@ export type UserCreateWithoutAttemptsInput = {
   lectureQuestions?: Prisma.LectureQuestionCreateNestedManyWithoutUserInput
   warmups?: Prisma.WarmupResultCreateNestedManyWithoutUserInput
   hintViews?: Prisma.HintViewCreateNestedManyWithoutUserInput
+  badges?: Prisma.UserBadgeCreateNestedManyWithoutUserInput
   friendsRequested?: Prisma.FriendshipCreateNestedManyWithoutRequesterInput
   friendsReceived?: Prisma.FriendshipCreateNestedManyWithoutAddresseeInput
   cheersSent?: Prisma.CheerCreateNestedManyWithoutFromInput
@@ -740,6 +797,7 @@ export type UserUncheckedCreateWithoutAttemptsInput = {
   email: string
   passwordHash: string
   displayName: string
+  theme?: $Enums.Theme | null
   plantedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -750,6 +808,7 @@ export type UserUncheckedCreateWithoutAttemptsInput = {
   lectureQuestions?: Prisma.LectureQuestionUncheckedCreateNestedManyWithoutUserInput
   warmups?: Prisma.WarmupResultUncheckedCreateNestedManyWithoutUserInput
   hintViews?: Prisma.HintViewUncheckedCreateNestedManyWithoutUserInput
+  badges?: Prisma.UserBadgeUncheckedCreateNestedManyWithoutUserInput
   friendsRequested?: Prisma.FriendshipUncheckedCreateNestedManyWithoutRequesterInput
   friendsReceived?: Prisma.FriendshipUncheckedCreateNestedManyWithoutAddresseeInput
   cheersSent?: Prisma.CheerUncheckedCreateNestedManyWithoutFromInput
@@ -777,6 +836,7 @@ export type UserUpdateWithoutAttemptsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
+  theme?: Prisma.NullableEnumThemeFieldUpdateOperationsInput | $Enums.Theme | null
   plantedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -787,6 +847,7 @@ export type UserUpdateWithoutAttemptsInput = {
   lectureQuestions?: Prisma.LectureQuestionUpdateManyWithoutUserNestedInput
   warmups?: Prisma.WarmupResultUpdateManyWithoutUserNestedInput
   hintViews?: Prisma.HintViewUpdateManyWithoutUserNestedInput
+  badges?: Prisma.UserBadgeUpdateManyWithoutUserNestedInput
   friendsRequested?: Prisma.FriendshipUpdateManyWithoutRequesterNestedInput
   friendsReceived?: Prisma.FriendshipUpdateManyWithoutAddresseeNestedInput
   cheersSent?: Prisma.CheerUpdateManyWithoutFromNestedInput
@@ -798,6 +859,7 @@ export type UserUncheckedUpdateWithoutAttemptsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
+  theme?: Prisma.NullableEnumThemeFieldUpdateOperationsInput | $Enums.Theme | null
   plantedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -808,6 +870,7 @@ export type UserUncheckedUpdateWithoutAttemptsInput = {
   lectureQuestions?: Prisma.LectureQuestionUncheckedUpdateManyWithoutUserNestedInput
   warmups?: Prisma.WarmupResultUncheckedUpdateManyWithoutUserNestedInput
   hintViews?: Prisma.HintViewUncheckedUpdateManyWithoutUserNestedInput
+  badges?: Prisma.UserBadgeUncheckedUpdateManyWithoutUserNestedInput
   friendsRequested?: Prisma.FriendshipUncheckedUpdateManyWithoutRequesterNestedInput
   friendsReceived?: Prisma.FriendshipUncheckedUpdateManyWithoutAddresseeNestedInput
   cheersSent?: Prisma.CheerUncheckedUpdateManyWithoutFromNestedInput
@@ -819,6 +882,7 @@ export type UserCreateWithoutMasteryInput = {
   email: string
   passwordHash: string
   displayName: string
+  theme?: $Enums.Theme | null
   plantedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -829,6 +893,7 @@ export type UserCreateWithoutMasteryInput = {
   lectureQuestions?: Prisma.LectureQuestionCreateNestedManyWithoutUserInput
   warmups?: Prisma.WarmupResultCreateNestedManyWithoutUserInput
   hintViews?: Prisma.HintViewCreateNestedManyWithoutUserInput
+  badges?: Prisma.UserBadgeCreateNestedManyWithoutUserInput
   friendsRequested?: Prisma.FriendshipCreateNestedManyWithoutRequesterInput
   friendsReceived?: Prisma.FriendshipCreateNestedManyWithoutAddresseeInput
   cheersSent?: Prisma.CheerCreateNestedManyWithoutFromInput
@@ -840,6 +905,7 @@ export type UserUncheckedCreateWithoutMasteryInput = {
   email: string
   passwordHash: string
   displayName: string
+  theme?: $Enums.Theme | null
   plantedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -850,6 +916,7 @@ export type UserUncheckedCreateWithoutMasteryInput = {
   lectureQuestions?: Prisma.LectureQuestionUncheckedCreateNestedManyWithoutUserInput
   warmups?: Prisma.WarmupResultUncheckedCreateNestedManyWithoutUserInput
   hintViews?: Prisma.HintViewUncheckedCreateNestedManyWithoutUserInput
+  badges?: Prisma.UserBadgeUncheckedCreateNestedManyWithoutUserInput
   friendsRequested?: Prisma.FriendshipUncheckedCreateNestedManyWithoutRequesterInput
   friendsReceived?: Prisma.FriendshipUncheckedCreateNestedManyWithoutAddresseeInput
   cheersSent?: Prisma.CheerUncheckedCreateNestedManyWithoutFromInput
@@ -877,6 +944,7 @@ export type UserUpdateWithoutMasteryInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
+  theme?: Prisma.NullableEnumThemeFieldUpdateOperationsInput | $Enums.Theme | null
   plantedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -887,6 +955,7 @@ export type UserUpdateWithoutMasteryInput = {
   lectureQuestions?: Prisma.LectureQuestionUpdateManyWithoutUserNestedInput
   warmups?: Prisma.WarmupResultUpdateManyWithoutUserNestedInput
   hintViews?: Prisma.HintViewUpdateManyWithoutUserNestedInput
+  badges?: Prisma.UserBadgeUpdateManyWithoutUserNestedInput
   friendsRequested?: Prisma.FriendshipUpdateManyWithoutRequesterNestedInput
   friendsReceived?: Prisma.FriendshipUpdateManyWithoutAddresseeNestedInput
   cheersSent?: Prisma.CheerUpdateManyWithoutFromNestedInput
@@ -898,6 +967,7 @@ export type UserUncheckedUpdateWithoutMasteryInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
+  theme?: Prisma.NullableEnumThemeFieldUpdateOperationsInput | $Enums.Theme | null
   plantedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -908,6 +978,7 @@ export type UserUncheckedUpdateWithoutMasteryInput = {
   lectureQuestions?: Prisma.LectureQuestionUncheckedUpdateManyWithoutUserNestedInput
   warmups?: Prisma.WarmupResultUncheckedUpdateManyWithoutUserNestedInput
   hintViews?: Prisma.HintViewUncheckedUpdateManyWithoutUserNestedInput
+  badges?: Prisma.UserBadgeUncheckedUpdateManyWithoutUserNestedInput
   friendsRequested?: Prisma.FriendshipUncheckedUpdateManyWithoutRequesterNestedInput
   friendsReceived?: Prisma.FriendshipUncheckedUpdateManyWithoutAddresseeNestedInput
   cheersSent?: Prisma.CheerUncheckedUpdateManyWithoutFromNestedInput
@@ -919,6 +990,7 @@ export type UserCreateWithoutLeavesInput = {
   email: string
   passwordHash: string
   displayName: string
+  theme?: $Enums.Theme | null
   plantedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -929,6 +1001,7 @@ export type UserCreateWithoutLeavesInput = {
   lectureQuestions?: Prisma.LectureQuestionCreateNestedManyWithoutUserInput
   warmups?: Prisma.WarmupResultCreateNestedManyWithoutUserInput
   hintViews?: Prisma.HintViewCreateNestedManyWithoutUserInput
+  badges?: Prisma.UserBadgeCreateNestedManyWithoutUserInput
   friendsRequested?: Prisma.FriendshipCreateNestedManyWithoutRequesterInput
   friendsReceived?: Prisma.FriendshipCreateNestedManyWithoutAddresseeInput
   cheersSent?: Prisma.CheerCreateNestedManyWithoutFromInput
@@ -940,6 +1013,7 @@ export type UserUncheckedCreateWithoutLeavesInput = {
   email: string
   passwordHash: string
   displayName: string
+  theme?: $Enums.Theme | null
   plantedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -950,6 +1024,7 @@ export type UserUncheckedCreateWithoutLeavesInput = {
   lectureQuestions?: Prisma.LectureQuestionUncheckedCreateNestedManyWithoutUserInput
   warmups?: Prisma.WarmupResultUncheckedCreateNestedManyWithoutUserInput
   hintViews?: Prisma.HintViewUncheckedCreateNestedManyWithoutUserInput
+  badges?: Prisma.UserBadgeUncheckedCreateNestedManyWithoutUserInput
   friendsRequested?: Prisma.FriendshipUncheckedCreateNestedManyWithoutRequesterInput
   friendsReceived?: Prisma.FriendshipUncheckedCreateNestedManyWithoutAddresseeInput
   cheersSent?: Prisma.CheerUncheckedCreateNestedManyWithoutFromInput
@@ -977,6 +1052,7 @@ export type UserUpdateWithoutLeavesInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
+  theme?: Prisma.NullableEnumThemeFieldUpdateOperationsInput | $Enums.Theme | null
   plantedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -987,6 +1063,7 @@ export type UserUpdateWithoutLeavesInput = {
   lectureQuestions?: Prisma.LectureQuestionUpdateManyWithoutUserNestedInput
   warmups?: Prisma.WarmupResultUpdateManyWithoutUserNestedInput
   hintViews?: Prisma.HintViewUpdateManyWithoutUserNestedInput
+  badges?: Prisma.UserBadgeUpdateManyWithoutUserNestedInput
   friendsRequested?: Prisma.FriendshipUpdateManyWithoutRequesterNestedInput
   friendsReceived?: Prisma.FriendshipUpdateManyWithoutAddresseeNestedInput
   cheersSent?: Prisma.CheerUpdateManyWithoutFromNestedInput
@@ -998,6 +1075,7 @@ export type UserUncheckedUpdateWithoutLeavesInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
+  theme?: Prisma.NullableEnumThemeFieldUpdateOperationsInput | $Enums.Theme | null
   plantedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1008,6 +1086,7 @@ export type UserUncheckedUpdateWithoutLeavesInput = {
   lectureQuestions?: Prisma.LectureQuestionUncheckedUpdateManyWithoutUserNestedInput
   warmups?: Prisma.WarmupResultUncheckedUpdateManyWithoutUserNestedInput
   hintViews?: Prisma.HintViewUncheckedUpdateManyWithoutUserNestedInput
+  badges?: Prisma.UserBadgeUncheckedUpdateManyWithoutUserNestedInput
   friendsRequested?: Prisma.FriendshipUncheckedUpdateManyWithoutRequesterNestedInput
   friendsReceived?: Prisma.FriendshipUncheckedUpdateManyWithoutAddresseeNestedInput
   cheersSent?: Prisma.CheerUncheckedUpdateManyWithoutFromNestedInput
@@ -1019,6 +1098,7 @@ export type UserCreateWithoutDecorationsInput = {
   email: string
   passwordHash: string
   displayName: string
+  theme?: $Enums.Theme | null
   plantedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1029,6 +1109,7 @@ export type UserCreateWithoutDecorationsInput = {
   lectureQuestions?: Prisma.LectureQuestionCreateNestedManyWithoutUserInput
   warmups?: Prisma.WarmupResultCreateNestedManyWithoutUserInput
   hintViews?: Prisma.HintViewCreateNestedManyWithoutUserInput
+  badges?: Prisma.UserBadgeCreateNestedManyWithoutUserInput
   friendsRequested?: Prisma.FriendshipCreateNestedManyWithoutRequesterInput
   friendsReceived?: Prisma.FriendshipCreateNestedManyWithoutAddresseeInput
   cheersSent?: Prisma.CheerCreateNestedManyWithoutFromInput
@@ -1040,6 +1121,7 @@ export type UserUncheckedCreateWithoutDecorationsInput = {
   email: string
   passwordHash: string
   displayName: string
+  theme?: $Enums.Theme | null
   plantedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1050,6 +1132,7 @@ export type UserUncheckedCreateWithoutDecorationsInput = {
   lectureQuestions?: Prisma.LectureQuestionUncheckedCreateNestedManyWithoutUserInput
   warmups?: Prisma.WarmupResultUncheckedCreateNestedManyWithoutUserInput
   hintViews?: Prisma.HintViewUncheckedCreateNestedManyWithoutUserInput
+  badges?: Prisma.UserBadgeUncheckedCreateNestedManyWithoutUserInput
   friendsRequested?: Prisma.FriendshipUncheckedCreateNestedManyWithoutRequesterInput
   friendsReceived?: Prisma.FriendshipUncheckedCreateNestedManyWithoutAddresseeInput
   cheersSent?: Prisma.CheerUncheckedCreateNestedManyWithoutFromInput
@@ -1077,6 +1160,7 @@ export type UserUpdateWithoutDecorationsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
+  theme?: Prisma.NullableEnumThemeFieldUpdateOperationsInput | $Enums.Theme | null
   plantedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1087,6 +1171,7 @@ export type UserUpdateWithoutDecorationsInput = {
   lectureQuestions?: Prisma.LectureQuestionUpdateManyWithoutUserNestedInput
   warmups?: Prisma.WarmupResultUpdateManyWithoutUserNestedInput
   hintViews?: Prisma.HintViewUpdateManyWithoutUserNestedInput
+  badges?: Prisma.UserBadgeUpdateManyWithoutUserNestedInput
   friendsRequested?: Prisma.FriendshipUpdateManyWithoutRequesterNestedInput
   friendsReceived?: Prisma.FriendshipUpdateManyWithoutAddresseeNestedInput
   cheersSent?: Prisma.CheerUpdateManyWithoutFromNestedInput
@@ -1098,6 +1183,7 @@ export type UserUncheckedUpdateWithoutDecorationsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
+  theme?: Prisma.NullableEnumThemeFieldUpdateOperationsInput | $Enums.Theme | null
   plantedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1108,6 +1194,7 @@ export type UserUncheckedUpdateWithoutDecorationsInput = {
   lectureQuestions?: Prisma.LectureQuestionUncheckedUpdateManyWithoutUserNestedInput
   warmups?: Prisma.WarmupResultUncheckedUpdateManyWithoutUserNestedInput
   hintViews?: Prisma.HintViewUncheckedUpdateManyWithoutUserNestedInput
+  badges?: Prisma.UserBadgeUncheckedUpdateManyWithoutUserNestedInput
   friendsRequested?: Prisma.FriendshipUncheckedUpdateManyWithoutRequesterNestedInput
   friendsReceived?: Prisma.FriendshipUncheckedUpdateManyWithoutAddresseeNestedInput
   cheersSent?: Prisma.CheerUncheckedUpdateManyWithoutFromNestedInput
@@ -1119,6 +1206,7 @@ export type UserCreateWithoutLectureQuestionsInput = {
   email: string
   passwordHash: string
   displayName: string
+  theme?: $Enums.Theme | null
   plantedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1129,6 +1217,7 @@ export type UserCreateWithoutLectureQuestionsInput = {
   decorations?: Prisma.UserDecorationCreateNestedManyWithoutUserInput
   warmups?: Prisma.WarmupResultCreateNestedManyWithoutUserInput
   hintViews?: Prisma.HintViewCreateNestedManyWithoutUserInput
+  badges?: Prisma.UserBadgeCreateNestedManyWithoutUserInput
   friendsRequested?: Prisma.FriendshipCreateNestedManyWithoutRequesterInput
   friendsReceived?: Prisma.FriendshipCreateNestedManyWithoutAddresseeInput
   cheersSent?: Prisma.CheerCreateNestedManyWithoutFromInput
@@ -1140,6 +1229,7 @@ export type UserUncheckedCreateWithoutLectureQuestionsInput = {
   email: string
   passwordHash: string
   displayName: string
+  theme?: $Enums.Theme | null
   plantedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1150,6 +1240,7 @@ export type UserUncheckedCreateWithoutLectureQuestionsInput = {
   decorations?: Prisma.UserDecorationUncheckedCreateNestedManyWithoutUserInput
   warmups?: Prisma.WarmupResultUncheckedCreateNestedManyWithoutUserInput
   hintViews?: Prisma.HintViewUncheckedCreateNestedManyWithoutUserInput
+  badges?: Prisma.UserBadgeUncheckedCreateNestedManyWithoutUserInput
   friendsRequested?: Prisma.FriendshipUncheckedCreateNestedManyWithoutRequesterInput
   friendsReceived?: Prisma.FriendshipUncheckedCreateNestedManyWithoutAddresseeInput
   cheersSent?: Prisma.CheerUncheckedCreateNestedManyWithoutFromInput
@@ -1177,6 +1268,7 @@ export type UserUpdateWithoutLectureQuestionsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
+  theme?: Prisma.NullableEnumThemeFieldUpdateOperationsInput | $Enums.Theme | null
   plantedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1187,6 +1279,7 @@ export type UserUpdateWithoutLectureQuestionsInput = {
   decorations?: Prisma.UserDecorationUpdateManyWithoutUserNestedInput
   warmups?: Prisma.WarmupResultUpdateManyWithoutUserNestedInput
   hintViews?: Prisma.HintViewUpdateManyWithoutUserNestedInput
+  badges?: Prisma.UserBadgeUpdateManyWithoutUserNestedInput
   friendsRequested?: Prisma.FriendshipUpdateManyWithoutRequesterNestedInput
   friendsReceived?: Prisma.FriendshipUpdateManyWithoutAddresseeNestedInput
   cheersSent?: Prisma.CheerUpdateManyWithoutFromNestedInput
@@ -1198,6 +1291,7 @@ export type UserUncheckedUpdateWithoutLectureQuestionsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
+  theme?: Prisma.NullableEnumThemeFieldUpdateOperationsInput | $Enums.Theme | null
   plantedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1208,6 +1302,7 @@ export type UserUncheckedUpdateWithoutLectureQuestionsInput = {
   decorations?: Prisma.UserDecorationUncheckedUpdateManyWithoutUserNestedInput
   warmups?: Prisma.WarmupResultUncheckedUpdateManyWithoutUserNestedInput
   hintViews?: Prisma.HintViewUncheckedUpdateManyWithoutUserNestedInput
+  badges?: Prisma.UserBadgeUncheckedUpdateManyWithoutUserNestedInput
   friendsRequested?: Prisma.FriendshipUncheckedUpdateManyWithoutRequesterNestedInput
   friendsReceived?: Prisma.FriendshipUncheckedUpdateManyWithoutAddresseeNestedInput
   cheersSent?: Prisma.CheerUncheckedUpdateManyWithoutFromNestedInput
@@ -1219,6 +1314,7 @@ export type UserCreateWithoutHintViewsInput = {
   email: string
   passwordHash: string
   displayName: string
+  theme?: $Enums.Theme | null
   plantedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1229,6 +1325,7 @@ export type UserCreateWithoutHintViewsInput = {
   decorations?: Prisma.UserDecorationCreateNestedManyWithoutUserInput
   lectureQuestions?: Prisma.LectureQuestionCreateNestedManyWithoutUserInput
   warmups?: Prisma.WarmupResultCreateNestedManyWithoutUserInput
+  badges?: Prisma.UserBadgeCreateNestedManyWithoutUserInput
   friendsRequested?: Prisma.FriendshipCreateNestedManyWithoutRequesterInput
   friendsReceived?: Prisma.FriendshipCreateNestedManyWithoutAddresseeInput
   cheersSent?: Prisma.CheerCreateNestedManyWithoutFromInput
@@ -1240,6 +1337,7 @@ export type UserUncheckedCreateWithoutHintViewsInput = {
   email: string
   passwordHash: string
   displayName: string
+  theme?: $Enums.Theme | null
   plantedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1250,6 +1348,7 @@ export type UserUncheckedCreateWithoutHintViewsInput = {
   decorations?: Prisma.UserDecorationUncheckedCreateNestedManyWithoutUserInput
   lectureQuestions?: Prisma.LectureQuestionUncheckedCreateNestedManyWithoutUserInput
   warmups?: Prisma.WarmupResultUncheckedCreateNestedManyWithoutUserInput
+  badges?: Prisma.UserBadgeUncheckedCreateNestedManyWithoutUserInput
   friendsRequested?: Prisma.FriendshipUncheckedCreateNestedManyWithoutRequesterInput
   friendsReceived?: Prisma.FriendshipUncheckedCreateNestedManyWithoutAddresseeInput
   cheersSent?: Prisma.CheerUncheckedCreateNestedManyWithoutFromInput
@@ -1277,6 +1376,7 @@ export type UserUpdateWithoutHintViewsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
+  theme?: Prisma.NullableEnumThemeFieldUpdateOperationsInput | $Enums.Theme | null
   plantedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1287,6 +1387,7 @@ export type UserUpdateWithoutHintViewsInput = {
   decorations?: Prisma.UserDecorationUpdateManyWithoutUserNestedInput
   lectureQuestions?: Prisma.LectureQuestionUpdateManyWithoutUserNestedInput
   warmups?: Prisma.WarmupResultUpdateManyWithoutUserNestedInput
+  badges?: Prisma.UserBadgeUpdateManyWithoutUserNestedInput
   friendsRequested?: Prisma.FriendshipUpdateManyWithoutRequesterNestedInput
   friendsReceived?: Prisma.FriendshipUpdateManyWithoutAddresseeNestedInput
   cheersSent?: Prisma.CheerUpdateManyWithoutFromNestedInput
@@ -1298,6 +1399,7 @@ export type UserUncheckedUpdateWithoutHintViewsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
+  theme?: Prisma.NullableEnumThemeFieldUpdateOperationsInput | $Enums.Theme | null
   plantedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1308,6 +1410,7 @@ export type UserUncheckedUpdateWithoutHintViewsInput = {
   decorations?: Prisma.UserDecorationUncheckedUpdateManyWithoutUserNestedInput
   lectureQuestions?: Prisma.LectureQuestionUncheckedUpdateManyWithoutUserNestedInput
   warmups?: Prisma.WarmupResultUncheckedUpdateManyWithoutUserNestedInput
+  badges?: Prisma.UserBadgeUncheckedUpdateManyWithoutUserNestedInput
   friendsRequested?: Prisma.FriendshipUncheckedUpdateManyWithoutRequesterNestedInput
   friendsReceived?: Prisma.FriendshipUncheckedUpdateManyWithoutAddresseeNestedInput
   cheersSent?: Prisma.CheerUncheckedUpdateManyWithoutFromNestedInput
@@ -1319,6 +1422,7 @@ export type UserCreateWithoutWarmupsInput = {
   email: string
   passwordHash: string
   displayName: string
+  theme?: $Enums.Theme | null
   plantedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1329,6 +1433,7 @@ export type UserCreateWithoutWarmupsInput = {
   decorations?: Prisma.UserDecorationCreateNestedManyWithoutUserInput
   lectureQuestions?: Prisma.LectureQuestionCreateNestedManyWithoutUserInput
   hintViews?: Prisma.HintViewCreateNestedManyWithoutUserInput
+  badges?: Prisma.UserBadgeCreateNestedManyWithoutUserInput
   friendsRequested?: Prisma.FriendshipCreateNestedManyWithoutRequesterInput
   friendsReceived?: Prisma.FriendshipCreateNestedManyWithoutAddresseeInput
   cheersSent?: Prisma.CheerCreateNestedManyWithoutFromInput
@@ -1340,6 +1445,7 @@ export type UserUncheckedCreateWithoutWarmupsInput = {
   email: string
   passwordHash: string
   displayName: string
+  theme?: $Enums.Theme | null
   plantedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1350,6 +1456,7 @@ export type UserUncheckedCreateWithoutWarmupsInput = {
   decorations?: Prisma.UserDecorationUncheckedCreateNestedManyWithoutUserInput
   lectureQuestions?: Prisma.LectureQuestionUncheckedCreateNestedManyWithoutUserInput
   hintViews?: Prisma.HintViewUncheckedCreateNestedManyWithoutUserInput
+  badges?: Prisma.UserBadgeUncheckedCreateNestedManyWithoutUserInput
   friendsRequested?: Prisma.FriendshipUncheckedCreateNestedManyWithoutRequesterInput
   friendsReceived?: Prisma.FriendshipUncheckedCreateNestedManyWithoutAddresseeInput
   cheersSent?: Prisma.CheerUncheckedCreateNestedManyWithoutFromInput
@@ -1377,6 +1484,7 @@ export type UserUpdateWithoutWarmupsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
+  theme?: Prisma.NullableEnumThemeFieldUpdateOperationsInput | $Enums.Theme | null
   plantedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1387,6 +1495,7 @@ export type UserUpdateWithoutWarmupsInput = {
   decorations?: Prisma.UserDecorationUpdateManyWithoutUserNestedInput
   lectureQuestions?: Prisma.LectureQuestionUpdateManyWithoutUserNestedInput
   hintViews?: Prisma.HintViewUpdateManyWithoutUserNestedInput
+  badges?: Prisma.UserBadgeUpdateManyWithoutUserNestedInput
   friendsRequested?: Prisma.FriendshipUpdateManyWithoutRequesterNestedInput
   friendsReceived?: Prisma.FriendshipUpdateManyWithoutAddresseeNestedInput
   cheersSent?: Prisma.CheerUpdateManyWithoutFromNestedInput
@@ -1398,6 +1507,7 @@ export type UserUncheckedUpdateWithoutWarmupsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
+  theme?: Prisma.NullableEnumThemeFieldUpdateOperationsInput | $Enums.Theme | null
   plantedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1407,6 +1517,115 @@ export type UserUncheckedUpdateWithoutWarmupsInput = {
   leaves?: Prisma.LeafTransactionUncheckedUpdateManyWithoutUserNestedInput
   decorations?: Prisma.UserDecorationUncheckedUpdateManyWithoutUserNestedInput
   lectureQuestions?: Prisma.LectureQuestionUncheckedUpdateManyWithoutUserNestedInput
+  hintViews?: Prisma.HintViewUncheckedUpdateManyWithoutUserNestedInput
+  badges?: Prisma.UserBadgeUncheckedUpdateManyWithoutUserNestedInput
+  friendsRequested?: Prisma.FriendshipUncheckedUpdateManyWithoutRequesterNestedInput
+  friendsReceived?: Prisma.FriendshipUncheckedUpdateManyWithoutAddresseeNestedInput
+  cheersSent?: Prisma.CheerUncheckedUpdateManyWithoutFromNestedInput
+  cheersReceived?: Prisma.CheerUncheckedUpdateManyWithoutToNestedInput
+}
+
+export type UserCreateWithoutBadgesInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  displayName: string
+  theme?: $Enums.Theme | null
+  plantedAt?: Date | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  modules?: Prisma.ModuleProgressCreateNestedManyWithoutUserInput
+  attempts?: Prisma.QuizAttemptCreateNestedManyWithoutUserInput
+  mastery?: Prisma.MasteryCreateNestedManyWithoutUserInput
+  leaves?: Prisma.LeafTransactionCreateNestedManyWithoutUserInput
+  decorations?: Prisma.UserDecorationCreateNestedManyWithoutUserInput
+  lectureQuestions?: Prisma.LectureQuestionCreateNestedManyWithoutUserInput
+  warmups?: Prisma.WarmupResultCreateNestedManyWithoutUserInput
+  hintViews?: Prisma.HintViewCreateNestedManyWithoutUserInput
+  friendsRequested?: Prisma.FriendshipCreateNestedManyWithoutRequesterInput
+  friendsReceived?: Prisma.FriendshipCreateNestedManyWithoutAddresseeInput
+  cheersSent?: Prisma.CheerCreateNestedManyWithoutFromInput
+  cheersReceived?: Prisma.CheerCreateNestedManyWithoutToInput
+}
+
+export type UserUncheckedCreateWithoutBadgesInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  displayName: string
+  theme?: $Enums.Theme | null
+  plantedAt?: Date | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  modules?: Prisma.ModuleProgressUncheckedCreateNestedManyWithoutUserInput
+  attempts?: Prisma.QuizAttemptUncheckedCreateNestedManyWithoutUserInput
+  mastery?: Prisma.MasteryUncheckedCreateNestedManyWithoutUserInput
+  leaves?: Prisma.LeafTransactionUncheckedCreateNestedManyWithoutUserInput
+  decorations?: Prisma.UserDecorationUncheckedCreateNestedManyWithoutUserInput
+  lectureQuestions?: Prisma.LectureQuestionUncheckedCreateNestedManyWithoutUserInput
+  warmups?: Prisma.WarmupResultUncheckedCreateNestedManyWithoutUserInput
+  hintViews?: Prisma.HintViewUncheckedCreateNestedManyWithoutUserInput
+  friendsRequested?: Prisma.FriendshipUncheckedCreateNestedManyWithoutRequesterInput
+  friendsReceived?: Prisma.FriendshipUncheckedCreateNestedManyWithoutAddresseeInput
+  cheersSent?: Prisma.CheerUncheckedCreateNestedManyWithoutFromInput
+  cheersReceived?: Prisma.CheerUncheckedCreateNestedManyWithoutToInput
+}
+
+export type UserCreateOrConnectWithoutBadgesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutBadgesInput, Prisma.UserUncheckedCreateWithoutBadgesInput>
+}
+
+export type UserUpsertWithoutBadgesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutBadgesInput, Prisma.UserUncheckedUpdateWithoutBadgesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutBadgesInput, Prisma.UserUncheckedCreateWithoutBadgesInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutBadgesInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutBadgesInput, Prisma.UserUncheckedUpdateWithoutBadgesInput>
+}
+
+export type UserUpdateWithoutBadgesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  displayName?: Prisma.StringFieldUpdateOperationsInput | string
+  theme?: Prisma.NullableEnumThemeFieldUpdateOperationsInput | $Enums.Theme | null
+  plantedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  modules?: Prisma.ModuleProgressUpdateManyWithoutUserNestedInput
+  attempts?: Prisma.QuizAttemptUpdateManyWithoutUserNestedInput
+  mastery?: Prisma.MasteryUpdateManyWithoutUserNestedInput
+  leaves?: Prisma.LeafTransactionUpdateManyWithoutUserNestedInput
+  decorations?: Prisma.UserDecorationUpdateManyWithoutUserNestedInput
+  lectureQuestions?: Prisma.LectureQuestionUpdateManyWithoutUserNestedInput
+  warmups?: Prisma.WarmupResultUpdateManyWithoutUserNestedInput
+  hintViews?: Prisma.HintViewUpdateManyWithoutUserNestedInput
+  friendsRequested?: Prisma.FriendshipUpdateManyWithoutRequesterNestedInput
+  friendsReceived?: Prisma.FriendshipUpdateManyWithoutAddresseeNestedInput
+  cheersSent?: Prisma.CheerUpdateManyWithoutFromNestedInput
+  cheersReceived?: Prisma.CheerUpdateManyWithoutToNestedInput
+}
+
+export type UserUncheckedUpdateWithoutBadgesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  displayName?: Prisma.StringFieldUpdateOperationsInput | string
+  theme?: Prisma.NullableEnumThemeFieldUpdateOperationsInput | $Enums.Theme | null
+  plantedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  modules?: Prisma.ModuleProgressUncheckedUpdateManyWithoutUserNestedInput
+  attempts?: Prisma.QuizAttemptUncheckedUpdateManyWithoutUserNestedInput
+  mastery?: Prisma.MasteryUncheckedUpdateManyWithoutUserNestedInput
+  leaves?: Prisma.LeafTransactionUncheckedUpdateManyWithoutUserNestedInput
+  decorations?: Prisma.UserDecorationUncheckedUpdateManyWithoutUserNestedInput
+  lectureQuestions?: Prisma.LectureQuestionUncheckedUpdateManyWithoutUserNestedInput
+  warmups?: Prisma.WarmupResultUncheckedUpdateManyWithoutUserNestedInput
   hintViews?: Prisma.HintViewUncheckedUpdateManyWithoutUserNestedInput
   friendsRequested?: Prisma.FriendshipUncheckedUpdateManyWithoutRequesterNestedInput
   friendsReceived?: Prisma.FriendshipUncheckedUpdateManyWithoutAddresseeNestedInput
@@ -1419,6 +1638,7 @@ export type UserCreateWithoutFriendsRequestedInput = {
   email: string
   passwordHash: string
   displayName: string
+  theme?: $Enums.Theme | null
   plantedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1430,6 +1650,7 @@ export type UserCreateWithoutFriendsRequestedInput = {
   lectureQuestions?: Prisma.LectureQuestionCreateNestedManyWithoutUserInput
   warmups?: Prisma.WarmupResultCreateNestedManyWithoutUserInput
   hintViews?: Prisma.HintViewCreateNestedManyWithoutUserInput
+  badges?: Prisma.UserBadgeCreateNestedManyWithoutUserInput
   friendsReceived?: Prisma.FriendshipCreateNestedManyWithoutAddresseeInput
   cheersSent?: Prisma.CheerCreateNestedManyWithoutFromInput
   cheersReceived?: Prisma.CheerCreateNestedManyWithoutToInput
@@ -1440,6 +1661,7 @@ export type UserUncheckedCreateWithoutFriendsRequestedInput = {
   email: string
   passwordHash: string
   displayName: string
+  theme?: $Enums.Theme | null
   plantedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1451,6 +1673,7 @@ export type UserUncheckedCreateWithoutFriendsRequestedInput = {
   lectureQuestions?: Prisma.LectureQuestionUncheckedCreateNestedManyWithoutUserInput
   warmups?: Prisma.WarmupResultUncheckedCreateNestedManyWithoutUserInput
   hintViews?: Prisma.HintViewUncheckedCreateNestedManyWithoutUserInput
+  badges?: Prisma.UserBadgeUncheckedCreateNestedManyWithoutUserInput
   friendsReceived?: Prisma.FriendshipUncheckedCreateNestedManyWithoutAddresseeInput
   cheersSent?: Prisma.CheerUncheckedCreateNestedManyWithoutFromInput
   cheersReceived?: Prisma.CheerUncheckedCreateNestedManyWithoutToInput
@@ -1466,6 +1689,7 @@ export type UserCreateWithoutFriendsReceivedInput = {
   email: string
   passwordHash: string
   displayName: string
+  theme?: $Enums.Theme | null
   plantedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1477,6 +1701,7 @@ export type UserCreateWithoutFriendsReceivedInput = {
   lectureQuestions?: Prisma.LectureQuestionCreateNestedManyWithoutUserInput
   warmups?: Prisma.WarmupResultCreateNestedManyWithoutUserInput
   hintViews?: Prisma.HintViewCreateNestedManyWithoutUserInput
+  badges?: Prisma.UserBadgeCreateNestedManyWithoutUserInput
   friendsRequested?: Prisma.FriendshipCreateNestedManyWithoutRequesterInput
   cheersSent?: Prisma.CheerCreateNestedManyWithoutFromInput
   cheersReceived?: Prisma.CheerCreateNestedManyWithoutToInput
@@ -1487,6 +1712,7 @@ export type UserUncheckedCreateWithoutFriendsReceivedInput = {
   email: string
   passwordHash: string
   displayName: string
+  theme?: $Enums.Theme | null
   plantedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1498,6 +1724,7 @@ export type UserUncheckedCreateWithoutFriendsReceivedInput = {
   lectureQuestions?: Prisma.LectureQuestionUncheckedCreateNestedManyWithoutUserInput
   warmups?: Prisma.WarmupResultUncheckedCreateNestedManyWithoutUserInput
   hintViews?: Prisma.HintViewUncheckedCreateNestedManyWithoutUserInput
+  badges?: Prisma.UserBadgeUncheckedCreateNestedManyWithoutUserInput
   friendsRequested?: Prisma.FriendshipUncheckedCreateNestedManyWithoutRequesterInput
   cheersSent?: Prisma.CheerUncheckedCreateNestedManyWithoutFromInput
   cheersReceived?: Prisma.CheerUncheckedCreateNestedManyWithoutToInput
@@ -1524,6 +1751,7 @@ export type UserUpdateWithoutFriendsRequestedInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
+  theme?: Prisma.NullableEnumThemeFieldUpdateOperationsInput | $Enums.Theme | null
   plantedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1535,6 +1763,7 @@ export type UserUpdateWithoutFriendsRequestedInput = {
   lectureQuestions?: Prisma.LectureQuestionUpdateManyWithoutUserNestedInput
   warmups?: Prisma.WarmupResultUpdateManyWithoutUserNestedInput
   hintViews?: Prisma.HintViewUpdateManyWithoutUserNestedInput
+  badges?: Prisma.UserBadgeUpdateManyWithoutUserNestedInput
   friendsReceived?: Prisma.FriendshipUpdateManyWithoutAddresseeNestedInput
   cheersSent?: Prisma.CheerUpdateManyWithoutFromNestedInput
   cheersReceived?: Prisma.CheerUpdateManyWithoutToNestedInput
@@ -1545,6 +1774,7 @@ export type UserUncheckedUpdateWithoutFriendsRequestedInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
+  theme?: Prisma.NullableEnumThemeFieldUpdateOperationsInput | $Enums.Theme | null
   plantedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1556,6 +1786,7 @@ export type UserUncheckedUpdateWithoutFriendsRequestedInput = {
   lectureQuestions?: Prisma.LectureQuestionUncheckedUpdateManyWithoutUserNestedInput
   warmups?: Prisma.WarmupResultUncheckedUpdateManyWithoutUserNestedInput
   hintViews?: Prisma.HintViewUncheckedUpdateManyWithoutUserNestedInput
+  badges?: Prisma.UserBadgeUncheckedUpdateManyWithoutUserNestedInput
   friendsReceived?: Prisma.FriendshipUncheckedUpdateManyWithoutAddresseeNestedInput
   cheersSent?: Prisma.CheerUncheckedUpdateManyWithoutFromNestedInput
   cheersReceived?: Prisma.CheerUncheckedUpdateManyWithoutToNestedInput
@@ -1577,6 +1808,7 @@ export type UserUpdateWithoutFriendsReceivedInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
+  theme?: Prisma.NullableEnumThemeFieldUpdateOperationsInput | $Enums.Theme | null
   plantedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1588,6 +1820,7 @@ export type UserUpdateWithoutFriendsReceivedInput = {
   lectureQuestions?: Prisma.LectureQuestionUpdateManyWithoutUserNestedInput
   warmups?: Prisma.WarmupResultUpdateManyWithoutUserNestedInput
   hintViews?: Prisma.HintViewUpdateManyWithoutUserNestedInput
+  badges?: Prisma.UserBadgeUpdateManyWithoutUserNestedInput
   friendsRequested?: Prisma.FriendshipUpdateManyWithoutRequesterNestedInput
   cheersSent?: Prisma.CheerUpdateManyWithoutFromNestedInput
   cheersReceived?: Prisma.CheerUpdateManyWithoutToNestedInput
@@ -1598,6 +1831,7 @@ export type UserUncheckedUpdateWithoutFriendsReceivedInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
+  theme?: Prisma.NullableEnumThemeFieldUpdateOperationsInput | $Enums.Theme | null
   plantedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1609,6 +1843,7 @@ export type UserUncheckedUpdateWithoutFriendsReceivedInput = {
   lectureQuestions?: Prisma.LectureQuestionUncheckedUpdateManyWithoutUserNestedInput
   warmups?: Prisma.WarmupResultUncheckedUpdateManyWithoutUserNestedInput
   hintViews?: Prisma.HintViewUncheckedUpdateManyWithoutUserNestedInput
+  badges?: Prisma.UserBadgeUncheckedUpdateManyWithoutUserNestedInput
   friendsRequested?: Prisma.FriendshipUncheckedUpdateManyWithoutRequesterNestedInput
   cheersSent?: Prisma.CheerUncheckedUpdateManyWithoutFromNestedInput
   cheersReceived?: Prisma.CheerUncheckedUpdateManyWithoutToNestedInput
@@ -1619,6 +1854,7 @@ export type UserCreateWithoutCheersSentInput = {
   email: string
   passwordHash: string
   displayName: string
+  theme?: $Enums.Theme | null
   plantedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1630,6 +1866,7 @@ export type UserCreateWithoutCheersSentInput = {
   lectureQuestions?: Prisma.LectureQuestionCreateNestedManyWithoutUserInput
   warmups?: Prisma.WarmupResultCreateNestedManyWithoutUserInput
   hintViews?: Prisma.HintViewCreateNestedManyWithoutUserInput
+  badges?: Prisma.UserBadgeCreateNestedManyWithoutUserInput
   friendsRequested?: Prisma.FriendshipCreateNestedManyWithoutRequesterInput
   friendsReceived?: Prisma.FriendshipCreateNestedManyWithoutAddresseeInput
   cheersReceived?: Prisma.CheerCreateNestedManyWithoutToInput
@@ -1640,6 +1877,7 @@ export type UserUncheckedCreateWithoutCheersSentInput = {
   email: string
   passwordHash: string
   displayName: string
+  theme?: $Enums.Theme | null
   plantedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1651,6 +1889,7 @@ export type UserUncheckedCreateWithoutCheersSentInput = {
   lectureQuestions?: Prisma.LectureQuestionUncheckedCreateNestedManyWithoutUserInput
   warmups?: Prisma.WarmupResultUncheckedCreateNestedManyWithoutUserInput
   hintViews?: Prisma.HintViewUncheckedCreateNestedManyWithoutUserInput
+  badges?: Prisma.UserBadgeUncheckedCreateNestedManyWithoutUserInput
   friendsRequested?: Prisma.FriendshipUncheckedCreateNestedManyWithoutRequesterInput
   friendsReceived?: Prisma.FriendshipUncheckedCreateNestedManyWithoutAddresseeInput
   cheersReceived?: Prisma.CheerUncheckedCreateNestedManyWithoutToInput
@@ -1666,6 +1905,7 @@ export type UserCreateWithoutCheersReceivedInput = {
   email: string
   passwordHash: string
   displayName: string
+  theme?: $Enums.Theme | null
   plantedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1677,6 +1917,7 @@ export type UserCreateWithoutCheersReceivedInput = {
   lectureQuestions?: Prisma.LectureQuestionCreateNestedManyWithoutUserInput
   warmups?: Prisma.WarmupResultCreateNestedManyWithoutUserInput
   hintViews?: Prisma.HintViewCreateNestedManyWithoutUserInput
+  badges?: Prisma.UserBadgeCreateNestedManyWithoutUserInput
   friendsRequested?: Prisma.FriendshipCreateNestedManyWithoutRequesterInput
   friendsReceived?: Prisma.FriendshipCreateNestedManyWithoutAddresseeInput
   cheersSent?: Prisma.CheerCreateNestedManyWithoutFromInput
@@ -1687,6 +1928,7 @@ export type UserUncheckedCreateWithoutCheersReceivedInput = {
   email: string
   passwordHash: string
   displayName: string
+  theme?: $Enums.Theme | null
   plantedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1698,6 +1940,7 @@ export type UserUncheckedCreateWithoutCheersReceivedInput = {
   lectureQuestions?: Prisma.LectureQuestionUncheckedCreateNestedManyWithoutUserInput
   warmups?: Prisma.WarmupResultUncheckedCreateNestedManyWithoutUserInput
   hintViews?: Prisma.HintViewUncheckedCreateNestedManyWithoutUserInput
+  badges?: Prisma.UserBadgeUncheckedCreateNestedManyWithoutUserInput
   friendsRequested?: Prisma.FriendshipUncheckedCreateNestedManyWithoutRequesterInput
   friendsReceived?: Prisma.FriendshipUncheckedCreateNestedManyWithoutAddresseeInput
   cheersSent?: Prisma.CheerUncheckedCreateNestedManyWithoutFromInput
@@ -1724,6 +1967,7 @@ export type UserUpdateWithoutCheersSentInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
+  theme?: Prisma.NullableEnumThemeFieldUpdateOperationsInput | $Enums.Theme | null
   plantedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1735,6 +1979,7 @@ export type UserUpdateWithoutCheersSentInput = {
   lectureQuestions?: Prisma.LectureQuestionUpdateManyWithoutUserNestedInput
   warmups?: Prisma.WarmupResultUpdateManyWithoutUserNestedInput
   hintViews?: Prisma.HintViewUpdateManyWithoutUserNestedInput
+  badges?: Prisma.UserBadgeUpdateManyWithoutUserNestedInput
   friendsRequested?: Prisma.FriendshipUpdateManyWithoutRequesterNestedInput
   friendsReceived?: Prisma.FriendshipUpdateManyWithoutAddresseeNestedInput
   cheersReceived?: Prisma.CheerUpdateManyWithoutToNestedInput
@@ -1745,6 +1990,7 @@ export type UserUncheckedUpdateWithoutCheersSentInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
+  theme?: Prisma.NullableEnumThemeFieldUpdateOperationsInput | $Enums.Theme | null
   plantedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1756,6 +2002,7 @@ export type UserUncheckedUpdateWithoutCheersSentInput = {
   lectureQuestions?: Prisma.LectureQuestionUncheckedUpdateManyWithoutUserNestedInput
   warmups?: Prisma.WarmupResultUncheckedUpdateManyWithoutUserNestedInput
   hintViews?: Prisma.HintViewUncheckedUpdateManyWithoutUserNestedInput
+  badges?: Prisma.UserBadgeUncheckedUpdateManyWithoutUserNestedInput
   friendsRequested?: Prisma.FriendshipUncheckedUpdateManyWithoutRequesterNestedInput
   friendsReceived?: Prisma.FriendshipUncheckedUpdateManyWithoutAddresseeNestedInput
   cheersReceived?: Prisma.CheerUncheckedUpdateManyWithoutToNestedInput
@@ -1777,6 +2024,7 @@ export type UserUpdateWithoutCheersReceivedInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
+  theme?: Prisma.NullableEnumThemeFieldUpdateOperationsInput | $Enums.Theme | null
   plantedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1788,6 +2036,7 @@ export type UserUpdateWithoutCheersReceivedInput = {
   lectureQuestions?: Prisma.LectureQuestionUpdateManyWithoutUserNestedInput
   warmups?: Prisma.WarmupResultUpdateManyWithoutUserNestedInput
   hintViews?: Prisma.HintViewUpdateManyWithoutUserNestedInput
+  badges?: Prisma.UserBadgeUpdateManyWithoutUserNestedInput
   friendsRequested?: Prisma.FriendshipUpdateManyWithoutRequesterNestedInput
   friendsReceived?: Prisma.FriendshipUpdateManyWithoutAddresseeNestedInput
   cheersSent?: Prisma.CheerUpdateManyWithoutFromNestedInput
@@ -1798,6 +2047,7 @@ export type UserUncheckedUpdateWithoutCheersReceivedInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
+  theme?: Prisma.NullableEnumThemeFieldUpdateOperationsInput | $Enums.Theme | null
   plantedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1809,6 +2059,7 @@ export type UserUncheckedUpdateWithoutCheersReceivedInput = {
   lectureQuestions?: Prisma.LectureQuestionUncheckedUpdateManyWithoutUserNestedInput
   warmups?: Prisma.WarmupResultUncheckedUpdateManyWithoutUserNestedInput
   hintViews?: Prisma.HintViewUncheckedUpdateManyWithoutUserNestedInput
+  badges?: Prisma.UserBadgeUncheckedUpdateManyWithoutUserNestedInput
   friendsRequested?: Prisma.FriendshipUncheckedUpdateManyWithoutRequesterNestedInput
   friendsReceived?: Prisma.FriendshipUncheckedUpdateManyWithoutAddresseeNestedInput
   cheersSent?: Prisma.CheerUncheckedUpdateManyWithoutFromNestedInput
@@ -1828,6 +2079,7 @@ export type UserCountOutputType = {
   lectureQuestions: number
   warmups: number
   hintViews: number
+  badges: number
   friendsRequested: number
   friendsReceived: number
   cheersSent: number
@@ -1843,6 +2095,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   lectureQuestions?: boolean | UserCountOutputTypeCountLectureQuestionsArgs
   warmups?: boolean | UserCountOutputTypeCountWarmupsArgs
   hintViews?: boolean | UserCountOutputTypeCountHintViewsArgs
+  badges?: boolean | UserCountOutputTypeCountBadgesArgs
   friendsRequested?: boolean | UserCountOutputTypeCountFriendsRequestedArgs
   friendsReceived?: boolean | UserCountOutputTypeCountFriendsReceivedArgs
   cheersSent?: boolean | UserCountOutputTypeCountCheersSentArgs
@@ -1918,6 +2171,13 @@ export type UserCountOutputTypeCountHintViewsArgs<ExtArgs extends runtime.Types.
 /**
  * UserCountOutputType without action
  */
+export type UserCountOutputTypeCountBadgesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.UserBadgeWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
 export type UserCountOutputTypeCountFriendsRequestedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.FriendshipWhereInput
 }
@@ -1949,6 +2209,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   email?: boolean
   passwordHash?: boolean
   displayName?: boolean
+  theme?: boolean
   plantedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1960,6 +2221,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   lectureQuestions?: boolean | Prisma.User$lectureQuestionsArgs<ExtArgs>
   warmups?: boolean | Prisma.User$warmupsArgs<ExtArgs>
   hintViews?: boolean | Prisma.User$hintViewsArgs<ExtArgs>
+  badges?: boolean | Prisma.User$badgesArgs<ExtArgs>
   friendsRequested?: boolean | Prisma.User$friendsRequestedArgs<ExtArgs>
   friendsReceived?: boolean | Prisma.User$friendsReceivedArgs<ExtArgs>
   cheersSent?: boolean | Prisma.User$cheersSentArgs<ExtArgs>
@@ -1972,6 +2234,7 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   email?: boolean
   passwordHash?: boolean
   displayName?: boolean
+  theme?: boolean
   plantedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1982,6 +2245,7 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   email?: boolean
   passwordHash?: boolean
   displayName?: boolean
+  theme?: boolean
   plantedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1992,12 +2256,13 @@ export type UserSelectScalar = {
   email?: boolean
   passwordHash?: boolean
   displayName?: boolean
+  theme?: boolean
   plantedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "passwordHash" | "displayName" | "plantedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "passwordHash" | "displayName" | "theme" | "plantedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   modules?: boolean | Prisma.User$modulesArgs<ExtArgs>
   attempts?: boolean | Prisma.User$attemptsArgs<ExtArgs>
@@ -2007,6 +2272,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   lectureQuestions?: boolean | Prisma.User$lectureQuestionsArgs<ExtArgs>
   warmups?: boolean | Prisma.User$warmupsArgs<ExtArgs>
   hintViews?: boolean | Prisma.User$hintViewsArgs<ExtArgs>
+  badges?: boolean | Prisma.User$badgesArgs<ExtArgs>
   friendsRequested?: boolean | Prisma.User$friendsRequestedArgs<ExtArgs>
   friendsReceived?: boolean | Prisma.User$friendsReceivedArgs<ExtArgs>
   cheersSent?: boolean | Prisma.User$cheersSentArgs<ExtArgs>
@@ -2027,6 +2293,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     lectureQuestions: Prisma.$LectureQuestionPayload<ExtArgs>[]
     warmups: Prisma.$WarmupResultPayload<ExtArgs>[]
     hintViews: Prisma.$HintViewPayload<ExtArgs>[]
+    badges: Prisma.$UserBadgePayload<ExtArgs>[]
     friendsRequested: Prisma.$FriendshipPayload<ExtArgs>[]
     friendsReceived: Prisma.$FriendshipPayload<ExtArgs>[]
     cheersSent: Prisma.$CheerPayload<ExtArgs>[]
@@ -2037,6 +2304,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     email: string
     passwordHash: string
     displayName: string
+    theme: $Enums.Theme | null
     plantedAt: Date
     createdAt: Date
     updatedAt: Date
@@ -2442,6 +2710,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   lectureQuestions<T extends Prisma.User$lectureQuestionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$lectureQuestionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LectureQuestionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   warmups<T extends Prisma.User$warmupsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$warmupsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WarmupResultPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   hintViews<T extends Prisma.User$hintViewsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$hintViewsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$HintViewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  badges<T extends Prisma.User$badgesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$badgesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserBadgePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   friendsRequested<T extends Prisma.User$friendsRequestedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$friendsRequestedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FriendshipPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   friendsReceived<T extends Prisma.User$friendsReceivedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$friendsReceivedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FriendshipPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   cheersSent<T extends Prisma.User$cheersSentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$cheersSentArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CheerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -2479,6 +2748,7 @@ export interface UserFieldRefs {
   readonly email: Prisma.FieldRef<"User", 'String'>
   readonly passwordHash: Prisma.FieldRef<"User", 'String'>
   readonly displayName: Prisma.FieldRef<"User", 'String'>
+  readonly theme: Prisma.FieldRef<"User", 'Theme'>
   readonly plantedAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>
@@ -3064,6 +3334,30 @@ export type User$hintViewsArgs<ExtArgs extends runtime.Types.Extensions.Internal
   take?: number
   skip?: number
   distinct?: Prisma.HintViewScalarFieldEnum | Prisma.HintViewScalarFieldEnum[]
+}
+
+/**
+ * User.badges
+ */
+export type User$badgesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the UserBadge
+   */
+  select?: Prisma.UserBadgeSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the UserBadge
+   */
+  omit?: Prisma.UserBadgeOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserBadgeInclude<ExtArgs> | null
+  where?: Prisma.UserBadgeWhereInput
+  orderBy?: Prisma.UserBadgeOrderByWithRelationInput | Prisma.UserBadgeOrderByWithRelationInput[]
+  cursor?: Prisma.UserBadgeWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.UserBadgeScalarFieldEnum | Prisma.UserBadgeScalarFieldEnum[]
 }
 
 /**

@@ -138,6 +138,37 @@ export const READY_CHECK_ITEM_IDS = [
 
 export const READY_CHECK_PASS = Math.ceil(READY_THRESHOLD * READY_CHECK_ITEM_IDS.length);
 
+export const SPLITTER_RUN = 3;
+
+export const FRIEND_REQUESTS_PER_HOUR = 10;
+export const CHEERS_PER_HOUR = 20;
+
+export const BADGES = [
+  {
+    id: 'explorer',
+    label: 'Explorer',
+    description: 'Finished the warm-up and module 1.',
+  },
+  {
+    id: 'splitter',
+    label: 'Splitter',
+    description: `Split an overflowing node correctly ${SPLITTER_RUN} times in a row.`,
+  },
+  {
+    id: 'rootRaiser',
+    label: 'Root Raiser',
+    description: 'Mastered splits that reach the root.',
+  },
+  {
+    id: 'lectureReady',
+    label: 'Lecture Ready',
+    description: 'Scored 80% on the ready-for-lecture check.',
+  },
+] as const;
+
+export type BadgeId = (typeof BADGES)[number]['id'];
+export const BADGE_IDS = BADGES.map((b) => b.id) as [BadgeId, ...BadgeId[]];
+
 export const DECORATIONS = [
   { id: 'apples', name: 'Apples', cost: 40, minStage: 'sapling' },
   { id: 'blossoms', name: 'Blossoms', cost: 40, minStage: 'sapling' },
@@ -151,3 +182,6 @@ export const DECORATIONS = [
 ] as const satisfies readonly { id: string; name: string; cost: number; minStage: GrowthStageId }[];
 
 export type DecorationId = (typeof DECORATIONS)[number]['id'];
+
+export const THEMES = ['day', 'dusk'] as const;
+export type Theme = (typeof THEMES)[number];

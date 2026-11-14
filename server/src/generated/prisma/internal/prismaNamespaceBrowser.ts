@@ -61,6 +61,7 @@ export const ModelName = {
   LectureQuestion: 'LectureQuestion',
   HintView: 'HintView',
   WarmupResult: 'WarmupResult',
+  UserBadge: 'UserBadge',
   Friendship: 'Friendship',
   Cheer: 'Cheer'
 } as const
@@ -86,6 +87,7 @@ export const UserScalarFieldEnum = {
   email: 'email',
   passwordHash: 'passwordHash',
   displayName: 'displayName',
+  theme: 'theme',
   plantedAt: 'plantedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -199,6 +201,16 @@ export const WarmupResultScalarFieldEnum = {
 } as const
 
 export type WarmupResultScalarFieldEnum = (typeof WarmupResultScalarFieldEnum)[keyof typeof WarmupResultScalarFieldEnum]
+
+
+export const UserBadgeScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  badge: 'badge',
+  awardedAt: 'awardedAt'
+} as const
+
+export type UserBadgeScalarFieldEnum = (typeof UserBadgeScalarFieldEnum)[keyof typeof UserBadgeScalarFieldEnum]
 
 
 export const FriendshipScalarFieldEnum = {

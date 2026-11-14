@@ -14,6 +14,7 @@ import {
   removeStudents,
   student,
   type Db,
+  type Student,
 } from './helpers';
 
 const PRIVATE_WORDS = /score|mastery|correct|hint|leaves|answer|email/i;
@@ -236,6 +237,18 @@ describe.skipIf(!hasDb)('friends routes (database)', () => {
       expect(res.body.decorations).toEqual(['apples']);
     });
 
+    it('friend grove never includes badges', async () => {
+      const a = await fresh('Onlooker');
+      const b = await fresh('Achiever');
+      await befriend(a, b);
+      await prisma.userBadge.create({ data: { userId: b.id, badge: 'lectureReady' } });
+
+      const res = await a.agent.get(`/api/friends/${b.id}/grove`).expect(200);
+
+      expect(Object.keys(res.body).sort()).toEqual(Object.keys(FriendGrove.shape).sort());
+      expect(JSON.stringify(res.body)).not.toMatch(/badge|lectureReady|Lecture Ready/i);
+    });
+
     it('GET /api/friends exposes only FriendSummary fields for each friend', async () => {
       const a = await fresh('Lister');
       const b = await fresh('Listed');
@@ -252,6 +265,167 @@ describe.skipIf(!hasDb)('friends routes (database)', () => {
       expect(body).not.toMatch(PRIVATE_WORDS);
       expect(body).not.toContain('secret');
       expect(body).not.toContain(b.email);
+    });
+  });
+
+  describe('request lifecycle (4.1)', () => {
+    const ask = (from: Student, to: Student) =>
+      from.agent.post('/api/friends/requests').send({ email: to.email }).expect(202);
+
+    const requestRow = (from: Student, to: Student) =>
+      prisma.friendship.findUniqueOrThrow({
+        where: { requesterId_addresseeId: { requesterId: from.id, addresseeId: to.id } },
+      });
+
+    const rowsBetween = (a: Student, b: Student) =>
+      prisma.friendship.findMany({
+        where: {
+          OR: [
+            { requesterId: a.id, addresseeId: b.id },
+            { requesterId: b.id, addresseeId: a.id },
+          ],
+        },
+      });
+
+    describe('POST /api/friends/requests/:id/decline', () => {
+      it('lets the addressee decline a pending request (204) and removes it', async () => {
+        const a = await fresh('Asker');
+        const b = await fresh('Decliner');
+        await ask(a, b);
+        const row = await requestRow(a, b);
+
+        await b.agent.post(`/api/friends/requests/${row.id}/decline`).expect(204);
+
+        expect(await rowsBetween(a, b)).toEqual([]);
+      });
+
+      it('returns 404 when a stranger tries to decline', async () => {
+        const a = await fresh('Asker');
+        const b = await fresh('Asked');
+        const c = await fresh('Meddler');
+        await ask(a, b);
+        const row = await requestRow(a, b);
+
+        await c.agent.post(`/api/friends/requests/${row.id}/decline`).expect(404);
+
+        expect(await rowsBetween(a, b)).toHaveLength(1);
+      });
+    });
+
+    describe('DELETE /api/friends/requests/:id', () => {
+      it('lets the requester cancel a pending request (204) and removes it', async () => {
+        const a = await fresh('Canceller');
+        const b = await fresh('Asked');
+        await ask(a, b);
+        const row = await requestRow(a, b);
+
+        await a.agent.delete(`/api/friends/requests/${row.id}`).expect(204);
+
+        expect(await rowsBetween(a, b)).toEqual([]);
+      });
+
+      it('returns 404 when the addressee tries to cancel', async () => {
+        const a = await fresh('Asker');
+        const b = await fresh('Asked');
+        await ask(a, b);
+        const row = await requestRow(a, b);
+
+        await b.agent.delete(`/api/friends/requests/${row.id}`).expect(404);
+
+        expect(await rowsBetween(a, b)).toHaveLength(1);
+      });
+    });
+
+    describe('DELETE /api/friends/:id', () => {
+      it('lets the student who sent the request unfriend (204)', async () => {
+        const a = await fresh('Sender');
+        const b = await fresh('Accepter');
+        await befriend(a, b);
+
+        await a.agent.delete(`/api/friends/${b.id}`).expect(204);
+
+        expect(await rowsBetween(a, b)).toEqual([]);
+      });
+
+      it('lets the student who accepted the request unfriend (204)', async () => {
+        const a = await fresh('Sender');
+        const b = await fresh('Accepter');
+        await befriend(a, b);
+
+        await b.agent.delete(`/api/friends/${a.id}`).expect(204);
+
+        expect(await rowsBetween(a, b)).toEqual([]);
+      });
+
+      it('returns 404 when the two students are not friends', async () => {
+        const a = await fresh('Loner');
+        const c = await fresh('Stranger');
+        await ask(a, c);
+
+        await a.agent.delete(`/api/friends/${c.id}`).expect(404);
+
+        expect(await rowsBetween(a, c)).toHaveLength(1);
+      });
+
+      it('afterwards the grove returns 404 and cheers return 403', async () => {
+        const a = await fresh('Former');
+        const b = await fresh('Friend');
+        await befriend(a, b);
+        await a.agent.delete(`/api/friends/${b.id}`).expect(204);
+
+        await a.agent.get(`/api/friends/${b.id}/grove`).expect(404);
+        await b.agent.get(`/api/friends/${a.id}/grove`).expect(404);
+        await a.agent.post(`/api/friends/${b.id}/cheers`).send({}).expect(403);
+      });
+    });
+
+    describe('POST /api/friends/requests', () => {
+      it('makes A and B friends with one row when their requests cross', async () => {
+        const a = await fresh('Crosser A');
+        const b = await fresh('Crosser B');
+
+        await ask(a, b);
+        await ask(b, a);
+
+        const rows = await rowsBetween(a, b);
+        expect(rows).toHaveLength(1);
+        expect(rows[0]!.status).toBe('accepted');
+        const res = await a.agent.get('/api/friends').expect(200);
+        expect(res.body.friends.map((f: { id: string }) => f.id)).toEqual([b.id]);
+        expect(res.body.incoming).toEqual([]);
+        expect(res.body.outgoing).toEqual([]);
+      });
+
+      it('creates no row when the two are already friends', async () => {
+        const a = await fresh('Old Friend A');
+        const b = await fresh('Old Friend B');
+        await befriend(a, b);
+
+        await ask(a, b);
+        await ask(b, a);
+
+        const rows = await rowsBetween(a, b);
+        expect(rows).toHaveLength(1);
+        expect(rows[0]!.status).toBe('accepted');
+      });
+    });
+
+    describe('GET /api/friends', () => {
+      it('lists my pending outgoing requests with the email I typed', async () => {
+        const a = await fresh('Outgoing');
+        const b = await fresh('Target');
+        await ask(a, b);
+        const row = await requestRow(a, b);
+
+        const mine = await a.agent.get('/api/friends').expect(200);
+        expect(mine.body.outgoing).toEqual([
+          { id: row.id, email: b.email, sentAt: row.createdAt.toISOString() },
+        ]);
+
+        const theirs = await b.agent.get('/api/friends').expect(200);
+        expect(theirs.body.outgoing).toEqual([]);
+        expect(theirs.body.incoming).toEqual([{ id: row.id, fromName: 'Outgoing' }]);
+      });
     });
   });
 });

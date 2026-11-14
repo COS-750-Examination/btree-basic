@@ -407,6 +407,7 @@ export const ModelName = {
   LectureQuestion: 'LectureQuestion',
   HintView: 'HintView',
   WarmupResult: 'WarmupResult',
+  UserBadge: 'UserBadge',
   Friendship: 'Friendship',
   Cheer: 'Cheer'
 } as const
@@ -424,7 +425,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "moduleProgress" | "quizAttempt" | "mastery" | "leafTransaction" | "decoration" | "userDecoration" | "lectureQuestion" | "hintView" | "warmupResult" | "friendship" | "cheer"
+    modelProps: "user" | "moduleProgress" | "quizAttempt" | "mastery" | "leafTransaction" | "decoration" | "userDecoration" | "lectureQuestion" | "hintView" | "warmupResult" | "userBadge" | "friendship" | "cheer"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1168,6 +1169,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    UserBadge: {
+      payload: Prisma.$UserBadgePayload<ExtArgs>
+      fields: Prisma.UserBadgeFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.UserBadgeFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserBadgePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.UserBadgeFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserBadgePayload>
+        }
+        findFirst: {
+          args: Prisma.UserBadgeFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserBadgePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.UserBadgeFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserBadgePayload>
+        }
+        findMany: {
+          args: Prisma.UserBadgeFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserBadgePayload>[]
+        }
+        create: {
+          args: Prisma.UserBadgeCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserBadgePayload>
+        }
+        createMany: {
+          args: Prisma.UserBadgeCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.UserBadgeCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserBadgePayload>[]
+        }
+        delete: {
+          args: Prisma.UserBadgeDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserBadgePayload>
+        }
+        update: {
+          args: Prisma.UserBadgeUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserBadgePayload>
+        }
+        deleteMany: {
+          args: Prisma.UserBadgeDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.UserBadgeUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.UserBadgeUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserBadgePayload>[]
+        }
+        upsert: {
+          args: Prisma.UserBadgeUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserBadgePayload>
+        }
+        aggregate: {
+          args: Prisma.UserBadgeAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateUserBadge>
+        }
+        groupBy: {
+          args: Prisma.UserBadgeGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.UserBadgeGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.UserBadgeCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.UserBadgeCountAggregateOutputType> | number
+        }
+      }
+    }
     Friendship: {
       payload: Prisma.$FriendshipPayload<ExtArgs>
       fields: Prisma.FriendshipFieldRefs
@@ -1360,6 +1435,7 @@ export const UserScalarFieldEnum = {
   email: 'email',
   passwordHash: 'passwordHash',
   displayName: 'displayName',
+  theme: 'theme',
   plantedAt: 'plantedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -1475,6 +1551,16 @@ export const WarmupResultScalarFieldEnum = {
 export type WarmupResultScalarFieldEnum = (typeof WarmupResultScalarFieldEnum)[keyof typeof WarmupResultScalarFieldEnum]
 
 
+export const UserBadgeScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  badge: 'badge',
+  awardedAt: 'awardedAt'
+} as const
+
+export type UserBadgeScalarFieldEnum = (typeof UserBadgeScalarFieldEnum)[keyof typeof UserBadgeScalarFieldEnum]
+
+
 export const FriendshipScalarFieldEnum = {
   id: 'id',
   requesterId: 'requesterId',
@@ -1544,6 +1630,20 @@ export type ListStringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaMod
 
 
 /**
+ * Reference to a field of type 'Theme'
+ */
+export type EnumThemeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Theme'>
+    
+
+
+/**
+ * Reference to a field of type 'Theme[]'
+ */
+export type ListEnumThemeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Theme[]'>
+    
+
+
+/**
  * Reference to a field of type 'DateTime'
  */
 export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
@@ -1603,6 +1703,20 @@ export type EnumLeafReasonFieldRefInput<$PrismaModel> = FieldRefInputType<$Prism
  * Reference to a field of type 'LeafReason[]'
  */
 export type ListEnumLeafReasonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LeafReason[]'>
+    
+
+
+/**
+ * Reference to a field of type 'BadgeId'
+ */
+export type EnumBadgeIdFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BadgeId'>
+    
+
+
+/**
+ * Reference to a field of type 'BadgeId[]'
+ */
+export type ListEnumBadgeIdFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BadgeId[]'>
     
 
 
@@ -1780,6 +1894,7 @@ export type GlobalOmitConfig = {
   lectureQuestion?: Prisma.LectureQuestionOmit
   hintView?: Prisma.HintViewOmit
   warmupResult?: Prisma.WarmupResultOmit
+  userBadge?: Prisma.UserBadgeOmit
   friendship?: Prisma.FriendshipOmit
   cheer?: Prisma.CheerOmit
 }

@@ -408,6 +408,188 @@ None were asked. The request was interpreted as follows:
 
 ---
 
+## Entry 008: Badges scaffolding (BACKEND_PLAN Task 3)
+
+| Field        | Detail                                                                                           |
+| ------------ | ------------------------------------------------------------------------------------------------ |
+| Date         | 14 November 2026                                                                                 |
+| Requested by | Kyle Liebenberg, backend owner                                                                   |
+| Tool         | Claude Code (Anthropic), model Claude Opus 5.5                                                   |
+| Scope        | Prisma schema and migration, `@btree/shared`, `server/src/lib/badges.ts`, progress routes, tests |
+| Status       | Completed; left uncommitted on branch `feat/badges` for review                                   |
+
+### Request
+
+> Please refer to Task 3 in `docs/BACKEND_PLAN.md` and implement the scaffolding for Task 3 in the same way as for Task 2. I will implement the method bodies myself.
+
+### Clarifications provided
+
+None were needed. The badge rules are the ones agreed in the plan (decision D2):
+
+| Badge         | Rule                                                       |
+| ------------- | ---------------------------------------------------------- |
+| Explorer      | warm-up done and module 1 complete                         |
+| Splitter      | the three latest O5 answers all correct                    |
+| Root Raiser   | O6 mastered                                                |
+| Lecture Ready | ready check passed, reusing `passedReadyCheck` from Task 2 |
+
+As in Task 2, declarations are defined in full, new functions throw `Not implemented`, and tests have empty bodies.
+
+### Deliverables
+
+- **Database:** migration `badges`, with a `BadgeId` enum and a `UserBadge` table. Each badge is unique per user and deleted along with the user. The Prisma client was regenerated.
+- **`@btree/shared`:**
+  - `BADGES`: the id, label and description of each badge;
+  - `BadgeId`, `BADGE_IDS` and `SPLITTER_RUN` (3);
+  - the `BadgeIdSchema` and `Badge` schemas.
+- **New server module (stubs):** `lib/badges.ts`, with:
+  - `earnedExplorer`, `earnedSplitter` and `earnedRootRaiser`;
+  - `BADGE_RULES`, with Lecture Ready wired to `passedReadyCheck`;
+  - `checkBadges` and `badgesFor`.
+- **Routes:**
+  - new `GET /api/badges`, which returns 501 until implemented;
+  - `TODO(Task 3.2)` markers where `checkBadges` runs: `PUT /progress`, `POST /attempts` and `POST /warmup`.
+- **Tests with empty bodies:**
+  - `server/test/badges.test.ts` (13): an earned and a not-yet case for each badge, once-only awarding, and `GET /api/badges`;
+  - one privacy test in `friends.test.ts`: the friend grove never includes badges.
+
+### Verification summary
+
+| Check                                               | Result                                        |
+| --------------------------------------------------- | --------------------------------------------- |
+| Server tests against local PostgreSQL               | 73 / 73 pass (14 new tests with empty bodies) |
+| Client tests                                        | 43 / 43 pass                                  |
+| Schema drift between migrations and `schema.prisma` | None                                          |
+| ESLint, TypeScript (strict), Prettier               | Pass                                          |
+
+### Human review required
+
+- **Badge wording:** the descriptions in `BADGES` are student-facing. The ID lead should check them.
+- **Scaffolding markers:** remove each `void …; // scaffolding` line, the doc comments and the `TODO(Task 3.x)` markers when implementing.
+- **Empty tests pass:** fill in the 14 new tests before merging.
+
+---
+
+## Entry 009: Friends and privacy scaffolding (BACKEND_PLAN Task 4)
+
+| Field        | Detail                                                                  |
+| ------------ | ----------------------------------------------------------------------- |
+| Date         | 14 November 2026                                                        |
+| Requested by | Kyle Liebenberg, backend owner                                          |
+| Tool         | Claude Code (Anthropic), model Claude Opus 5.5                          |
+| Scope        | `@btree/shared`, `server/src/lib/rateLimit.ts`, friends routes, tests   |
+| Status       | Completed; left uncommitted on branch `feat/friends-privacy` for review |
+
+### Request
+
+> Please implement the scaffolding for Task 4. Task 4.3, the data export (POPIA right of access), is to be ignored, as it falls outside the project's scope.
+
+### Clarifications provided
+
+None were needed. Task 4.3 was left out as instructed, and no database change was required. As in Tasks 2 and 3:
+
+- declarations are defined in full;
+- new endpoints return 501 until implemented;
+- tests have empty bodies.
+
+The one exception is `perUserLimiter`. Routes create it when the app starts, so a version that threw an error would stop the server. Its scaffold therefore lets every request through until it is implemented.
+
+### Deliverables
+
+- **`@btree/shared`:**
+  - schemas `IncomingFriendRequest`, `OutgoingFriendRequest` and `FriendsList`;
+  - constants `FRIEND_REQUESTS_PER_HOUR` (10) and `CHEERS_PER_HOUR` (20).
+- **New server module (stub):** `lib/rateLimit.ts`, with `perUserLimiter`, `PerUserLimit` and `RATE_LIMIT_MESSAGE`.
+- **Routes in `friends.ts`:**
+  - per-student limiters mounted on `POST /friends/requests` and `POST /friends/:id/cheers`;
+  - new endpoints, each returning 501 until implemented:
+    - `POST /friends/requests/:id/decline`;
+    - `DELETE /friends/requests/:id`;
+    - `DELETE /friends/:id`;
+  - `TODO(Task 4.1)` markers on `GET /friends` (the outgoing list) and `POST /friends/requests` (crossing requests and existing friends).
+- **Tests with empty bodies:**
+  - 11 request-lifecycle tests in `friends.test.ts`;
+  - 3 rate-limit tests in a new `rateLimit.test.ts`.
+
+### Verification summary
+
+| Check                                 | Result                                        |
+| ------------------------------------- | --------------------------------------------- |
+| Server tests against local PostgreSQL | 87 / 87 pass (14 new tests with empty bodies) |
+| Client tests                          | 43 / 43 pass                                  |
+| ESLint, TypeScript (strict), Prettier | Pass                                          |
+
+### Human review required
+
+- **Outgoing requests reveal accounts:** a request row exists only when the email belongs to an account, so the outgoing list tells the sender whether an address is registered. The rate limit slows this down but does not prevent it.
+- **Scaffolding markers:** remove each `void …; // scaffolding` line, the doc comments and the `TODO(Task 4.x)` markers when implementing.
+- **Empty tests pass:** fill in the 14 new tests before merging.
+
+---
+
+## Entry 010: Account settings scaffolding (BACKEND_PLAN Task 5)
+
+| Field        | Detail                                                                                                    |
+| ------------ | --------------------------------------------------------------------------------------------------------- |
+| Date         | 14 November 2026                                                                                          |
+| Requested by | Kyle Liebenberg, backend owner                                                                            |
+| Tool         | Claude Code (Anthropic), model Claude Opus 5.5                                                            |
+| Scope        | Prisma schema and migration, `@btree/shared`, `server/src/lib/account.ts`, account and auth routes, tests |
+| Status       | Completed; left uncommitted on branch `feat/account-settings` for review                                  |
+
+### Request
+
+> Please implement the scaffolding for Task 5 (account settings). I will implement the core logic myself.
+
+### Clarifications provided
+
+None were needed. As in the earlier tasks:
+
+- declarations are defined in full;
+- the core logic is a stub that returns 501;
+- tests have empty bodies.
+
+The one exception is `toPublicUser`, which now returns the user's `theme`. The client checks every sign-in and session response against `PublicUser`, so adding the field to the schema without sending it would have broken signing in.
+
+Task 5.2 only marks items in `docs/TODO.md` as out of scope. It is left for when the task is completed.
+
+### Deliverables
+
+- **Database:** migration `user_theme`, adding a `Theme` enum (`day`, `dusk`) and a nullable `User.theme` column. The Prisma client was regenerated.
+- **`@btree/shared`:**
+  - `THEMES`, `Theme` and `ThemeSchema`;
+  - `PublicUser.theme`, which is null until the student picks a theme;
+  - `AccountPatchBody`:
+    - fields: display name (1–40 characters), theme, current password, and new password (8–128 characters);
+    - at least one setting must change;
+    - a new password needs the current one.
+- **New server module (stub):** `lib/account.ts`, with `updateAccount` and `WRONG_PASSWORD_MESSAGE`. The rules are in its doc comment.
+- **Routes:**
+  - `PATCH /api/account`, with sign-in, the auth rate limit and body validation already in place;
+  - `authLimiter` is now exported from `routes/auth.ts`;
+  - a `TODO(Task 5.1)` marker in `lib/export.ts` to add the theme to the data export.
+- **Tests with empty bodies:**
+  - 10 in a new `settings.test.ts`, covering the display name, theme, password and validation;
+  - 1 in `account.test.ts`: the export includes the theme.
+
+### Verification summary
+
+| Check                                               | Result                                          |
+| --------------------------------------------------- | ----------------------------------------------- |
+| Server tests against local PostgreSQL               | 101 / 101 pass (11 new tests with empty bodies) |
+| Client tests                                        | 43 / 43 pass                                    |
+| Playwright end-to-end and axe accessibility         | 24 / 24 pass                                    |
+| Schema drift between migrations and `schema.prisma` | None                                            |
+| ESLint, TypeScript (strict), Prettier               | Pass                                            |
+
+### Human review required
+
+- **Sessions after a password change:** other signed-in devices stay signed in. Revocable sessions were ruled out of scope for the prototype.
+- **Scaffolding markers:** remove each `void …; // scaffolding` line, the doc comment and the `TODO(Task 5.1)` marker when implementing.
+- **Empty tests pass:** fill in the 11 new tests before merging.
+
+---
+
 ## Entry template
 
 ```markdown

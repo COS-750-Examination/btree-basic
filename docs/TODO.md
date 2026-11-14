@@ -26,12 +26,13 @@ Tick items off as they land, and move finished work into the CHANGELOG.
 ### Features
 
 - [ ] Practice activity 4, **Build the tree** (O6), is still a stub (`client/src/pages/PracticePage.tsx`).
-- [ ] Badges (Explorer, Splitter, Root Raiser, Lecture Ready): show them on the Ready and Grove screens.
+- [ ] Badges (Explorer, Splitter, Root Raiser, Lecture Ready): show them on the Ready and Grove screens. The server side is ready: `GET /api/badges` returns all four, with `awardedAt` (or null while locked).
 - [ ] Drag decorations into place on the grove. The server has `PUT /api/grove/placement`, but nothing on the client calls it.
-- [ ] Friend requests: add decline and unfriend buttons, and show pending requests outside the Account page.
+- [ ] Friend requests: add decline and unfriend buttons, and show pending requests outside the Account page. The server side is ready: `POST /api/friends/requests/:id/decline`, `DELETE /api/friends/requests/:id` (cancel), `DELETE /api/friends/:id` (unfriend), and `GET /api/friends` now also lists `outgoing` requests. Show the 429 message ("Slow down a little and try again later") when a student sends too many requests or cheers.
 - [ ] Streak card: show the real streak from the server. It's currently computed on the client only. The server side is ready: `GET /api/streak` returns `{ days }`.
 - [ ] Show reward bonuses as soon as they're earned. `POST /api/attempts` now returns `bonuses` (streak +15, ready check +60), but the client ignores them, so they only appear in the leaf count after a reload.
-- [ ] Profile settings: change display name and password, and remember the Day/Dusk choice per account.
+- [ ] Profile settings: change display name and password, and remember the Day/Dusk choice per account. The server side is ready: `PATCH /api/account` takes `displayName`, `theme`, and `currentPassword` with `newPassword`, and `user.theme` (null until set) comes back from sign-in and `/api/auth/session`. Apply it on sign-in when it isn't null.
+- [ ] "Download my data" link on the Account page (`<a href="/api/account/export" download>`). The server side is ready.
 - [ ] Turn the mastery mini-lessons behind "Need more?" into real content. For now they just send the student back to the lesson.
 - [ ] Add an error boundary and an offline banner, so a failed save is shown to the student instead of failing silently.
 
@@ -49,27 +50,27 @@ Tick items off as they land, and move finished work into the CHANGELOG.
 
 - [x] Award the **3-day streak** bonus (+15), once per streak. Days are counted in South African time. Done 14 November 2026.
 - [x] Award the **ready-check** bonus (+60) once, when 7 of the 8 ready-check questions are right on the first try without hints. Done 14 November 2026.
-- [ ] Badge model and award rules (needs a Prisma migration).
+- [x] Badge model and award rules: Explorer (warm-up and module 1), Splitter (3 correct O5 answers in a row), Root Raiser (O6 mastered) and Lecture Ready (ready check passed). Done 14 November 2026.
 - [x] Check that `firstAttempt` and `hintsUsed` agree on the server, not only on the client, so a student can't fake a first-try answer. Done 14 November 2026.
 
 ### Friends and privacy
 
-- [ ] Endpoints to decline a request, unfriend, and cancel a request you sent.
-- [ ] Rate-limit cheers and friend requests to block spam.
-- [ ] Data export endpoint (POPIA right of access), alongside the account deletion that already exists.
+- [x] Endpoints to decline a request, unfriend, and cancel a request you sent. Requests that cross now make the two students friends. Done 14 November 2026.
+- [x] Rate-limit cheers and friend requests to block spam: 10 friend requests and 20 cheers per student per hour. Done 14 November 2026.
+- [x] Data export endpoint (POPIA right of access), alongside the account deletion that already exists: `GET /api/account/export` downloads everything the app stores about the student as a JSON file. Done 14 November 2026.
 
 ### Account
 
-- [ ] `PATCH /api/account`: display name, theme and password change.
-- [ ] Password reset by email (needs a mail provider), or a documented decision not to support it.
-- [ ] Sessions: tokens currently live for a fixed number of days with no refresh or revoke. Decide whether that's acceptable.
+- [x] `PATCH /api/account`: display name, theme and password change. Password changes are limited to 10 per student per 15 minutes; name and theme changes are not limited. Done 14 November 2026.
+- [x] ~~Password reset by email (needs a mail provider)~~. Won't do (prototype): there is no mail provider. A signed-in student can still change their password. Decided 14 November 2026.
+- [x] Sessions: tokens currently live for a fixed number of days with no refresh or revoke. Decided: the 14-day JWT cookie is acceptable for a prototype. Changing the password does not sign out other devices. Decided 14 November 2026.
 
 ### Ops and deployment
 
 - [ ] Deploy the API and Postgres to Render and the client to Vercel. This includes cross-site cookies: `SameSite=None; Secure`, or putting both on one domain.
 - [ ] Run `prisma migrate deploy` in the release step and put secrets in the hosting dashboard.
 - [ ] Add a database readiness check to `/api/health`.
-- [ ] Back up the production database.
+- [x] ~~Back up the production database.~~ Won't do (prototype). Decided 14 November 2026.
 
 ### Quality
 

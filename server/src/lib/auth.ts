@@ -1,7 +1,9 @@
+import type { PublicUser } from '@btree/shared';
 import bcrypt from 'bcryptjs';
 import type { CookieOptions } from 'express';
 import jwt from 'jsonwebtoken';
 import { env, isProd } from '../env';
+import type { User } from '../generated/prisma/client';
 
 export const SESSION_COOKIE = 'btree_session';
 const SESSION_DAYS = 14;
@@ -25,7 +27,6 @@ export function verifySession(token: string): string | null {
   }
 }
 
-/** httpOnly so scripts cannot read the token; SameSite=Lax blocks cross-site POSTs (NFR8). */
 export const sessionCookieOptions: CookieOptions = {
   httpOnly: true,
   sameSite: 'lax',
@@ -33,3 +34,11 @@ export const sessionCookieOptions: CookieOptions = {
   path: '/',
   maxAge: SESSION_DAYS * 24 * 60 * 60 * 1000,
 };
+
+export const toPublicUser = (u: User): PublicUser => ({
+  id: u.id,
+  email: u.email,
+  displayName: u.displayName,
+  theme: u.theme,
+  plantedAt: u.plantedAt.toISOString(),
+});

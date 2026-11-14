@@ -11,6 +11,7 @@ import {
 } from '@btree/shared';
 import { Router } from 'express';
 import { trustedAttempt } from '../lib/attempts';
+import { badgesFor, checkBadges } from '../lib/badges';
 import { prisma } from '../lib/prisma';
 import { awardLeaves, readinessFor, streakDays } from '../lib/progress';
 import { awardReadyCheckBonus, awardStreakBonus, isReadyCheckItem } from '../lib/rewards';
@@ -56,6 +57,7 @@ progressRouter.put('/progress', requireAuth, validateBody(ProgressPutBody), asyn
     });
     if (newlyCompleted) await awardLeaves(userId, 'lesson', `lesson:${m.moduleId}`);
   }
+  await checkBadges(userId);
   res.json(await readinessFor(userId));
 });
 
@@ -93,6 +95,7 @@ progressRouter.post('/attempts', requireAuth, validateBody(QuizAttemptBody), asy
     if (ready) bonuses.push(ready);
   }
 
+  await checkBadges(userId);
   const result: AttemptResult = { ...m, bonuses };
   res.status(201).json(result);
 });
@@ -110,6 +113,10 @@ progressRouter.get('/streak', requireAuth, async (req, res) => {
   res.json(summary);
 });
 
+progressRouter.get('/badges', requireAuth, async (req, res) => {
+  res.json(await badgesFor(uid(req)));
+});
+
 progressRouter.get('/mastery', requireAuth, async (req, res) => {
   res.json((await readinessFor(uid(req))).objectives);
 });
@@ -125,5 +132,6 @@ progressRouter.post('/warmup', requireAuth, validateBody(WarmupBody), async (req
   await prisma.warmupResult.create({
     data: { userId: uid(req), correct, total: answers.length, needsRecap },
   });
+  await checkBadges(uid(req));
   res.status(201).json({ correct, total: answers.length, needsRecap });
 });

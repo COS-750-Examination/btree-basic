@@ -48,12 +48,41 @@ All notable changes to this project are documented here. The format follows [Kee
 - `POST /api/attempts` also returns `bonuses`, the streak and ready-check bonuses that answer earned.
 - Payouts can be made once-only: a nullable `dedupeKey` on `LeafTransaction`, unique per user (migration `leaf_dedupe_key`).
 - Tests: `days.test.ts`, `rewards.test.ts` and `attempts.test.ts` on the server; `progressStore.test.ts`, `QuestionCard.test.tsx` and `shuffle.test.ts` on the client; a check that the ready-check question ids match `READY_CHECK_ITEM_IDS`.
+- **Badges**, awarded by the server and kept for good:
+  - **Explorer:** the warm-up is done and module 1 is complete.
+  - **Splitter:** the three latest answers on splitting a node (O5) are all correct.
+  - **Root Raiser:** splits that reach the root (O6) are mastered.
+  - **Lecture Ready:** the ready check is passed, with 7 of 8 right on the first try without hints.
+  - Badges are checked after saving progress, answering a question and finishing the warm-up. Each is awarded once, even if two requests arrive at the same moment.
+  - New `UserBadge` table, deleted along with the user (migration `badges`). The badge list (`BADGES`) and the `Badge` schema are in `@btree/shared`.
+  - Friends never see each other's badges.
+- `GET /api/badges` returns all four badges in order, with `awardedAt`, or null while a badge is locked.
+- Tests: `badges.test.ts` (13 cases), and a privacy test that a friend's grove has no badges.
+- **Friend request lifecycle:**
+  - `POST /api/friends/requests/:id/decline`: the student who received a pending request declines it.
+  - `DELETE /api/friends/requests/:id`: the student who sent a pending request cancels it.
+  - `DELETE /api/friends/:id`: either friend ends the friendship. Afterwards neither can see the other's grove or cheer them, but cheers already sent stay in the history.
+  - `GET /api/friends` also returns `outgoing`, the pending requests the student sent, with the email they typed. The response type is `FriendsList` in `@btree/shared`.
+- **Per-student rate limits:** 10 friend requests and 20 cheers per hour. Limits count per student, not per IP address, so a class on one network doesn't share them. Going over returns 429 with "Slow down a little and try again later".
+- Tests: 11 request-lifecycle cases in `friends.test.ts`, and `rateLimit.test.ts` (3 cases).
+- **Data export (POPIA right of access):** `GET /api/account/export` downloads everything the app stores about the student as `btree-basic-data-<date>.json`:
+  - their account details;
+  - progress, attempts, mastery, leaves, decorations, lecture questions, warm-ups, hints and badges;
+  - friendships and cheers, which show other students by display name only.
+  - The file never includes the password hash, any user id, or another student's email or answers. It sits alongside the existing account deletion.
+- Tests: `account.test.ts` (3 cases).
+- **Account settings:** `PATCH /api/account` changes the display name, the Day/Dusk theme and the password.
+  - Changing the password needs the current one. A wrong current password returns 400 "Current password is incorrect" and changes nothing.
+  - Password changes are limited to 10 per student per 15 minutes. Name and theme changes aren't limited, so switching themes on shared campus Wi-Fi never uses up the class's login limit.
+  - The theme is saved per account (migration `user_theme`). It is null until the student picks one, and comes back as `theme` with the signed-in user and in the data export.
+- Tests: `settings.test.ts` (11 cases), and a check that the data export includes the theme.
 
 ### Fixed
 
 - **"Tap the nodes" questions can now be answered.** `QuestionCard` had no answer controls for `trace-path` questions, so tapping did nothing and Next stayed disabled. This blocked the module 3 and 5 quizzes and the ready check. Students now tap the path, then press Check or Clear.
 - Completing a module in two requests at the same moment paid the +30 lesson leaves twice.
 - `POST /api/hints` paid +5 on every call, so leaves could be farmed without limit.
+- **Friend requests that cross now make the two students friends.** Before, if B had already asked A and A then asked B, a second pending request was created. A request between students who are already friends now does nothing.
 
 ### Content
 
@@ -76,7 +105,10 @@ All notable changes to this project are documented here. The format follows [Kee
 - Pixel pass of each screen against its Figma frame (layout and spacing; tokens are done).
 - Practice activity 4, **Build the tree** (objective O6), is a stub.
 - The ID lead should review the new lessons and quiz items (see the prompt log, Entry 004).
-- Badges (Explorer, Splitter, Root Raiser, Lecture Ready) are not implemented yet. Leaf rewards and growth stages are.
+- The client doesn't show badges yet. The server awards them and `GET /api/badges` lists them.
+- The client has no decline, cancel or unfriend buttons yet, no "Download my data" link, and doesn't show the 429 message. The server endpoints are ready.
+- The client has no profile settings yet (name, password, theme per account). `PATCH /api/account` is ready.
+- Not planned for the prototype: password reset by email, revocable sessions (the 14-day sign-in cookie stays valid after a password change), and database backups.
 - The client doesn't show reward bonuses (streak +15, ready check +60) until the page reloads, and the streak card doesn't use `GET /api/streak` yet.
 - Deployment (Vercel for the client, Render for the API and database) is not configured.
 
