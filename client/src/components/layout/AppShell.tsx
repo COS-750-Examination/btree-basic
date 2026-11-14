@@ -7,6 +7,7 @@ import { applyTheme, useThemeStore } from '../../stores/themeStore';
 import { ErrorBoundary } from './ErrorBoundary';
 import { Header } from './Header';
 import { OfflineBanner } from './OfflineBanner';
+import { RewardToast } from './RewardToast';
 
 export function AppShell() {
   const theme = useThemeStore((s) => s.theme);
@@ -47,6 +48,7 @@ export function AppShell() {
           <Outlet />
         </ErrorBoundary>
       </main>
+      <RewardToast />
     </MotionConfig>
   );
 }

@@ -25,6 +25,12 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ### Added
 
+- **Reward feedback** (FRONTEND_PLAN Task 1).
+  - **Bonuses show straight away.** The client now reads the server's reply to `POST /api/attempts` and adds any `bonuses` (3-day streak +15, ready check +60) to the leaf count and ledger, so the header updates without a reload. A short message pops up at the bottom of the screen ("+15 leaves: 3-day practice streak!"), announced to screen readers, and closes after 6 seconds. The server alone decides these bonuses, so guests never get them.
+  - **Streak card** on My grove, under the leaf count, from `GET /api/streak`. It counts down to the 3-day bonus ("Practise 1 day more in a row for +15 leaves") and refreshes after every saved answer. Guests see "Sign in to keep a streak".
+  - **Practice streak text fixed.** It promised "the Apples decoration for free", which nothing awards. It now counts correct split answers in a row toward the **Splitter** badge ("2 of 3 splits right in a row"), using the same rule as the server (the latest O5 answers, quiz included), and only appears on **Split it yourself**.
+  - The query client moved to `client/src/api/queryClient.ts`, so stores can refresh server data.
+  - Tests: 3 store cases for bonuses, `lib/rewards.test.ts` (streak text and split run) and `RewardToast.test.tsx`.
 - **Take decorations off the tree and put them back.** Bought decorations still go straight onto the tree, but each owned tile in the craft drawer (**Decorate** on My grove) now has a **Take off** / **Add to tree** button, and says "in your tree" or "in your drawer". Nothing is refunded or lost: the decoration stays owned.
   - Guests keep the choice in the browser session, like their leaves. Signed-in students save it with the existing `PUT /api/grove/placement` (`placed`), so it survives signing out and in.
   - `GET /api/decorations` now also returns `placed` for each decoration (false when not owned). The shared `Decoration` schema has the new field.

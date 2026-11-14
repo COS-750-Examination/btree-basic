@@ -2,6 +2,7 @@ import {
   Cheer,
   FriendGrove,
   PublicUser,
+  StreakSummary,
   type FriendSummary,
   type LoginBody,
   type RegisterBody,
@@ -80,5 +81,14 @@ export function useSendCheer(friendId: string) {
   return useMutation({
     mutationFn: (moduleId?: number) => api.post(`/friends/${friendId}/cheers`, { moduleId }),
     onSuccess: () => void qc.invalidateQueries({ queryKey: ['cheers'] }),
+  });
+}
+
+/** The student's day streak (signed-in only). Refreshed after every saved answer. */
+export function useStreak(enabled: boolean) {
+  return useQuery({
+    queryKey: ['streak'],
+    queryFn: () => api.get('/streak', StreakSummary),
+    enabled,
   });
 }

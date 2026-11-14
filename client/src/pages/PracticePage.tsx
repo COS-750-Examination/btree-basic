@@ -13,8 +13,8 @@ import {
   type BTreeNode,
   type NodeSpec,
 } from '@btree/engine';
-import type { ObjectiveId, QuizItem } from '@btree/shared';
-import { Apple } from 'lucide-react';
+import { SPLITTER_RUN, type ObjectiveId, type QuizItem } from '@btree/shared';
+import { Award } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router';
 import { QuestionCard, type Answer } from '../components/quiz/QuestionCard';
@@ -28,6 +28,7 @@ import {
   ProgressSegments,
   cn,
 } from '../components/ui';
+import { splitRun } from '../lib/rewards';
 import { useProgressStore } from '../stores/progressStore';
 
 const ACTIVITIES = [
@@ -39,6 +40,7 @@ const ACTIVITIES = [
 ] as const satisfies readonly { id: string; label: string; objective: ObjectiveId }[];
 
 type ActivityId = (typeof ACTIVITIES)[number]['id'];
+
 const EXERCISES_PER_ACTIVITY = 4;
 
 interface Result {
@@ -61,9 +63,10 @@ export function PracticePage() {
     .id as ActivityId;
   const meta = ACTIVITIES.find((a) => a.id === activity)!;
   const recordAttempt = useProgressStore((s) => s.recordAttempt);
+  const signedIn = useProgressStore((s) => s.signedIn);
+  const run = useProgressStore((s) => splitRun(s.attempts));
   const [exercise, setExercise] = useState(1);
   const [seed, setSeed] = useState(() => Math.floor(Math.random() * 1e6));
-  const [streak, setStreak] = useState(0);
   const [result, setResult] = useState<Result | null>(null);
   const [tries, setTries] = useState(0);
 
@@ -77,7 +80,6 @@ export function PracticePage() {
       hintsUsed: 0,
     });
     setTries((t) => t + 1);
-    setStreak((s) => (r.correct ? s + 1 : 0));
   };
 
   const nextExercise = () => {
@@ -197,17 +199,23 @@ export function PracticePage() {
               </li>
             </ul>
           </Card>
-          <Card tone="accent" className="flex gap-3">
-            <Apple className="text-danger h-6 w-6 shrink-0" aria-hidden />
-            <div>
-              <p className="font-bold">{streak} correct in a row</p>
-              <p className="text-small">
-                {streak >= 3
-                  ? 'Splitter streak! Keep going.'
-                  : `${3 - streak} more and you earn the Apples decoration for free.`}
-              </p>
-            </div>
-          </Card>
+          {activity === 'split-it-yourself' && (
+            <Card tone="accent" className="flex gap-3">
+              <Award className="h-6 w-6 shrink-0" aria-hidden />
+              <div>
+                <p className="font-bold">
+                  {Math.min(run, SPLITTER_RUN)} of {SPLITTER_RUN} splits right in a row
+                </p>
+                <p className="text-small">
+                  {run >= SPLITTER_RUN
+                    ? signedIn
+                      ? 'You have earned the Splitter badge. Keep going!'
+                      : 'That is a Splitter run! Sign in to earn the badge.'
+                    : `${SPLITTER_RUN - run} more in a row ${signedIn ? 'earns' : 'would earn'} the Splitter badge${signedIn ? '' : ' (sign in to collect it)'}.`}
+                </p>
+              </div>
+            </Card>
+          )}
         </aside>
       </div>
     </div>

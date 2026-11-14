@@ -132,3 +132,47 @@ describe('progress store decorations', () => {
     expect(useProgressStore.getState().leaves).toBe(before);
   });
 });
+
+describe('progress store server bonuses', () => {
+  const flush = () => new Promise((r) => setTimeout(r, 0));
+  const reply = (bonuses: { reason: 'streak' | 'readyCheck'; amount: number }[]) => ({
+    objective: 'O3',
+    score: 1,
+    counted: 1,
+    status: 'getting-there',
+    bonuses,
+  });
+
+  it('adds a ready-check bonus from the server to leaves and the ledger', async () => {
+    vi.spyOn(api, 'post').mockResolvedValue(reply([{ reason: 'readyCheck', amount: 60 }]));
+    useProgressStore.getState().setSignedIn(true);
+
+    useProgressStore.getState().recordAttempt({ ...correct, correct: true });
+    await flush();
+
+    const s = useProgressStore.getState();
+    expect(s.leaves).toBe(10 + 60);
+    expect(s.ledger[0]).toMatchObject({ amount: 60, reason: 'readyCheck' });
+    expect(s.lastBonus).toMatchObject({ amount: 60, reason: 'readyCheck' });
+  });
+
+  it('adds nothing when the server pays no bonus', async () => {
+    vi.spyOn(api, 'post').mockResolvedValue(reply([]));
+    useProgressStore.getState().setSignedIn(true);
+
+    useProgressStore.getState().recordAttempt({ ...correct, correct: true });
+    await flush();
+
+    expect(useProgressStore.getState().leaves).toBe(10);
+    expect(useProgressStore.getState().lastBonus).toBeNull();
+  });
+
+  it('never gives guests a bonus, because nothing is sent to the server', async () => {
+    const post = vi.spyOn(api, 'post');
+    useProgressStore.getState().recordAttempt({ ...correct, correct: true });
+    await flush();
+
+    expect(post).not.toHaveBeenCalled();
+    expect(useProgressStore.getState().leaves).toBe(10);
+  });
+});

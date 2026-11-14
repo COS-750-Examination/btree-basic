@@ -1,15 +1,18 @@
 import {
+  AttemptResult,
   LEAF_REWARDS,
   MODULES,
   readiness,
   type AttemptLike,
   type AttemptRecord,
   type Confidence,
+  type LeafBonus,
   type LeafReason,
 } from '@btree/shared';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import { api } from '../api/client';
+import { queryClient } from '../api/queryClient';
 import { useSyncStore } from './syncStore';
 
 export interface LocalAttempt extends AttemptLike {
@@ -38,6 +41,8 @@ interface ProgressState {
   /** Owned decorations the student took off the tree. Bought ones start on the tree. */
   hiddenDecorations: string[];
   hintsRead: string[];
+  /** The latest server bonus (streak or ready check), shown once as a message. Not saved. */
+  lastBonus: (LeafBonus & { at: number }) | null;
 
   setSignedIn: (v: boolean) => void;
   hydrateFromServer: () => Promise<void>;
@@ -55,6 +60,7 @@ interface ProgressState {
   buyDecoration: (id: string, cost: number) => boolean;
   /** Puts an owned decoration on the tree or takes it off. */
   toggleDecoration: (id: string) => void;
+  dismissBonus: () => void;
   reset: () => void;
 }
 
@@ -89,9 +95,26 @@ export const useProgressStore = create<ProgressState>()(
           ledger: [{ amount: LEAF_REWARDS[reason], reason, at: Date.now() }, ...s.ledger],
         }));
 
+      /**
+       * The server decides the streak and ready-check bonuses, so they are added when its
+       * reply to an answer arrives. Guests never get them.
+       */
+      const applyAttemptResult = (result: AttemptResult | undefined) => {
+        for (const bonus of result?.bonuses ?? []) {
+          const at = Date.now();
+          set((s) => ({
+            leaves: s.leaves + bonus.amount,
+            ledger: [{ amount: bonus.amount, reason: bonus.reason, at }, ...s.ledger],
+            lastBonus: { ...bonus, at },
+          }));
+        }
+        void queryClient.invalidateQueries({ queryKey: ['streak'] });
+      };
+
       return {
         ...initial,
         signedIn: false,
+        lastBonus: null,
 
         setSignedIn: (signedIn) => set({ signedIn }),
 
@@ -164,15 +187,21 @@ export const useProgressStore = create<ProgressState>()(
               misconception,
             } = a;
             save(() =>
-              api.post('/attempts', {
-                itemId,
-                objective,
-                correct,
-                firstAttempt,
-                hintsUsed,
-                confidence,
-                misconception,
-              }),
+              api
+                .post(
+                  '/attempts',
+                  {
+                    itemId,
+                    objective,
+                    correct,
+                    firstAttempt,
+                    hintsUsed,
+                    confidence,
+                    misconception,
+                  },
+                  AttemptResult,
+                )
+                .then(applyAttemptResult),
             );
           }
         },
@@ -227,16 +256,18 @@ export const useProgressStore = create<ProgressState>()(
             save(() => api.put('/grove/placement', { items: [{ decorationId: id, placed }] }));
         },
 
+        dismissBonus: () => set({ lastBonus: null }),
+
         reset: () => {
           useSyncStore.getState().clear();
-          set({ ...initial });
+          set({ ...initial, lastBonus: null });
         },
       };
     },
     {
       name: 'btree-progress',
       storage: createJSONStorage(() => sessionStorage),
-      partialize: ({ signedIn: _signedIn, ...rest }) => rest,
+      partialize: ({ signedIn: _signedIn, lastBonus: _lastBonus, ...rest }) => rest,
     },
   ),
 );

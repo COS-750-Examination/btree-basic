@@ -6,6 +6,7 @@ import { useFriends, useMe } from '../api/hooks';
 import { DecoIcon } from '../components/grove/DecoIcon';
 import { GroveTree } from '../components/grove/GroveTree';
 import { GrowthStrip } from '../components/grove/GrowthStrip';
+import { StreakCard } from '../components/grove/StreakCard';
 import { SceneBackdrop } from '../components/grove/SceneBackdrop';
 import {
   Avatar,
@@ -167,6 +168,8 @@ export function GrovePage() {
               Hints are free, and nothing ever wilts.
             </p>
           </Card>
+
+          <StreakCard signedIn={Boolean(me.data)} />
 
           <Card>
             <div className="mb-3 flex items-center justify-between">

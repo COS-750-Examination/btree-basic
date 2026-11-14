@@ -767,6 +767,51 @@ Several fonts were tried in turn at the requester's direction: Spectral, Gravita
 
 ---
 
+## Entry 015: Reward feedback (FRONTEND_PLAN Task 1)
+
+| Field        | Detail                                                                                                                                                      |
+| ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Date         | 14 November 2026                                                                                                                                            |
+| Requested by | Taylor Sergel, frontend                                                                                                                                     |
+| Tool         | Claude Code (Anthropic), model Claude Opus 5.5                                                                                                              |
+| Scope        | `progressStore.ts`, `api/queryClient.ts`, `api/hooks.ts`, `RewardToast.tsx`, `StreakCard.tsx`, `GrovePage.tsx`, `PracticePage.tsx`, `lib/rewards.ts`, tests |
+| Status       | Completed; left uncommitted on branch `feat/rewards-ui` for review                                                                                          |
+
+### Request
+
+> Please implement step 1 of the frontend plan (rewards feedback: show the streak and ready-check bonuses as soon as they are earned, add a streak card, and correct the Practice streak text), and explain how to check that it works before committing.
+
+### Clarifications provided
+
+- The streak card goes on the My grove page under the leaf count, as agreed earlier with the requester.
+- The bonus message is a small pop-up at the bottom of the screen that closes by itself, so it doesn't push the page down.
+- The Practice "in a row" count now follows the server's Splitter rule (the latest O5 answers, including quiz answers) rather than a counter that reset on page load, so the number shown matches when the badge is awarded.
+- The branch was created from `feat/ui-updates`, whose pull request wasn't merged yet.
+
+### Deliverables
+
+- **Bonuses:** `recordAttempt` parses the `AttemptResult` reply and adds each bonus to `leaves` and `ledger`, and stores it in `lastBonus` (not saved). Bonuses also apply when a queued save is retried after reconnecting.
+- **`RewardToast.tsx` (new):** "+15 leaves: 3-day practice streak!" or "+60 leaves: You're ready for the lecture!", as a live region, closing after 6 seconds or on **Close**.
+- **`StreakCard.tsx` (new)** and `useStreak` (query key `['streak']`, invalidated after each saved answer).
+- **Practice:** "n of 3 splits right in a row" toward the Splitter badge, only on **Split it yourself**.
+- **`api/queryClient.ts` (new):** the query client, shared by `main.tsx` and the stores.
+- **Tests:** 3 store cases, `lib/rewards.test.ts`, `RewardToast.test.tsx`.
+
+### Verification summary
+
+| Check                                                                                                                      | Result       |
+| -------------------------------------------------------------------------------------------------------------------------- | ------------ |
+| Client tests                                                                                                               | 77 / 77 pass |
+| Browser check (Chrome): a 2-day streak plus one answer paid +15, showed the message and updated the header and streak card | Pass         |
+| ESLint, TypeScript (strict), Prettier, build                                                                               | Pass         |
+
+### Human review required
+
+- **Splitter text after the badge:** once earned, the badge is kept, but the Practice card counts the current run. After a wrong split it says "3 more in a row earns the Splitter badge" even if the student already has it. Task 2 (badges) can show "earned" from `GET /api/badges`.
+- **Figma:** the streak card and bonus message have no Figma frame yet.
+
+---
+
 ## Entry template
 
 ```markdown
