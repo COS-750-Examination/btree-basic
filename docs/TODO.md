@@ -26,7 +26,7 @@ Tick items off as they land, and move finished work into the CHANGELOG.
 ### Features
 
 - [ ] Practice activity 4, **Build the tree** (O6), is still a stub (`client/src/pages/PracticePage.tsx`).
-- [ ] Badges (Explorer, Splitter, Root Raiser, Lecture Ready): show them on the Ready and Grove screens.
+- [ ] Badges (Explorer, Splitter, Root Raiser, Lecture Ready): show them on the Ready and Grove screens. The server side is ready: `GET /api/badges` returns all four, with `awardedAt` (or null while locked).
 - [ ] Drag decorations into place on the grove. The server has `PUT /api/grove/placement`, but nothing on the client calls it.
 - [ ] Friend requests: add decline and unfriend buttons, and show pending requests outside the Account page.
 - [ ] Streak card: show the real streak from the server. It's currently computed on the client only. The server side is ready: `GET /api/streak` returns `{ days }`.
@@ -49,7 +49,7 @@ Tick items off as they land, and move finished work into the CHANGELOG.
 
 - [x] Award the **3-day streak** bonus (+15), once per streak. Days are counted in South African time. Done 14 November 2026.
 - [x] Award the **ready-check** bonus (+60) once, when 7 of the 8 ready-check questions are right on the first try without hints. Done 14 November 2026.
-- [ ] Badge model and award rules (needs a Prisma migration).
+- [x] Badge model and award rules: Explorer (warm-up and module 1), Splitter (3 correct O5 answers in a row), Root Raiser (O6 mastered) and Lecture Ready (ready check passed). Done 14 November 2026.
 - [x] Check that `firstAttempt` and `hintsUsed` agree on the server, not only on the client, so a student can't fake a first-try answer. Done 14 November 2026.
 
 ### Friends and privacy

@@ -5,9 +5,9 @@ import {
   type GrowthStageId,
   type ObjectiveId,
 } from '@btree/shared';
-import { Prisma, type LeafReason } from '../generated/prisma/client';
+import type { LeafReason } from '../generated/prisma/client';
 import { addDays, dayKey } from './days';
-import { prisma } from './prisma';
+import { isUniqueViolation, prisma } from './prisma';
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 const STREAK_LOOKBACK_DAYS = 60;
@@ -31,7 +31,7 @@ export async function awardLeaves(
     });
     return true;
   } catch (e) {
-    if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === 'P2002') return false;
+    if (isUniqueViolation(e)) return false;
     throw e;
   }
 }

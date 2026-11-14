@@ -236,6 +236,18 @@ describe.skipIf(!hasDb)('friends routes (database)', () => {
       expect(res.body.decorations).toEqual(['apples']);
     });
 
+    it('friend grove never includes badges', async () => {
+      const a = await fresh('Onlooker');
+      const b = await fresh('Achiever');
+      await befriend(a, b);
+      await prisma.userBadge.create({ data: { userId: b.id, badge: 'lectureReady' } });
+
+      const res = await a.agent.get(`/api/friends/${b.id}/grove`).expect(200);
+
+      expect(Object.keys(res.body).sort()).toEqual(Object.keys(FriendGrove.shape).sort());
+      expect(JSON.stringify(res.body)).not.toMatch(/badge|lectureReady|Lecture Ready/i);
+    });
+
     it('GET /api/friends exposes only FriendSummary fields for each friend', async () => {
       const a = await fresh('Lister');
       const b = await fresh('Listed');

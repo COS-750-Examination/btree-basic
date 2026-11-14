@@ -92,6 +92,11 @@ export type HintView = Prisma.HintViewModel
  */
 export type WarmupResult = Prisma.WarmupResultModel
 /**
+ * Model UserBadge
+ * 
+ */
+export type UserBadge = Prisma.UserBadgeModel
+/**
  * Model Friendship
  * 
  */
