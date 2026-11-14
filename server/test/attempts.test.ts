@@ -1,4 +1,5 @@
 import type { Express } from 'express';
+import request from 'supertest';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import {
   closeDb,
@@ -141,5 +142,24 @@ describe.skipIf(!hasDb)('attempt integrity (database)', () => {
       const s = await newStudent();
       await s.agent.post('/api/hints').send({ hint: 1 }).expect(400);
     });
+  });
+
+  it('GET /api/attempts returns only your own answers, oldest first', async () => {
+    const s = await newStudent('History');
+    const other = await newStudent('Someone else');
+    await attempt(s, 'm6-q1', { correct: false }).expect(201);
+    await attempt(s, 'm6-q2').expect(201);
+    await attempt(other, 'm6-q3').expect(201);
+
+    const res = await s.agent.get('/api/attempts').expect(200);
+    const rows = res.body as { itemId: string; objective: string; correct: boolean; at: string }[];
+
+    expect(rows.map((r) => r.itemId)).toEqual(['m6-q1', 'm6-q2']);
+    expect(rows[0]).toMatchObject({ objective: 'O5', correct: false, firstAttempt: true });
+    expect(Number.isNaN(Date.parse(rows[0]!.at))).toBe(false);
+  });
+
+  it('GET /api/attempts needs a session', async () => {
+    await request(app).get('/api/attempts').expect(401);
   });
 });

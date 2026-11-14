@@ -3,6 +3,7 @@ import {
   MODULES,
   readiness,
   type AttemptLike,
+  type AttemptRecord,
   type Confidence,
   type LeafReason,
 } from '@btree/shared';
@@ -95,19 +96,22 @@ export const useProgressStore = create<ProgressState>()(
         setSignedIn: (signedIn) => set({ signedIn }),
 
         hydrateFromServer: async () => {
-          const [progress, leaves, questions, decorations] = await Promise.all([
+          const [progress, leaves, questions, decorations, attempts] = await Promise.all([
             api.get<{ modules: { moduleId: number; part: number; completed: boolean }[] }>(
               '/progress',
             ),
             api.get<{ balance: number }>('/leaves'),
             api.get<{ id: string; text: string }[]>('/lecture-questions'),
             api.get<{ id: string; owned: boolean; placed: boolean }[]>('/decorations'),
+            api.get<AttemptRecord[]>('/attempts'),
           ]);
           set({
             modules: Object.fromEntries(
               progress.modules.map((m) => [m.moduleId, { part: m.part, completed: m.completed }]),
             ),
             leaves: leaves.balance,
+            // Past answers drive mastery (header %, Ready page) and which questions already paid leaves.
+            attempts: attempts.map(({ at, ...a }) => ({ ...a, at: Date.parse(at) })),
             lectureQuestions: questions,
             ownedDecorations: decorations.filter((d) => d.owned).map((d) => d.id),
             hiddenDecorations: decorations.filter((d) => d.owned && !d.placed).map((d) => d.id),

@@ -21,10 +21,18 @@ export const MIN_COUNTED_FOR_MASTERY = 3;
 /** Only first-attempt answers given without hints count toward mastery (ID doc, Assessment Strategy). */
 export const countsTowardMastery = (a: AttemptLike): boolean => a.firstAttempt && a.hintsUsed === 0;
 
+/**
+ * `score` is progress toward mastery, not plain accuracy: right answers out of at least
+ * MIN_COUNTED_FOR_MASTERY. One right answer is 1/3 (33%), not 100%, because there isn't
+ * enough evidence yet; after three or more answers it is the share answered correctly.
+ * This makes the percentage and the status agree: an objective is mastered exactly when
+ * its score reaches READY_THRESHOLD (80%).
+ */
 export function objectiveMastery(attempts: AttemptLike[]): ObjectiveMastery[] {
   return OBJECTIVES.map(({ id }) => {
     const counted = attempts.filter((a) => a.objective === id && countsTowardMastery(a));
-    const score = counted.length ? counted.filter((a) => a.correct).length / counted.length : 0;
+    const right = counted.filter((a) => a.correct).length;
+    const score = right / Math.max(counted.length, MIN_COUNTED_FOR_MASTERY);
     const status: ObjectiveMastery['status'] =
       counted.length === 0
         ? 'not-started'

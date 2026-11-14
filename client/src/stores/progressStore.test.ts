@@ -91,6 +91,16 @@ describe('progress store decorations', () => {
       Promise.resolve(
         {
           '/progress': { modules: [] },
+          '/attempts': [
+            {
+              itemId: 'm6-q1',
+              objective: 'O5',
+              correct: true,
+              firstAttempt: true,
+              hintsUsed: 0,
+              at: '2026-11-14T10:00:00.000Z',
+            },
+          ],
           '/leaves': { balance: 0 },
           '/lecture-questions': [],
           '/decorations': [
@@ -106,5 +116,19 @@ describe('progress store decorations', () => {
 
     expect(useProgressStore.getState().ownedDecorations).toEqual(['apples', 'bunting']);
     expect(placedDecorations(useProgressStore.getState())).toEqual(['apples']);
+    // Past answers come back too, so the header's readiness matches the server after sign-in.
+    expect(useProgressStore.getState().attempts).toEqual([
+      expect.objectContaining({ itemId: 'm6-q1', objective: 'O5', correct: true }),
+    ]);
+    // An answer that already paid leaves on another device doesn't pay again here.
+    const before = useProgressStore.getState().leaves;
+    useProgressStore.getState().recordAttempt({
+      itemId: 'm6-q1',
+      objective: 'O5',
+      correct: true,
+      firstAttempt: true,
+      hintsUsed: 0,
+    });
+    expect(useProgressStore.getState().leaves).toBe(before);
   });
 });

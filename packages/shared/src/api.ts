@@ -74,6 +74,10 @@ export const QuizAttemptBody = z.object({
 });
 export type QuizAttemptBody = z.infer<typeof QuizAttemptBody>;
 
+/** One saved answer, as `GET /api/attempts` returns it (oldest first). */
+export const AttemptRecord = QuizAttemptBody.extend({ at: z.string() });
+export type AttemptRecord = z.infer<typeof AttemptRecord>;
+
 export const ObjectiveMastery = z.object({
   objective: ObjectiveIdSchema,
   score: z.number().min(0).max(1),

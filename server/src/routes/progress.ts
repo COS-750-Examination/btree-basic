@@ -4,6 +4,7 @@ import {
   QuizAttemptBody,
   WarmupBody,
   objectiveMastery,
+  type AttemptRecord,
   type AttemptResult,
   type LeafBonus,
   type ObjectiveId,
@@ -106,6 +107,25 @@ progressRouter.post('/hints', requireAuth, validateBody(HintBody), async (req, r
   await prisma.hintView.create({ data: { userId, itemId, hint } });
   await awardLeaves(userId, 'hintRead', `hint:${itemId}:${hint}`);
   res.status(201).json({ ok: true });
+});
+
+/** Every saved answer, so a new device or a fresh sign-in shows the same mastery as the server. */
+progressRouter.get('/attempts', requireAuth, async (req, res) => {
+  const rows = await prisma.quizAttempt.findMany({
+    where: { userId: uid(req) },
+    orderBy: { createdAt: 'asc' },
+  });
+  const attempts: AttemptRecord[] = rows.map((a) => ({
+    itemId: a.itemId,
+    objective: a.objective as ObjectiveId,
+    correct: a.correct,
+    firstAttempt: a.firstAttempt,
+    hintsUsed: a.hintsUsed,
+    ...(a.confidence ? { confidence: a.confidence as AttemptRecord['confidence'] } : {}),
+    ...(a.misconception ? { misconception: a.misconception } : {}),
+    at: a.createdAt.toISOString(),
+  }));
+  res.json(attempts);
 });
 
 progressRouter.get('/streak', requireAuth, async (req, res) => {
