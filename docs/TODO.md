@@ -27,13 +27,14 @@ Tick items off as they land, and move finished work into the CHANGELOG.
 
 - [ ] Practice activity 4, **Build the tree** (O6), is still a stub (`client/src/pages/PracticePage.tsx`).
 - [x] Badges (Explorer, Splitter, Root Raiser, Lecture Ready): show them on the Ready and Grove screens. Done 14 November 2026. The server side is ready: `GET /api/badges` returns all four, with `awardedAt` (or null while locked).
-- [ ] Drag decorations into place on the grove. The server has `PUT /api/grove/placement`, but nothing on the client calls it.
+- [x] Drag decorations into place on the grove. The server has `PUT /api/grove/placement`, but nothing on the client calls it. Done 15 November 2026.
 - [x] Friend requests: add decline and unfriend buttons, and show pending requests outside the Account page. The server side is ready: `POST /api/friends/requests/:id/decline`, `DELETE /api/friends/requests/:id` (cancel), `DELETE /api/friends/:id` (unfriend), and `GET /api/friends` now also lists `outgoing` requests. Show the 429 message ("Slow down a little and try again later") when a student sends too many requests or cheers. Done 14 November 2026.
+- [x] Friend invite links: a personal link to share, with copy, share and replace, and an add-friend page that works for guests too. Done 14 November 2026.
 - [x] Streak card: show the real streak from the server. It's currently computed on the client only. The server side is ready: `GET /api/streak` returns `{ days }`. Done 14 November 2026.
 - [x] Show reward bonuses as soon as they're earned. `POST /api/attempts` now returns `bonuses` (streak +15, ready check +60), but the client ignores them, so they only appear in the leaf count after a reload. Done 14 November 2026.
 - [x] Profile settings: change display name and password, and remember the Day/Dusk choice per account. The server side is ready: `PATCH /api/account` takes `displayName`, `theme`, and `currentPassword` with `newPassword`, and `user.theme` (null until set) comes back from sign-in and `/api/auth/session`. Apply it on sign-in when it isn't null. Done 14 November 2026.
 - [x] "Download my data" link on the Account page (`<a href="/api/account/export" download>`). The server side is ready. Done 14 November 2026.
-- [ ] Turn the mastery mini-lessons behind "Need more?" into real content. For now they just send the student back to the lesson.
+- [x] Turn the mastery mini-lessons behind "Need more?" into real content. For now they just send the student back to the lesson. Done 15 November 2026 (text written by the frontend team with Claude Code; the ID team should review it).
 - [x] Add an error boundary and an offline banner, so a failed save is shown to the student instead of failing silently. Done 14 November 2026.
 - [x] Let students take bought decorations off the tree and put them back (craft drawer). Done 14 November 2026.
 - [x] Load past answers on sign-in, so readiness doesn't drop to 0%, and make mastery percentages show progress toward mastery. Done 14 November 2026.

@@ -5,7 +5,6 @@ import { useStreak } from '../../api/hooks';
 import { streakMessage } from '../../lib/rewards';
 import { Card } from '../ui';
 
-/** Days in a row with at least one answer (from the server, in South African time). */
 export function StreakCard({ signedIn }: { signedIn: boolean }) {
   const streak = useStreak(signedIn);
   const n = streak.data?.days ?? 0;

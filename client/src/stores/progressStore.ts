@@ -1,11 +1,13 @@
 import {
   AttemptResult,
+  type Decoration,
   LEAF_REWARDS,
   MODULES,
   readiness,
   type AttemptLike,
   type AttemptRecord,
   type Confidence,
+  type DecorationPosition,
   type LeafBonus,
   type LeafReason,
 } from '@btree/shared';
@@ -40,8 +42,8 @@ interface ProgressState {
   ownedDecorations: string[];
   /** Owned decorations the student took off the tree. Bought ones start on the tree. */
   hiddenDecorations: string[];
+  decorationPositions: Record<string, DecorationPosition>;
   hintsRead: string[];
-  /** The latest server bonus (streak or ready check), shown once as a message. Not saved. */
   lastBonus: (LeafBonus & { at: number }) | null;
 
   setSignedIn: (v: boolean) => void;
@@ -60,6 +62,7 @@ interface ProgressState {
   buyDecoration: (id: string, cost: number) => boolean;
   /** Puts an owned decoration on the tree or takes it off. */
   toggleDecoration: (id: string) => void;
+  moveDecoration: (id: string, position: DecorationPosition | null) => void;
   dismissBonus: () => void;
   reset: () => void;
 }
@@ -73,6 +76,7 @@ const initial = {
   lectureQuestions: [],
   ownedDecorations: [],
   hiddenDecorations: [],
+  decorationPositions: {},
   hintsRead: [],
 };
 
@@ -82,7 +86,6 @@ const initial = {
  */
 const save = (fn: () => Promise<unknown>) => useSyncStore.getState().save(fn);
 
-/** The server awards badges while saving answers, modules and the warm-up, so reload them after. */
 const refreshBadges = () => void queryClient.invalidateQueries({ queryKey: ['badges'] });
 
 /**
@@ -98,10 +101,6 @@ export const useProgressStore = create<ProgressState>()(
           ledger: [{ amount: LEAF_REWARDS[reason], reason, at: Date.now() }, ...s.ledger],
         }));
 
-      /**
-       * The server decides the streak and ready-check bonuses, so they are added when its
-       * reply to an answer arrives. Guests never get them.
-       */
       const applyAttemptResult = (result: AttemptResult | undefined) => {
         for (const bonus of result?.bonuses ?? []) {
           const at = Date.now();
@@ -129,7 +128,7 @@ export const useProgressStore = create<ProgressState>()(
             ),
             api.get<{ balance: number }>('/leaves'),
             api.get<{ id: string; text: string }[]>('/lecture-questions'),
-            api.get<{ id: string; owned: boolean; placed: boolean }[]>('/decorations'),
+            api.get<Decoration[]>('/decorations'),
             api.get<AttemptRecord[]>('/attempts'),
           ]);
           set({
@@ -142,6 +141,11 @@ export const useProgressStore = create<ProgressState>()(
             lectureQuestions: questions,
             ownedDecorations: decorations.filter((d) => d.owned).map((d) => d.id),
             hiddenDecorations: decorations.filter((d) => d.owned && !d.placed).map((d) => d.id),
+            decorationPositions: Object.fromEntries(
+              decorations.flatMap((d) =>
+                d.owned && d.x !== null && d.y !== null ? [[d.id, { x: d.x, y: d.y }]] : [],
+              ),
+            ),
           });
         },
 
@@ -262,6 +266,26 @@ export const useProgressStore = create<ProgressState>()(
           });
           if (s.signedIn)
             save(() => api.put('/grove/placement', { items: [{ decorationId: id, placed }] }));
+        },
+
+        moveDecoration: (id, position) => {
+          const s = get();
+          if (!s.ownedDecorations.includes(id)) return;
+          const { [id]: _old, ...others } = s.decorationPositions;
+          set({ decorationPositions: position ? { ...others, [id]: position } : others });
+          if (s.signedIn)
+            save(() =>
+              api.put('/grove/placement', {
+                items: [
+                  {
+                    decorationId: id,
+                    placed: !s.hiddenDecorations.includes(id),
+                    x: position?.x ?? null,
+                    y: position?.y ?? null,
+                  },
+                ],
+              }),
+            );
         },
 
         dismissBonus: () => set({ lastBonus: null }),

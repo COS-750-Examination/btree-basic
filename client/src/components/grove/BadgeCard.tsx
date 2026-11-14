@@ -14,11 +14,9 @@ const ICONS: Record<BadgeId, LucideIcon> = {
 
 interface Props {
   signedIn: boolean;
-  /** One column for a sidebar (Grove); two columns on wider screens otherwise (Ready). */
   compact?: boolean;
 }
 
-/** The four badges. Earned ones show the date; locked ones say how to earn them. */
 export function BadgeCard({ signedIn, compact = false }: Props) {
   const query = useBadges(signedIn);
   const badges = signedIn ? (query.data ?? LOCKED_BADGES) : LOCKED_BADGES;

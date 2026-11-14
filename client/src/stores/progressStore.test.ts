@@ -87,6 +87,33 @@ describe('progress store decorations', () => {
     });
   });
 
+  it('moves a decoration, saves where it went, and moves it back', () => {
+    const put = vi.spyOn(api, 'put').mockResolvedValue(undefined);
+    own('apples');
+    useProgressStore.getState().setSignedIn(true);
+
+    useProgressStore.getState().moveDecoration('apples', { x: 40, y: -16 });
+    expect(useProgressStore.getState().decorationPositions).toEqual({ apples: { x: 40, y: -16 } });
+    expect(put).toHaveBeenLastCalledWith('/grove/placement', {
+      items: [{ decorationId: 'apples', placed: true, x: 40, y: -16 }],
+    });
+
+    useProgressStore.getState().moveDecoration('apples', null);
+    expect(useProgressStore.getState().decorationPositions).toEqual({});
+    expect(put).toHaveBeenLastCalledWith('/grove/placement', {
+      items: [{ decorationId: 'apples', placed: true, x: null, y: null }],
+    });
+  });
+
+  it("keeps a guest's moves on this device only", () => {
+    const put = vi.spyOn(api, 'put');
+    own('apples');
+    useProgressStore.getState().moveDecoration('apples', { x: 5, y: 5 });
+    useProgressStore.getState().moveDecoration('songbird', { x: 5, y: 5 });
+    expect(useProgressStore.getState().decorationPositions).toEqual({ apples: { x: 5, y: 5 } });
+    expect(put).not.toHaveBeenCalled();
+  });
+
   it('loads which owned decorations are off the tree on sign-in', async () => {
     vi.spyOn(api, 'get').mockImplementation((path: string) =>
       Promise.resolve(
@@ -105,9 +132,9 @@ describe('progress store decorations', () => {
           '/leaves': { balance: 0 },
           '/lecture-questions': [],
           '/decorations': [
-            { id: 'apples', owned: true, placed: true },
-            { id: 'bunting', owned: true, placed: false },
-            { id: 'songbird', owned: false, placed: false },
+            { id: 'apples', owned: true, placed: true, x: 12, y: -8 },
+            { id: 'bunting', owned: true, placed: false, x: null, y: null },
+            { id: 'songbird', owned: false, placed: false, x: null, y: null },
           ],
         }[path],
       ),
@@ -117,6 +144,7 @@ describe('progress store decorations', () => {
 
     expect(useProgressStore.getState().ownedDecorations).toEqual(['apples', 'bunting']);
     expect(placedDecorations(useProgressStore.getState())).toEqual(['apples']);
+    expect(useProgressStore.getState().decorationPositions).toEqual({ apples: { x: 12, y: -8 } });
     // Past answers come back too, so the header's readiness matches the server after sign-in.
     expect(useProgressStore.getState().attempts).toEqual([
       expect.objectContaining({ itemId: 'm6-q1', objective: 'O5', correct: true }),

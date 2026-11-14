@@ -24,6 +24,15 @@ export function lessonMarkdown(file: string): string {
 
 export const lessonFor = (moduleId: number) => lessons.find((l) => l.moduleId === moduleId);
 
+const miniLessons = import.meta.glob('../content/mini-lessons/*.md', {
+  query: '?raw',
+  import: 'default',
+  eager: true,
+}) as Record<string, string>;
+
+export const miniLesson = (objective: string): string | undefined =>
+  miniLessons[`../content/mini-lessons/${objective}.md`];
+
 const quizFiles = import.meta.glob('../content/quizzes/*.json', { import: 'default', eager: true });
 export const quizzes = Object.values(quizFiles)
   .map((q) => QuizFile.parse(q))

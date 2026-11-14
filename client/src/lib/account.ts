@@ -1,10 +1,5 @@
 import { ApiRequestError } from '../api/client';
 
-/**
- * Text for a failed account change. "Current password is incorrect" (400) and the 429
- * "Slow down" message are shown as the server wrote them; a rejected field shows the first
- * field message; anything else gets a general message.
- */
 export function accountErrorText(e: unknown): string {
   if (e instanceof ApiRequestError) {
     const issue = Array.isArray(e.details)

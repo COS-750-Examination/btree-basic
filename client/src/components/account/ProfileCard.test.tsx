@@ -25,49 +25,80 @@ function wrapper({ children }: { children: ReactNode }) {
 
 afterEach(() => vi.restoreAllMocks());
 
-async function changePassword(current: string, next: string, confirm = next) {
+const startEditing = () => userEvent.click(screen.getByRole('button', { name: 'Edit profile' }));
+const save = () => userEvent.click(screen.getByRole('button', { name: 'Save changes' }));
+
+async function fillPassword(current: string, next: string, confirm = next) {
   await userEvent.type(screen.getByLabelText('Current password'), current);
   await userEvent.type(screen.getByLabelText('New password'), next);
   await userEvent.type(screen.getByLabelText('Confirm new password'), confirm);
-  await userEvent.click(screen.getByRole('button', { name: 'Change password' }));
 }
 
-describe('ProfileCard name', () => {
-  it('saves a new display name and updates the signed-in user', async () => {
-    const patch = vi.spyOn(api, 'patch').mockResolvedValue({ ...user, displayName: 'Sam M' });
+describe('ProfileCard view', () => {
+  it('shows the profile without any fields until the pen is clicked', async () => {
     render(<ProfileCard user={user} />, { wrapper });
+    expect(screen.getByText('Sam')).toBeInTheDocument();
+    expect(screen.getByText('sam@tuks.co.za')).toBeInTheDocument();
+    expect(screen.queryByRole('textbox')).not.toBeInTheDocument();
 
+    await startEditing();
+    expect(screen.getByLabelText('Display name')).toHaveFocus();
+    expect(screen.getByRole('button', { name: 'Save changes' })).toBeDisabled();
+  });
+
+  it('goes back to the view on Cancel without saving', async () => {
+    const patch = vi.spyOn(api, 'patch');
+    render(<ProfileCard user={user} />, { wrapper });
+    await startEditing();
     await userEvent.type(screen.getByLabelText('Display name'), ' M');
-    await userEvent.click(screen.getByRole('button', { name: 'Save name' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Cancel' }));
 
-    expect(patch).toHaveBeenCalledWith('/account', { displayName: 'Sam M' }, expect.anything());
-    expect(await screen.findByRole('status')).toHaveTextContent('Name saved.');
-    expect(qc.getQueryData(['me'])).toMatchObject({ displayName: 'Sam M' });
+    expect(patch).not.toHaveBeenCalled();
+    expect(screen.queryByRole('textbox')).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Edit profile' })).toHaveFocus();
   });
 });
 
-describe('ProfileCard password', () => {
-  it('changes the password and clears the fields', async () => {
+describe('ProfileCard saving', () => {
+  it('saves a new name and returns to the view', async () => {
+    const patch = vi.spyOn(api, 'patch').mockResolvedValue({ ...user, displayName: 'Sam M' });
+    render(<ProfileCard user={user} />, { wrapper });
+    await startEditing();
+    await userEvent.type(screen.getByLabelText('Display name'), ' M');
+    await save();
+
+    expect(patch).toHaveBeenCalledWith('/account', { displayName: 'Sam M' }, expect.anything());
+    expect(await screen.findByRole('status')).toHaveTextContent('Changes saved.');
+    expect(qc.getQueryData(['me'])).toMatchObject({ displayName: 'Sam M' });
+  });
+
+  it('saves the name and password together', async () => {
     const patch = vi.spyOn(api, 'patch').mockResolvedValue(user);
     render(<ProfileCard user={user} />, { wrapper });
-    await changePassword('old-pass-123', 'new-pass-456');
+    await startEditing();
+    await userEvent.type(screen.getByLabelText('Display name'), ' M');
+    await fillPassword('old-pass-123', 'new-pass-456');
+    await save();
 
     expect(patch).toHaveBeenCalledWith(
       '/account',
-      { currentPassword: 'old-pass-123', newPassword: 'new-pass-456' },
+      { displayName: 'Sam M', currentPassword: 'old-pass-123', newPassword: 'new-pass-456' },
       expect.anything(),
     );
-    expect(await screen.findByRole('status')).toHaveTextContent('Password changed.');
-    expect(screen.getByLabelText('Current password')).toHaveValue('');
+    expect(await screen.findByText('Changes saved.')).toBeInTheDocument();
   });
 
-  it('shows "Current password is incorrect" from the server', async () => {
+  it('stays in edit mode and shows "Current password is incorrect"', async () => {
     vi.spyOn(api, 'patch').mockRejectedValue(
       new ApiRequestError(400, 'Current password is incorrect'),
     );
     render(<ProfileCard user={user} />, { wrapper });
-    await changePassword('wrong-pass', 'new-pass-456');
+    await startEditing();
+    await fillPassword('wrong-pass', 'new-pass-456');
+    await save();
+
     expect(await screen.findByRole('alert')).toHaveTextContent('Current password is incorrect');
+    expect(screen.getByLabelText('Current password')).toBeInTheDocument();
   });
 
   it('shows the slow-down message after too many changes', async () => {
@@ -75,24 +106,34 @@ describe('ProfileCard password', () => {
       new ApiRequestError(429, 'Slow down a little and try again later'),
     );
     render(<ProfileCard user={user} />, { wrapper });
-    await changePassword('old-pass-123', 'new-pass-456');
+    await startEditing();
+    await fillPassword('old-pass-123', 'new-pass-456');
+    await save();
     expect(await screen.findByRole('alert')).toHaveTextContent(
       'Slow down a little and try again later',
     );
   });
 
-  it('checks length and matching before sending anything', async () => {
+  it('checks the password fields before sending anything', async () => {
     const patch = vi.spyOn(api, 'patch');
     render(<ProfileCard user={user} />, { wrapper });
+    await startEditing();
 
-    await changePassword('old-pass-123', 'short');
-    expect(screen.getByRole('alert')).toHaveTextContent('Use at least 8 characters');
+    await userEvent.type(screen.getByLabelText('New password'), 'new-pass-456');
+    await save();
+    expect(screen.getByRole('alert')).toHaveTextContent(/fill in all three/i);
+
+    await userEvent.type(screen.getByLabelText('Current password'), 'old-pass-123');
+    await userEvent.type(screen.getByLabelText('Confirm new password'), 'new-pass-789');
+    await save();
+    expect(screen.getByRole('alert')).toHaveTextContent("The new passwords don't match.");
 
     await userEvent.clear(screen.getByLabelText('New password'));
     await userEvent.clear(screen.getByLabelText('Confirm new password'));
-    await userEvent.clear(screen.getByLabelText('Current password'));
-    await changePassword('old-pass-123', 'new-pass-456', 'new-pass-789');
-    expect(screen.getByRole('alert')).toHaveTextContent("The new passwords don't match.");
+    await userEvent.type(screen.getByLabelText('New password'), 'short');
+    await userEvent.type(screen.getByLabelText('Confirm new password'), 'short');
+    await save();
+    expect(screen.getByRole('alert')).toHaveTextContent('Use at least 8 characters');
     expect(patch).not.toHaveBeenCalled();
   });
 });

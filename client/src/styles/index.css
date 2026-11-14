@@ -64,3 +64,19 @@
     background: white;
   }
 }
+
+.deco-movable {
+  cursor: grab;
+  touch-action: none;
+  outline: none;
+}
+
+.deco-movable[data-dragging] {
+  cursor: grabbing;
+}
+
+.deco-movable:hover,
+.deco-movable:focus-visible,
+.deco-movable[data-dragging] {
+  filter: drop-shadow(0 0 2px var(--ink)) drop-shadow(0 0 6px var(--highlight));
+}

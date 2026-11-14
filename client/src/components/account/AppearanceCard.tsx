@@ -8,10 +8,7 @@ const THEME_OPTIONS: { id: Theme; label: string; Icon: typeof Sun }[] = [
   { id: 'dusk', label: 'Dusk', Icon: Moon },
 ];
 
-/**
- * Day / Dusk theme picker. Guests keep it on this device; signed-in students also save it
- * to their account, so it follows them to any device they sign in on.
- */
+/** Day / Dusk theme picker. Saved on this device, so guests can use it too. */
 export function AppearanceCard({ signedIn }: { signedIn: boolean }) {
   const { theme, setTheme } = useThemeStore();
   const update = useUpdateAccount();

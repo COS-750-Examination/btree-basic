@@ -25,8 +25,36 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ### Added
 
+- **Mini-lessons for every learning objective (O1–O8)** (FRONTEND_PLAN Task 8). A short recap for students who are stuck: the key idea, a worked example, common mistakes ("Watch out"), and a "Check yourself" question with a **Show answer** button.
+  - Opened from **Need more?** on the quiz (for the current question's objective), **Stuck?** on Practice, and a **Mini-lesson (3 min)** link under each objective that isn't mastered yet on Ready. Each page links back to where the student came from, to a matching practice activity, and to the full lesson.
+  - Content lives in `client/src/content/mini-lessons/O1.md` to `O8.md`, so the ID team can edit it like the lessons. It uses the same trees and rules as the lessons (order 3, promote the left middle key, predecessor on delete, left sibling first).
+  - `content/miniLessons.test.ts` runs every worked example and answer through the B-tree engine, so the text can't drift from what the visualiser does.
+  - New route `/mini-lessons/:objective`.
+- **Drag decorations into place** (FRONTEND_PLAN Task 7). With the craft drawer open (**Decorate** on My grove), students drag a decoration on the tree to a new spot, or press Tab to pick one and move it with the arrow keys (Shift for bigger steps). Decorations can't leave the scene. **Move back** in the drawer returns one to its usual spot.
+  - Positions are offsets from each decoration's usual spot in the scene's 832×480 frame, saved with `PUT /api/grove/placement` (`x`/`y`, or `null` to reset; limited to the scene's size). Guests' positions stay on the device for the session.
+  - `GET /api/decorations` now returns `x` and `y`, and a friend's grove returns `positions`, so friends see decorations where they were placed.
+  - No database change: `UserDecoration` already had `x` and `y`.
+  - Tests: `GroveTree.test.tsx` (5), 2 store cases, 2 server placement cases and 1 friend grove case.
+- **Friend request notifications.** The round initials button (your account) shows a small red counter for new friend requests, e.g. "2", read to screen readers as "Account: Sam, 2 new friend requests". Requests are re-checked every minute.
+  - Opening the Account page clears the counter. Requests you leave unanswered are not counted again: later only requests that arrived after your last visit are counted.
+  - The "seen" time is saved on the account (`User.requestsSeenAt`, migration `20261115090000_requests_seen`), so it survives signing out and in, clearing site data and switching devices.
+  - `GET /api/friends` now returns `sentAt` on each incoming request and `requestsSeenAt`. New `POST /api/friends/requests/seen` with `{ upTo }` moves the seen time forward (never back, never into the future). The seen time is included in "Download my data".
+  - Tests: 3 server cases, `RequestNotifications.test.tsx` (4) and 2 helper cases.
+- **Cheer notifications.** A cheer used to appear only on the sender's and receiver's friend-grove pages, so the student who got it never noticed.
+  - **My grove** in the header (and the phone menu button) shows a count of new cheers, e.g. "My grove 1", read to screen readers as "My grove, 1 new cheer". Cheers are re-checked every minute.
+  - A **Cheers for you** card on My grove lists the latest five cheers you received (who, which module, any message, the date), with a **New** tag on ones you hadn't seen. Opening My grove marks them as seen, which clears the count. Seen times are kept on the device, per account.
+  - `GET /api/cheers` now also returns `fromId` and `toId`, so cheers are matched by student, not by display name (two students can share a name). The friend's grove page uses them too.
+  - Tests: `stores/cheersStore.test.ts`, `CheersCard.test.tsx`, and the server cheers test checks the ids.
+- **My grove sidebar order:** leaves, streak, Friends' groves, Cheers for you, then Badges (Friends' groves was below Badges).
+- **Friend invite links.** Each student has a personal link (`/add/K7Q2XMAB`) to share with classmates, for example in a group chat.
+  - **Account → Friends** shows "Add by email" first, then "Or share your invite link" with **Copy link** and, on phones, **Share** (the device's share sheet). **Make a new link** replaces it after a confirm step, and the old link stops working.
+  - **Opening a link** shows "Add Thabo as a friend?" with **Send friend request**. The owner then accepts it as usual. If the owner had already asked you, you become friends at once. The page also handles your own link, existing friends, a request already sent, and a link that no longer works.
+  - **Guests** who open a link are asked to sign in or create an account, then return to the invite. Login and register now accept a `?next=` page on this site.
+  - **Privacy:** the preview shows only the owner's display name, never their email, and only to signed-in students holding the link. Codes are 8 characters from a 31-letter alphabet (about 850 billion combinations). Looking codes up is limited to 30 per hour, and sending through a link counts toward the 10 friend requests per hour.
+  - **Server:** `User.inviteCode` (unique, created on first use; migration `20261114140000_invite_code`), and `GET /api/invites/mine`, `POST /api/invites/mine/reset`, `GET /api/invites/:code` and `POST /api/invites/:code`. The code is included in "Download my data".
+  - Tests: `server/test/invites.test.ts` (6), `AddFriendPage.test.tsx` (6), 2 invite cases in `FriendsCard.test.tsx` and `lib/invite.test.ts`.
 - **Account settings** (FRONTEND_PLAN Task 4).
-  - **Profile** card on the Account page: change your **display name** (the header and friends see it at once) and your **password** (current, new and confirm). The length and matching checks run before anything is sent; "Current password is incorrect" and the 429 "Slow down a little and try again later" show inline. Other devices stay signed in after a password change (a known prototype decision).
+  - **Profile** card on the Account page. It shows your name, email and a hidden password, with a round pen button (**Edit profile**). The pen opens a form to change your **display name** (the header and friends see it at once) and your **password** (current, new and confirm; leave them empty to keep it), with **Cancel** and **Save changes** at the bottom. Saving sends one request, so a wrong password saves nothing, and a successful save returns to the view with "Changes saved." The length and matching checks run before anything is sent; "Current password is incorrect" and the 429 "Slow down a little and try again later" show inline. Other devices stay signed in after a password change (a known prototype decision).
   - **Theme follows the account.** A signed-in student's Day/Dusk choice is saved with `PATCH /api/account`, and applied on sign-in, so it comes back on another device or after clearing site data. Guests keep it on the device only. The Appearance card says which applies.
   - **Download my data:** a "Your data" card above "Delete account" downloads `btree-basic-data-<date>.json`, with a line explaining it is the student's right under POPIA.
   - `api.patch` and `useUpdateAccount` (updates `['me']` from the reply). `themeStore` now uses the shared `Theme` type. The Appearance card moved to `components/account/`.

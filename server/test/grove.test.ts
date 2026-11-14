@@ -173,6 +173,37 @@ describe.skipIf(!hasDb)('grove routes (database)', () => {
       expect(theirs).toMatchObject({ placed: true, x: null, y: null });
     });
 
+    it('returns saved positions, and null resets one to its default spot', async () => {
+      const s = await fresh('Mover');
+      await prisma.userDecoration.create({ data: { userId: s.id, decorationId: 'apples' } });
+
+      await s.agent
+        .put('/api/grove/placement')
+        .send({ items: [{ decorationId: 'apples', placed: true, x: -40.5, y: 12 }] })
+        .expect(204);
+      const moved = (await s.agent.get('/api/decorations').expect(200)).body.find(
+        (d: { id: string }) => d.id === 'apples',
+      );
+      expect(moved).toMatchObject({ owned: true, placed: true, x: -40.5, y: 12 });
+
+      await s.agent
+        .put('/api/grove/placement')
+        .send({ items: [{ decorationId: 'apples', placed: true, x: null, y: null }] })
+        .expect(204);
+      const reset = (await s.agent.get('/api/decorations').expect(200)).body.find(
+        (d: { id: string }) => d.id === 'apples',
+      );
+      expect(reset).toMatchObject({ x: null, y: null });
+    });
+
+    it('rejects a position far outside the scene with 400', async () => {
+      const s = await fresh('Far');
+      await s.agent
+        .put('/api/grove/placement')
+        .send({ items: [{ decorationId: 'apples', placed: true, x: 5000, y: 0 }] })
+        .expect(400);
+    });
+
     it('rejects more than 50 items with 400', async () => {
       const s = await fresh('Too many');
       const items = Array.from({ length: 51 }, () => ({ decorationId: 'apples', placed: true }));

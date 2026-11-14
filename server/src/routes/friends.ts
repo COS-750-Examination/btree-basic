@@ -3,6 +3,7 @@ import {
   CheerBody,
   FRIEND_REQUESTS_PER_HOUR,
   FriendRequestBody,
+  RequestsSeenBody,
   MODULES,
   type FriendGrove,
   type FriendsList,
@@ -19,7 +20,10 @@ import { validateBody } from '../middleware/validate';
 export const friendsRouter = Router();
 
 const HOUR_MS = 60 * 60 * 1000;
-const friendRequestLimiter = perUserLimiter({ windowMs: HOUR_MS, limit: FRIEND_REQUESTS_PER_HOUR });
+export const friendRequestLimiter = perUserLimiter({
+  windowMs: HOUR_MS,
+  limit: FRIEND_REQUESTS_PER_HOUR,
+});
 const cheerLimiter = perUserLimiter({ windowMs: HOUR_MS, limit: CHEERS_PER_HOUR });
 
 const between = (a: string, b: string) => [
@@ -47,6 +51,10 @@ async function summary(userId: string, since: Date): Promise<FriendSummary> {
 
 friendsRouter.get('/friends', requireAuth, async (req, res) => {
   const me = uid(req);
+  const { requestsSeenAt: seen } = await prisma.user.findUniqueOrThrow({
+    where: { id: me },
+    select: { requestsSeenAt: true },
+  });
   const rows = await prisma.friendship.findMany({
     where: { OR: [{ requesterId: me }, { addresseeId: me }] },
     include: {
@@ -67,10 +75,15 @@ friendsRouter.get('/friends', requireAuth, async (req, res) => {
     friends,
     incoming: pending
       .filter((r) => r.addresseeId === me)
-      .map((r) => ({ id: r.id, fromName: r.requester.displayName })),
+      .map((r) => ({
+        id: r.id,
+        fromName: r.requester.displayName,
+        sentAt: r.createdAt.toISOString(),
+      })),
     outgoing: pending
       .filter((r) => r.requesterId === me)
       .map((r) => ({ id: r.id, email: r.addressee.email, sentAt: r.createdAt.toISOString() })),
+    requestsSeenAt: seen?.toISOString() ?? null,
   };
   res.json(list);
 });
@@ -107,6 +120,21 @@ friendsRouter.post(
       update: {},
     });
     res.status(202).json({ ok: true });
+  },
+);
+
+friendsRouter.post(
+  '/friends/requests/seen',
+  requireAuth,
+  validateBody(RequestsSeenBody),
+  async (req, res) => {
+    const me = uid(req);
+    const upTo = new Date(Math.min(Date.parse((req.body as RequestsSeenBody).upTo), Date.now()));
+    await prisma.user.updateMany({
+      where: { id: me, OR: [{ requestsSeenAt: null }, { requestsSeenAt: { lt: upTo } }] },
+      data: { requestsSeenAt: upTo },
+    });
+    res.status(204).end();
   },
 );
 
@@ -155,7 +183,7 @@ friendsRouter.get('/friends/:id/grove', requireAuth, async (req, res) => {
     prisma.moduleProgress.findMany({ where: { userId: friendId }, orderBy: { moduleId: 'asc' } }),
     prisma.userDecoration.findMany({
       where: { userId: friendId, placed: true },
-      select: { decorationId: true },
+      select: { decorationId: true, x: true, y: true },
     }),
     streakDays(friendId),
   ]);
@@ -165,6 +193,11 @@ friendsRouter.get('/friends/:id/grove', requireAuth, async (req, res) => {
     plantedAt: user.plantedAt.toISOString(),
     streakDays: streak,
     decorations: decorations.map((d) => d.decorationId),
+    positions: Object.fromEntries(
+      decorations.flatMap((d) =>
+        d.x !== null && d.y !== null ? [[d.decorationId, { x: d.x, y: d.y }]] : [],
+      ),
+    ),
     completedModules: completed,
     currentModule: MODULES.map((m) => m.id).find((id) => !completed.includes(id)) ?? null,
   };
@@ -199,6 +232,8 @@ friendsRouter.get('/cheers', requireAuth, async (req, res) => {
   res.json(
     rows.map((c) => ({
       id: c.id,
+      fromId: c.fromId,
+      toId: c.toId,
       fromName: c.from.displayName,
       toName: c.to.displayName,
       message: c.message,

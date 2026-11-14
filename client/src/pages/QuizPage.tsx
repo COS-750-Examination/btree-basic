@@ -1,4 +1,10 @@
-import { MODULES, REMEDIATION_THRESHOLD, type QuizFile, type QuizItem } from '@btree/shared';
+import {
+  MODULES,
+  OBJECTIVES,
+  REMEDIATION_THRESHOLD,
+  type QuizFile,
+  type QuizItem,
+} from '@btree/shared';
 import { useState } from 'react';
 import { Link, useParams } from 'react-router';
 import { HintLadder } from '../components/quiz/HintLadder';
@@ -14,6 +20,7 @@ import {
   ProgressSegments,
 } from '../components/ui';
 import { quizFor, quizzes } from '../lib/content';
+import { miniLessonPath } from '../lib/miniLessons';
 import { moduleStatus, useProgressStore } from '../stores/progressStore';
 
 /** Where "Practise with new keys" leads after a low score, per module. */
@@ -179,10 +186,26 @@ function QuizQuestion({
         />
         <Card>
           <CardTitle>Need more?</CardTitle>
-          <Link to={`/lessons/${moduleId}`} className="flex gap-2 font-bold hover:underline">
-            <LeafIcon className="h-4 w-4 shrink-0" />
-            Mini-lesson: {moduleLabel}
-          </Link>
+          <ul className="space-y-3 font-bold">
+            <li>
+              <Link
+                to={miniLessonPath(item.objective, `/quiz/${moduleId}`)}
+                className="flex gap-2 hover:underline"
+              >
+                <LeafIcon className="h-4 w-4 shrink-0" />
+                Mini-lesson: {OBJECTIVES.find(
+                  (o) => o.id === item.objective,
+                )?.label.toLowerCase()}{' '}
+                (3 min)
+              </Link>
+            </li>
+            <li>
+              <Link to={`/lessons/${moduleId}`} className="flex gap-2 hover:underline">
+                <LeafIcon className="h-4 w-4 shrink-0" />
+                Full lesson: {moduleLabel}
+              </Link>
+            </li>
+          </ul>
         </Card>
       </aside>
     </div>

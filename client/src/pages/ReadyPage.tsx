@@ -25,6 +25,7 @@ import {
   StatusBadge,
 } from '../components/ui';
 import { masteryHint } from '../lib/mastery';
+import { miniLessonPath } from '../lib/miniLessons';
 import { useLocalReadiness, useProgressStore } from '../stores/progressStore';
 
 /** Where to revisit when an objective is not yet mastered. */
@@ -120,6 +121,15 @@ export function ReadyPage() {
                         <span className="text-ink-muted text-small block">
                           {masteryHint(o.score, o.counted)}
                         </span>
+                      )}
+                      {o.status !== 'mastered' && (
+                        <Link
+                          to={miniLessonPath(o.objective, '/ready')}
+                          className="no-print text-small block font-bold underline"
+                          aria-label={`Mini-lesson: ${meta.label}`}
+                        >
+                          Mini-lesson (3 min)
+                        </Link>
                       )}
                     </span>
                     <ProgressBar
