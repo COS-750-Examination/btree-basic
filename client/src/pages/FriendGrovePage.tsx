@@ -62,7 +62,7 @@ export function FriendGrovePage() {
   const stage = GROWTH_STAGES.find((s) => s.id === f.stage)?.label ?? '';
   const first = f.displayName.split(' ')[0];
   const theirCheers = (cheers.data ?? [])
-    .filter((c) => c.toName === f.displayName || c.fromName === f.displayName)
+    .filter((c) => c.toId === f.id || c.fromId === f.id)
     .slice(0, 5);
 
   return (
@@ -190,7 +190,7 @@ export function FriendGrovePage() {
                 {theirCheers.map((c) => (
                   <li key={c.id} className="flex items-center gap-2">
                     <Avatar name={c.fromName} />
-                    {c.fromName === f.displayName ? `${first} cheered you` : 'You sent a cheer'}
+                    {c.fromId === f.id ? `${first} cheered you` : 'You sent a cheer'}
                     {c.moduleId ? ` on Module ${c.moduleId}` : ''}
                   </li>
                 ))}

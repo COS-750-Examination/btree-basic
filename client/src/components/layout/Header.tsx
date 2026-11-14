@@ -3,6 +3,7 @@ import { Menu, Sprout, UserRound, X } from 'lucide-react';
 import { useState } from 'react';
 import { Link, NavLink } from 'react-router';
 import { useMe } from '../../api/hooks';
+import { useNewCheers } from '../../stores/cheersStore';
 import { useLocalReadiness } from '../../stores/progressStore';
 import { Avatar } from '../ui/Avatar';
 import { cn } from '../ui/cn';
@@ -23,11 +24,45 @@ const navClass = ({ isActive }: { isActive: boolean }) =>
     isActive ? 'bg-highlight text-on-highlight' : 'bg-paper text-ink hover:bg-highlight/60',
   );
 
+function NavItem({
+  to,
+  label,
+  count,
+  onClick,
+}: {
+  to: string;
+  label: string;
+  count: number;
+  onClick?: () => void;
+}) {
+  const news = count === 1 ? '1 new cheer' : `${count} new cheers`;
+  return (
+    <NavLink
+      to={to}
+      className={(s) => cn(navClass(s), 'inline-flex items-center gap-1.5')}
+      onClick={onClick}
+      aria-label={count ? `${label}, ${news}` : undefined}
+    >
+      {label}
+      {count > 0 && (
+        <span
+          aria-hidden
+          className="bg-leaf text-on-leaf rounded-pill text-small min-w-5 px-1.5 text-center leading-5"
+        >
+          {count}
+        </span>
+      )}
+    </NavLink>
+  );
+}
+
 export function Header() {
   const [open, setOpen] = useState(false);
   const r = useLocalReadiness();
   const me = useMe();
   const stage = GROWTH_STAGES.find((s) => s.id === r.stage)?.label ?? 'Seed';
+  const newCheers = useNewCheers().length;
+  const countFor = (to: string) => (to === '/grove' ? newCheers : 0);
 
   return (
     <header className="bg-sky-200">
@@ -39,9 +74,7 @@ export function Header() {
 
         <nav aria-label="Main" className="mx-auto hidden gap-2 md:flex">
           {NAV.map((n) => (
-            <NavLink key={n.to} to={n.to} className={navClass}>
-              {n.label}
-            </NavLink>
+            <NavItem key={n.to} to={n.to} label={n.label} count={countFor(n.to)} />
           ))}
         </nav>
 
@@ -88,13 +121,21 @@ export function Header() {
           )}
           <button
             type="button"
-            className="bg-paper shadow-paper-stack-sm rounded-pill grid h-10 w-10 place-items-center md:hidden"
+            className="bg-paper shadow-paper-stack-sm rounded-pill relative grid h-10 w-10 place-items-center md:hidden"
             aria-expanded={open}
             aria-controls="mobile-nav"
-            aria-label={open ? 'Close menu' : 'Open menu'}
+            aria-label={
+              (open ? 'Close menu' : 'Open menu') + (newCheers && !open ? ', new cheers' : '')
+            }
             onClick={() => setOpen((o) => !o)}
           >
             {open ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+            {newCheers > 0 && !open && (
+              <span
+                aria-hidden
+                className="bg-leaf border-paper rounded-pill absolute top-0 right-0 h-3 w-3 border-2"
+              />
+            )}
           </button>
         </div>
       </div>
@@ -106,9 +147,13 @@ export function Header() {
           className="mx-auto flex max-w-6xl flex-wrap gap-2 px-4 pt-3 md:hidden"
         >
           {NAV.map((n) => (
-            <NavLink key={n.to} to={n.to} className={navClass} onClick={() => setOpen(false)}>
-              {n.label}
-            </NavLink>
+            <NavItem
+              key={n.to}
+              to={n.to}
+              label={n.label}
+              count={countFor(n.to)}
+              onClick={() => setOpen(false)}
+            />
           ))}
           <NavLink
             to={me.data ? '/ready' : '/login'}

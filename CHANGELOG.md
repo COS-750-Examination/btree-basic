@@ -25,6 +25,12 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ### Added
 
+- **Cheer notifications.** A cheer used to appear only on the sender's and receiver's friend-grove pages, so the student who got it never noticed.
+  - **My grove** in the header (and the phone menu button) shows a count of new cheers, e.g. "My grove 1", read to screen readers as "My grove, 1 new cheer". Cheers are re-checked every minute.
+  - A **Cheers for you** card on My grove lists the latest five cheers you received (who, which module, any message, the date), with a **New** tag on ones you hadn't seen. Opening My grove marks them as seen, which clears the count. Seen times are kept on the device, per account.
+  - `GET /api/cheers` now also returns `fromId` and `toId`, so cheers are matched by student, not by display name (two students can share a name). The friend's grove page uses them too.
+  - Tests: `stores/cheersStore.test.ts`, `CheersCard.test.tsx`, and the server cheers test checks the ids.
+- **My grove sidebar order:** leaves, streak, Friends' groves, Cheers for you, then Badges (Friends' groves was below Badges).
 - **Friend invite links.** Each student has a personal link (`/add/K7Q2XMAB`) to share with classmates, for example in a group chat.
   - **Account → Friends** shows "Add by email" first, then "Or share your invite link" with **Copy link** and, on phones, **Share** (the device's share sheet). **Make a new link** replaces it after a confirm step, and the old link stops working.
   - **Opening a link** shows "Add Thabo as a friend?" with **Send friend request**. The owner then accepts it as usual. If the owner had already asked you, you become friends at once. The page also handles your own link, existing friends, a request already sent, and a link that no longer works.

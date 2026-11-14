@@ -1029,6 +1029,43 @@ Several fonts were tried in turn at the requester's direction: Spectral, Gravita
 
 ---
 
+## Entry 021: Cheer notifications and My grove order
+
+| Field        | Detail                                                                                                                                                      |
+| ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Date         | 15 November 2026                                                                                                                                            |
+| Requested by | Taylor Sergel, frontend                                                                                                                                     |
+| Tool         | Claude Code (Anthropic), model Claude Opus 5.5                                                                                                              |
+| Scope        | `routes/friends.ts`, shared `Cheer`, `stores/cheersStore.ts`, `CheersCard.tsx`, `Header.tsx`, `GrovePage.tsx`, `FriendGrovePage.tsx`, `api/hooks.ts`, tests |
+| Status       | Completed; left uncommitted on branch `feat/ui-updates` for review                                                                                          |
+
+### Request
+
+> A student can send a friend a cheer, but the friend gets no notification anywhere. Please add one, and on My grove place Friends' groves above Badges.
+
+### Clarifications provided
+
+- The notification is a count on **My grove** in the header (and a dot on the phone menu button), plus a **Cheers for you** card on My grove. Opening My grove marks cheers as seen.
+- "Seen" is stored on the device per account, so no database change was needed. A student on a new device sees their recent cheers as new once.
+- Cheers are re-checked every minute while the app is open.
+
+### Deliverables
+
+- **Server and shared:** `fromId` and `toId` on each cheer.
+- **Client:** `cheersStore.ts` (seen times and the new-cheer count), header count, `CheersCard.tsx`, sidebar reorder, friend grove matching by id.
+- **Tests:** 3 store cases, 2 card cases, updated server cheers test.
+
+### Verification summary
+
+| Check                                                                                                                                | Result         |
+| ------------------------------------------------------------------------------------------------------------------------------------ | -------------- |
+| Client tests                                                                                                                         | 118 / 118 pass |
+| Server tests                                                                                                                         | 111 / 111 pass |
+| Browser check (Chrome, two friends): A cheers B; B's header shows "My grove 1"; My grove lists the cheer as New and the count clears | Pass           |
+| ESLint, TypeScript (strict), Prettier, build                                                                                         | Pass           |
+
+---
+
 ## Entry template
 
 ```markdown

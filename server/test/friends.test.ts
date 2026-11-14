@@ -185,8 +185,20 @@ describe.skipIf(!hasDb)('friends routes (database)', () => {
       const res = await a.agent.get('/api/cheers').expect(200);
 
       expect(res.body).toHaveLength(2);
-      expect(res.body[0]).toMatchObject({ message: 'newer', fromName: 'Alpha', toName: 'Beta' });
-      expect(res.body[1]).toMatchObject({ message: 'older', fromName: 'Beta', toName: 'Alpha' });
+      expect(res.body[0]).toMatchObject({
+        message: 'newer',
+        fromId: a.id,
+        toId: b.id,
+        fromName: 'Alpha',
+        toName: 'Beta',
+      });
+      expect(res.body[1]).toMatchObject({
+        message: 'older',
+        fromId: b.id,
+        toId: a.id,
+        fromName: 'Beta',
+        toName: 'Alpha',
+      });
     });
   });
 

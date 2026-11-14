@@ -209,6 +209,8 @@ export type CheerBody = z.infer<typeof CheerBody>;
 
 export const Cheer = z.object({
   id: z.string(),
+  fromId: z.string(),
+  toId: z.string(),
   fromName: z.string(),
   toName: z.string(),
   message: z.string().nullable(),

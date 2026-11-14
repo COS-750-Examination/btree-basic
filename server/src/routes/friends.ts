@@ -202,6 +202,8 @@ friendsRouter.get('/cheers', requireAuth, async (req, res) => {
   res.json(
     rows.map((c) => ({
       id: c.id,
+      fromId: c.fromId,
+      toId: c.toId,
       fromName: c.from.displayName,
       toName: c.to.displayName,
       message: c.message,

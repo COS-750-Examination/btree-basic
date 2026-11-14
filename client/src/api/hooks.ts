@@ -97,6 +97,7 @@ export function useCheers(enabled: boolean) {
     queryKey: ['cheers'],
     queryFn: () => api.get('/cheers', z.array(Cheer)),
     enabled,
+    refetchInterval: 60_000,
   });
 }
 
