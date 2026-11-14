@@ -106,7 +106,7 @@ export function FriendGrovePage() {
             className="aspect-[832/480]"
             art={
               <>
-                <GroveTree stage={f.stage} decorations={f.decorations} />
+                <GroveTree stage={f.stage} decorations={f.decorations} positions={f.positions} />
                 <Tag tone="surface" className="absolute top-[87.5%] left-[3%]">
                   Planted {dateFmt.format(new Date(f.plantedAt))}
                 </Tag>

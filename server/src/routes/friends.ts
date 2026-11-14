@@ -183,7 +183,7 @@ friendsRouter.get('/friends/:id/grove', requireAuth, async (req, res) => {
     prisma.moduleProgress.findMany({ where: { userId: friendId }, orderBy: { moduleId: 'asc' } }),
     prisma.userDecoration.findMany({
       where: { userId: friendId, placed: true },
-      select: { decorationId: true },
+      select: { decorationId: true, x: true, y: true },
     }),
     streakDays(friendId),
   ]);
@@ -193,6 +193,11 @@ friendsRouter.get('/friends/:id/grove', requireAuth, async (req, res) => {
     plantedAt: user.plantedAt.toISOString(),
     streakDays: streak,
     decorations: decorations.map((d) => d.decorationId),
+    positions: Object.fromEntries(
+      decorations.flatMap((d) =>
+        d.x !== null && d.y !== null ? [[d.decorationId, { x: d.x, y: d.y }]] : [],
+      ),
+    ),
     completedModules: completed,
     currentModule: MODULES.map((m) => m.id).find((id) => !completed.includes(id)) ?? null,
   };

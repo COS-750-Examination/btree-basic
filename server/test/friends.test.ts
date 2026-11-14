@@ -281,6 +281,24 @@ describe.skipIf(!hasDb)('friends routes (database)', () => {
       expect(body).not.toContain('secret');
       expect(body).not.toContain(b.email);
       expect(res.body.decorations).toEqual(['apples']);
+      expect(res.body.positions).toEqual({});
+    });
+
+    it('friend grove shows where decorations were moved to', async () => {
+      const a = await fresh('Looker');
+      const b = await fresh('Decorator');
+      await befriend(a, b);
+      await prisma.userDecoration.createMany({
+        data: [
+          { userId: b.id, decorationId: 'apples', x: 24, y: -16 },
+          { userId: b.id, decorationId: 'bunting' },
+          { userId: b.id, decorationId: 'songbird', placed: false, x: 5, y: 5 },
+        ],
+      });
+
+      const res = await a.agent.get(`/api/friends/${b.id}/grove`).expect(200);
+      expect(res.body.decorations.sort()).toEqual(['apples', 'bunting']);
+      expect(res.body.positions).toEqual({ apples: { x: 24, y: -16 } });
     });
 
     it('friend grove never includes badges', async () => {

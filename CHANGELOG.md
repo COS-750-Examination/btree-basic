@@ -25,6 +25,16 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ### Added
 
+- **Mini-lessons for every learning objective (O1–O8)** (FRONTEND_PLAN Task 8). A short recap for students who are stuck: the key idea, a worked example, common mistakes ("Watch out"), and a "Check yourself" question with a **Show answer** button.
+  - Opened from **Need more?** on the quiz (for the current question's objective), **Stuck?** on Practice, and a **Mini-lesson (3 min)** link under each objective that isn't mastered yet on Ready. Each page links back to where the student came from, to a matching practice activity, and to the full lesson.
+  - Content lives in `client/src/content/mini-lessons/O1.md` to `O8.md`, so the ID team can edit it like the lessons. It uses the same trees and rules as the lessons (order 3, promote the left middle key, predecessor on delete, left sibling first).
+  - `content/miniLessons.test.ts` runs every worked example and answer through the B-tree engine, so the text can't drift from what the visualiser does.
+  - New route `/mini-lessons/:objective`.
+- **Drag decorations into place** (FRONTEND_PLAN Task 7). With the craft drawer open (**Decorate** on My grove), students drag a decoration on the tree to a new spot, or press Tab to pick one and move it with the arrow keys (Shift for bigger steps). Decorations can't leave the scene. **Move back** in the drawer returns one to its usual spot.
+  - Positions are offsets from each decoration's usual spot in the scene's 832×480 frame, saved with `PUT /api/grove/placement` (`x`/`y`, or `null` to reset; limited to the scene's size). Guests' positions stay on the device for the session.
+  - `GET /api/decorations` now returns `x` and `y`, and a friend's grove returns `positions`, so friends see decorations where they were placed.
+  - No database change: `UserDecoration` already had `x` and `y`.
+  - Tests: `GroveTree.test.tsx` (5), 2 store cases, 2 server placement cases and 1 friend grove case.
 - **Friend request notifications.** The round initials button (your account) shows a small red counter for new friend requests, e.g. "2", read to screen readers as "Account: Sam, 2 new friend requests". Requests are re-checked every minute.
   - Opening the Account page clears the counter. Requests you leave unanswered are not counted again: later only requests that arrived after your last visit are counted.
   - The "seen" time is saved on the account (`User.requestsSeenAt`, migration `20261115090000_requests_seen`), so it survives signing out and in, clearing site data and switching devices.

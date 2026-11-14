@@ -36,7 +36,15 @@ const EARN = [
 export function GrovePage() {
   const r = useLocalReadiness();
   const progress = useProgressStore();
-  const { ownedDecorations, hiddenDecorations, buyDecoration, toggleDecoration, leaves } = progress;
+  const {
+    ownedDecorations,
+    hiddenDecorations,
+    decorationPositions,
+    buyDecoration,
+    toggleDecoration,
+    moveDecoration,
+    leaves,
+  } = progress;
   const onTree = placedDecorations(progress);
   const me = useMe();
   const friends = useFriends(Boolean(me.data));
@@ -76,7 +84,15 @@ export function GrovePage() {
           <div ref={sceneRef}>
             <SceneBackdrop
               className="aspect-[832/480]"
-              art={<GroveTree stage={r.stage} decorations={onTree} showSpots />}
+              art={
+                <GroveTree
+                  stage={r.stage}
+                  decorations={onTree}
+                  positions={decorationPositions}
+                  showSpots
+                  onMove={decorating ? moveDecoration : undefined}
+                />
+              }
             />
           </div>
 
@@ -86,6 +102,11 @@ export function GrovePage() {
               <p className="text-ink-muted text-small mb-3">
                 You have {leaves} leaves. Decorations you buy go straight onto your tree. Take them
                 off or put them back whenever you like.
+              </p>
+              <p className="text-small mb-3 rounded-md bg-sky-100 p-3">
+                <span className="font-bold">Move them around:</span> while this drawer is open, drag
+                a decoration on your tree to a new spot. With a keyboard, press Tab to pick one and
+                use the arrow keys (hold Shift to move further).
               </p>
               <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-6">
                 {DECORATIONS.map((d) => {
@@ -123,6 +144,16 @@ export function GrovePage() {
                           >
                             {hidden ? 'Add to tree' : 'Take off'}
                           </Button>
+                          {!hidden && decorationPositions[d.id] && (
+                            <button
+                              type="button"
+                              className="text-small underline"
+                              onClick={() => moveDecoration(d.id, null)}
+                              aria-label={`Move ${d.name} back to its usual spot`}
+                            >
+                              Move back
+                            </button>
+                          )}
                         </>
                       ) : (
                         <Button

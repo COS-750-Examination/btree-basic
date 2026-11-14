@@ -1106,6 +1106,50 @@ Several fonts were tried in turn at the requester's direction: Spectral, Gravita
 
 ---
 
+## Entry 023: Mini-lessons (O1–O8) and dragging decorations
+
+| Field        | Detail                                                                                                                                                                                                                                                                                                                    |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Date         | 15 November 2026                                                                                                                                                                                                                                                                                                          |
+| Requested by | Taylor Sergel, frontend                                                                                                                                                                                                                                                                                                   |
+| Tool         | Claude Code (Anthropic), model Claude Opus 5.5                                                                                                                                                                                                                                                                            |
+| Scope        | `content/mini-lessons/*.md`, `MiniLessonPage.tsx`, `lib/miniLessons.ts`, `lib/content.ts`, `QuizPage.tsx`, `PracticePage.tsx`, `ReadyPage.tsx`, `GroveTree.tsx`, `GrovePage.tsx`, `FriendGrovePage.tsx`, `progressStore.ts`, `styles/index.css`, `routes/grove.ts`, `routes/friends.ts`, shared decoration schemas, tests |
+| Status       | Completed; left uncommitted on branch `feat/ui-updates` for review                                                                                                                                                                                                                                                        |
+
+### Request
+
+> Please do steps 6 and 7 together: write the "Need more?" mini-lessons for objectives O1–O8 (the ID team does not have time), and let students drag decorations into place on their grove, including the backend change.
+
+### Clarifications provided
+
+- The requester asked Claude to write the mini-lesson text. It follows the existing lessons' trees, wording and rules, and every worked example was checked against the B-tree engine. One calculation in the O7 draft was wrong (it said a 1,000-key 2-3 tree is at most 10 levels; it is 9) and was corrected before checking in.
+- Moving decorations is only switched on while the craft drawer is open, so the scene is not accidentally changed and stays a plain picture for screen readers otherwise.
+- Each decoration moves as one piece (for example all the apples together).
+
+### Deliverables
+
+- **Mini-lessons:** 8 Markdown files, the `/mini-lessons/:objective` page with a hidden answer, and links from Quiz, Practice and Ready.
+- **Decorations:** pointer dragging and arrow-key moving in `GroveTree`, positions in the progress store, **Move back**, and positions on a friend's grove.
+- **Server:** positions returned by `GET /api/decorations` and the friend grove; placement accepts `null` to reset and rejects positions outside the scene.
+- **Tests:** 6 engine-checked content cases, 5 page cases, 5 scene cases, 2 store cases, 3 server cases.
+
+### Verification summary
+
+| Check                                                                                                                              | Result         |
+| ---------------------------------------------------------------------------------------------------------------------------------- | -------------- |
+| Client tests                                                                                                                       | 142 / 142 pass |
+| Server tests                                                                                                                       | 117 / 117 pass |
+| Browser check (Chrome): drag the songbird with the mouse; move the apples with Shift+arrows; positions saved and kept after reload | Pass           |
+| Browser check: quiz "Need more?" opens the mini-lesson for the question's objective; **Show answer** and **Back** work             | Pass           |
+| ESLint, TypeScript (strict), Prettier, build                                                                                       | Pass           |
+
+### Human review required
+
+- **ID team:** please review the eight mini-lessons in `client/src/content/mini-lessons/` for tone and level before the demo.
+- **Figma:** neither the mini-lesson page nor the moving controls have a Figma frame.
+
+---
+
 ## Entry template
 
 ```markdown

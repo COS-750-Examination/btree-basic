@@ -148,8 +148,13 @@ export const Decoration = z.object({
   owned: z.boolean(),
   /** On the tree. Owned decorations can be taken off and put back; false when not owned. */
   placed: z.boolean(),
+  x: z.number().nullable(),
+  y: z.number().nullable(),
 });
 export type Decoration = z.infer<typeof Decoration>;
+
+export const DecorationPosition = z.object({ x: z.number(), y: z.number() });
+export type DecorationPosition = z.infer<typeof DecorationPosition>;
 
 export const LectureQuestionBody = z.object({ text: z.string().trim().min(1).max(280) });
 export type LectureQuestionBody = z.infer<typeof LectureQuestionBody>;
@@ -179,6 +184,7 @@ export const FriendGrove = FriendSummary.extend({
   plantedAt: z.string(),
   streakDays: z.number().int(),
   decorations: z.array(z.string()),
+  positions: z.record(z.string(), DecorationPosition),
   completedModules: z.array(z.number().int()),
   currentModule: z.number().int().nullable(),
 });

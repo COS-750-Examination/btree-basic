@@ -1,11 +1,13 @@
 import {
   AttemptResult,
+  type Decoration,
   LEAF_REWARDS,
   MODULES,
   readiness,
   type AttemptLike,
   type AttemptRecord,
   type Confidence,
+  type DecorationPosition,
   type LeafBonus,
   type LeafReason,
 } from '@btree/shared';
@@ -40,6 +42,7 @@ interface ProgressState {
   ownedDecorations: string[];
   /** Owned decorations the student took off the tree. Bought ones start on the tree. */
   hiddenDecorations: string[];
+  decorationPositions: Record<string, DecorationPosition>;
   hintsRead: string[];
   lastBonus: (LeafBonus & { at: number }) | null;
 
@@ -59,6 +62,7 @@ interface ProgressState {
   buyDecoration: (id: string, cost: number) => boolean;
   /** Puts an owned decoration on the tree or takes it off. */
   toggleDecoration: (id: string) => void;
+  moveDecoration: (id: string, position: DecorationPosition | null) => void;
   dismissBonus: () => void;
   reset: () => void;
 }
@@ -72,6 +76,7 @@ const initial = {
   lectureQuestions: [],
   ownedDecorations: [],
   hiddenDecorations: [],
+  decorationPositions: {},
   hintsRead: [],
 };
 
@@ -123,7 +128,7 @@ export const useProgressStore = create<ProgressState>()(
             ),
             api.get<{ balance: number }>('/leaves'),
             api.get<{ id: string; text: string }[]>('/lecture-questions'),
-            api.get<{ id: string; owned: boolean; placed: boolean }[]>('/decorations'),
+            api.get<Decoration[]>('/decorations'),
             api.get<AttemptRecord[]>('/attempts'),
           ]);
           set({
@@ -136,6 +141,11 @@ export const useProgressStore = create<ProgressState>()(
             lectureQuestions: questions,
             ownedDecorations: decorations.filter((d) => d.owned).map((d) => d.id),
             hiddenDecorations: decorations.filter((d) => d.owned && !d.placed).map((d) => d.id),
+            decorationPositions: Object.fromEntries(
+              decorations.flatMap((d) =>
+                d.owned && d.x !== null && d.y !== null ? [[d.id, { x: d.x, y: d.y }]] : [],
+              ),
+            ),
           });
         },
 
@@ -256,6 +266,26 @@ export const useProgressStore = create<ProgressState>()(
           });
           if (s.signedIn)
             save(() => api.put('/grove/placement', { items: [{ decorationId: id, placed }] }));
+        },
+
+        moveDecoration: (id, position) => {
+          const s = get();
+          if (!s.ownedDecorations.includes(id)) return;
+          const { [id]: _old, ...others } = s.decorationPositions;
+          set({ decorationPositions: position ? { ...others, [id]: position } : others });
+          if (s.signedIn)
+            save(() =>
+              api.put('/grove/placement', {
+                items: [
+                  {
+                    decorationId: id,
+                    placed: !s.hiddenDecorations.includes(id),
+                    x: position?.x ?? null,
+                    y: position?.y ?? null,
+                  },
+                ],
+              }),
+            );
         },
 
         dismissBonus: () => set({ lastBonus: null }),
