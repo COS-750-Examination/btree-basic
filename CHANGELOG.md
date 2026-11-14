@@ -66,6 +66,11 @@ All notable changes to this project are documented here. The format follows [Kee
   - friendships and cheers, which show other students by display name only.
   - The file never includes the password hash, any user id, or another student's email or answers. It sits alongside the existing account deletion.
 - Tests: `account.test.ts` (3 cases).
+- **Account settings:** `PATCH /api/account` changes the display name, the Day/Dusk theme and the password.
+  - Changing the password needs the current one. A wrong current password returns 400 "Current password is incorrect" and changes nothing.
+  - Password changes are limited to 10 per student per 15 minutes. Name and theme changes aren't limited, so switching themes on shared campus Wi-Fi never uses up the class's login limit.
+  - The theme is saved per account (migration `user_theme`). It is null until the student picks one, and comes back as `theme` with the signed-in user and in the data export.
+- Tests: `settings.test.ts` (11 cases), and a check that the data export includes the theme.
 
 ### Fixed
 
@@ -97,6 +102,8 @@ All notable changes to this project are documented here. The format follows [Kee
 - The ID lead should review the new lessons and quiz items (see the prompt log, Entry 004).
 - The client doesn't show badges yet. The server awards them and `GET /api/badges` lists them.
 - The client has no decline, cancel or unfriend buttons yet, no "Download my data" link, and doesn't show the 429 message. The server endpoints are ready.
+- The client has no profile settings yet (name, password, theme per account). `PATCH /api/account` is ready.
+- Not planned for the prototype: password reset by email, revocable sessions (the 14-day sign-in cookie stays valid after a password change), and database backups.
 - The client doesn't show reward bonuses (streak +15, ready check +60) until the page reloads, and the streak card doesn't use `GET /api/streak` yet.
 - Deployment (Vercel for the client, Render for the API and database) is not configured.
 

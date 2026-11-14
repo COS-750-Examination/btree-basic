@@ -527,6 +527,69 @@ The one exception is `perUserLimiter`. Routes create it when the app starts, so 
 
 ---
 
+## Entry 010: Account settings scaffolding (BACKEND_PLAN Task 5)
+
+| Field        | Detail                                                                                                    |
+| ------------ | --------------------------------------------------------------------------------------------------------- |
+| Date         | 14 November 2026                                                                                          |
+| Requested by | Kyle Liebenberg, backend owner                                                                            |
+| Tool         | Claude Code (Anthropic), model Claude Opus 5.5                                                            |
+| Scope        | Prisma schema and migration, `@btree/shared`, `server/src/lib/account.ts`, account and auth routes, tests |
+| Status       | Completed; left uncommitted on branch `feat/account-settings` for review                                  |
+
+### Request
+
+> Please implement the scaffolding for Task 5 (account settings). I will implement the core logic myself.
+
+### Clarifications provided
+
+None were needed. As in the earlier tasks:
+
+- declarations are defined in full;
+- the core logic is a stub that returns 501;
+- tests have empty bodies.
+
+The one exception is `toPublicUser`, which now returns the user's `theme`. The client checks every sign-in and session response against `PublicUser`, so adding the field to the schema without sending it would have broken signing in.
+
+Task 5.2 only marks items in `docs/TODO.md` as out of scope. It is left for when the task is completed.
+
+### Deliverables
+
+- **Database:** migration `user_theme`, adding a `Theme` enum (`day`, `dusk`) and a nullable `User.theme` column. The Prisma client was regenerated.
+- **`@btree/shared`:**
+  - `THEMES`, `Theme` and `ThemeSchema`;
+  - `PublicUser.theme`, which is null until the student picks a theme;
+  - `AccountPatchBody`:
+    - fields: display name (1–40 characters), theme, current password, and new password (8–128 characters);
+    - at least one setting must change;
+    - a new password needs the current one.
+- **New server module (stub):** `lib/account.ts`, with `updateAccount` and `WRONG_PASSWORD_MESSAGE`. The rules are in its doc comment.
+- **Routes:**
+  - `PATCH /api/account`, with sign-in, the auth rate limit and body validation already in place;
+  - `authLimiter` is now exported from `routes/auth.ts`;
+  - a `TODO(Task 5.1)` marker in `lib/export.ts` to add the theme to the data export.
+- **Tests with empty bodies:**
+  - 10 in a new `settings.test.ts`, covering the display name, theme, password and validation;
+  - 1 in `account.test.ts`: the export includes the theme.
+
+### Verification summary
+
+| Check                                               | Result                                          |
+| --------------------------------------------------- | ----------------------------------------------- |
+| Server tests against local PostgreSQL               | 101 / 101 pass (11 new tests with empty bodies) |
+| Client tests                                        | 43 / 43 pass                                    |
+| Playwright end-to-end and axe accessibility         | 24 / 24 pass                                    |
+| Schema drift between migrations and `schema.prisma` | None                                            |
+| ESLint, TypeScript (strict), Prettier               | Pass                                            |
+
+### Human review required
+
+- **Sessions after a password change:** other signed-in devices stay signed in. Revocable sessions were ruled out of scope for the prototype.
+- **Scaffolding markers:** remove each `void …; // scaffolding` line, the doc comment and the `TODO(Task 5.1)` marker when implementing.
+- **Empty tests pass:** fill in the 11 new tests before merging.
+
+---
+
 ## Entry template
 
 ```markdown

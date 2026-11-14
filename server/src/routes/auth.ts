@@ -1,12 +1,12 @@
-import { LoginBody, RegisterBody, type PublicUser } from '@btree/shared';
+import { LoginBody, RegisterBody } from '@btree/shared';
 import { Router } from 'express';
 import rateLimit from 'express-rate-limit';
-import type { User } from '../generated/prisma/client';
 import {
   SESSION_COOKIE,
   hashPassword,
   sessionCookieOptions,
   signSession,
+  toPublicUser,
   verifyPassword,
 } from '../lib/auth';
 import { HttpError } from '../lib/http';
@@ -21,13 +21,6 @@ const authLimiter = rateLimit({
   limit: 20,
   standardHeaders: 'draft-8',
   legacyHeaders: false,
-});
-
-export const toPublicUser = (u: User): PublicUser => ({
-  id: u.id,
-  email: u.email,
-  displayName: u.displayName,
-  plantedAt: u.plantedAt.toISOString(),
 });
 
 authRouter.post('/register', authLimiter, validateBody(RegisterBody), async (req, res) => {
@@ -49,7 +42,6 @@ authRouter.post('/register', authLimiter, validateBody(RegisterBody), async (req
 authRouter.post('/login', authLimiter, validateBody(LoginBody), async (req, res) => {
   const body = req.body as LoginBody;
   const user = await prisma.user.findUnique({ where: { email: body.email } });
-  // Same message for unknown email and wrong password, so accounts cannot be enumerated.
   if (!user || !(await verifyPassword(body.password, user.passwordHash))) {
     throw new HttpError(401, 'Email or password is incorrect');
   }
@@ -63,7 +55,6 @@ authRouter.post('/logout', (_req, res) => {
   res.status(204).end();
 });
 
-/** Always 200: `{ user: null }` for guests, so the client can check without a console error. */
 authRouter.get('/session', async (req, res) => {
   const user = req.userId ? await prisma.user.findUnique({ where: { id: req.userId } }) : null;
   res.json({ user: user ? toPublicUser(user) : null });
