@@ -248,7 +248,7 @@ This log records the generative AI prompts used during development of B-Tree Bas
 
 ### Request
 
-> Please review the codebase to gain an understanding of the project, a web application that teaches B-trees to second-year computer science students before their B-tree lecture. Several items remain outstanding in `docs/TODO.md`, and I am responsible for the Backend section. Please review what remains on the to-do list and produce an ordered plan for implementing all of it.
+> Please review the codebase to gain an understanding of the project, a web application that teaches B-trees to second-year computer science students before their B-tree lecture. Several items remain outstanding in `docs/TODO.md`, and I am responsible for the Backend section. Please review what remains on the to-do list and and in my `docs/BACKEND_PLAN.md` and modify my `BACKEND_PLAN.md` such that tasks are grouped with related sub-tasks and are ordered for the implementation phase. 
 
 ### Clarifications provided
 
