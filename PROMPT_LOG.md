@@ -248,7 +248,7 @@ This log records the generative AI prompts used during development of B-Tree Bas
 
 ### Request
 
-> Please review the codebase to gain an understanding of the project, a web application that teaches B-trees to second-year computer science students before their B-tree lecture. Several items remain outstanding in `docs/TODO.md`, and I am responsible for the Backend section. Please review what remains on the to-do list and produce an ordered plan for implementing all of it.
+> Please review the codebase to gain an understanding of the project, a web application that teaches B-trees to second-year computer science students before their B-tree lecture. Several items remain outstanding in `docs/TODO.md`, and I am responsible for the Backend section. Please review what remains on the to-do list and and in my `docs/BACKEND_PLAN.md` and modify my `BACKEND_PLAN.md` such that tasks are grouped with related sub-tasks and are ordered for the implementation phase.
 
 ### Clarifications provided
 
@@ -838,6 +838,61 @@ Task 5.2 only marks items in `docs/TODO.md` as out of scope. It is left for when
 - **Scoring:** the 10 s and 30 s penalties and 2 points per second are a first guess.
 - **ID team:** check the hint and mistake wording in `client/src/lib/dailyHints.ts`.
 - **Figma:** the Daily b-tree page, drag board and podium have no Figma frame.
+
+---
+
+## Entry 016: Animations and playback pacing
+
+| Field        | Detail                                                                                                                                                                                                                                                                                |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Date         | 15 November 2026                                                                                                                                                                                                                                                                      |
+| Requested by | Lonwabo Kwitshana                                                                                                                                                                                                                                                                     |
+| Tool         | Claude Code (Anthropic), model Claude Opus 5.5                                                                                                                                                                                                                                        |
+| Scope        | `styles/index.css`, `ui/stagger.ts`, `AppShell.tsx`, `Header.tsx`, `RewardToast.tsx`, `SceneBackdrop.tsx`, `GroveTree.tsx`, `BTreeView.tsx`, `KeyBead.tsx`, `layout.ts`, `usePlayback.ts`, `NarrationBar.tsx`, `TracePlayer.tsx`, quiz, daily and page components, unit and e2e tests |
+| Status       | Completed on branch `enhancement/animations`; changes left uncommitted for team review                                                                                                                                                                                                |
+
+### Request
+
+> Review the application and add appropriate animations to make it feel more lively.
+>
+> Follow-ups after trying it:
+>
+> 1. The page shifts up slightly when the notes appear on the tree in the visualiser. This happens on most, if not all, pages that show a B-tree.
+> 2. Slow down the time between steps during playback, and make the transitions smoother.
+> 3. Slower still: make each step last 5 seconds.
+> 4. Fix the end-to-end tests that now fail in CI (colour-contrast violations on every screen).
+> 5. Record these prompts in the prompt log.
+
+### Clarifications provided
+
+- **Approach:** a small set of reusable CSS animations (`rise`, `pop`, `bump`, `wiggle`, `sway`, `drift`, `twinkle`, `bob`, `sprout`, `fill-in`, `fade-in`) plus the existing `motion` library for the reward toast and the tree. A `stagger(i)` helper delays list items so they cascade in. Entrance animations leave no transform behind once finished, so they cannot break fixed-position elements such as drag overlays.
+- **Accessibility (NFR4):** the existing reduced-motion rule was extended to cancel animation delays and looping animations, and `MotionConfig reducedMotion="user"` still applies. The tree stops swaying while decorations are being arranged, so dragging stays accurate.
+- **Page shift:** the cause was already there before this work. The tree drawing only made room for a note while one was showing, so it changed height from step to step. A `calloutSpace` option now keeps that room on every step in the visualiser, the lesson "Watch" tab and practice help.
+- **Pacing:** with the voice off, each step lasts 5 s at 1x speed (previously 1.4 s); the speed slider still scales this (10 s at 0.5x, 2.5 s at 2x). With the voice on, playback waits for the narration and then pauses 1 s (previously 0.35 s). The tree uses a softer spring, and colour changes (highlight, overflow, yarn) fade instead of switching.
+- **E2E failures:** the app's colours were fine. Axe scanned while text was still fading in, so it measured low contrast. The smoke test now waits for entrance animations to finish before scanning; looping background animations are ignored because they never change text visibility.
+
+### Deliverables
+
+- **Animations:** page fade-in on navigation; cascading entrances on the welcome, lessons, ready, grove and practice pages; hover lift on buttons, nav pills and cards; leaf counter bump and logo wiggle in the header; spring-in reward toast; living grove scene (swaying tree, drifting clouds, twinkling fireflies); quiz answers that pop when right and shake when wrong; hints and finish cards that pop in; progress bars that fill and slide.
+- **Visualiser:** fixed tree height while stepping, slower playback, softer movement, fading notes, narration and colour changes.
+- **Tests:** `MotionGlobalConfig.skipAnimations` in the unit test setup; the reward toast test waits for the exit animation; playback tests read the timing constants from `usePlayback.ts`; `settleAnimations()` added to `e2e/smoke.spec.ts`.
+
+### Verification summary
+
+| Check                                        | Result                                                            |
+| -------------------------------------------- | ----------------------------------------------------------------- |
+| Client unit tests                            | 170 pass                                                          |
+| End-to-end tests (Chromium and mobile)       | 24 pass locally                                                   |
+| ESLint, TypeScript (strict), Prettier, build | Pass                                                              |
+| Browser check                                | Welcome, lessons and visualiser pages screenshotted mid-animation |
+
+### Human review required
+
+- Try it on a phone and a slower laptop to check the animations feel smooth and not distracting.
+- **Pacing:** 5 s per step and the 1 s pause after narration are the requester's choice; ID team to confirm they suit the lesson length.
+- **Lesson tabs:** switching between read, watch and listen now rebuilds the panel, so narration partway through restarts.
+- **CI:** push the branch and confirm the end-to-end job passes.
+- **Figma:** none of the motion has a Figma reference.
 
 ---
 
