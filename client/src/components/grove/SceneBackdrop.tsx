@@ -53,16 +53,25 @@ export function SceneBackdrop({
         className="absolute inset-0 h-full w-full"
       >
         <g fill="var(--firefly)">
-          {FIREFLIES.map(([cx, cy, r]) => (
-            <circle key={`${cx}-${cy}`} cx={cx} cy={cy} r={r} />
+          {FIREFLIES.map(([cx, cy, r], i) => (
+            <circle
+              key={`${cx}-${cy}`}
+              cx={cx}
+              cy={cy}
+              r={r}
+              className="twinkle"
+              style={{ animationDelay: `${i * 0.45}s` }}
+            />
           ))}
         </g>
         <circle cx="666" cy="96" r="40" fill="var(--sun)" className="drop-shadow-lift" />
         <circle cx="684" cy="84" r="36" fill="var(--moon-cut)" />
         <g fill="var(--cloud)" className="drop-shadow-lift">
-          <ellipse cx="176" cy="80" rx="60" ry="20" />
-          <ellipse cx="206" cy="68" rx="36" ry="18" />
-          <ellipse cx="576" cy="140" rx="46" ry="15" />
+          <g className="drift">
+            <ellipse cx="176" cy="80" rx="60" ry="20" />
+            <ellipse cx="206" cy="68" rx="36" ry="18" />
+          </g>
+          <ellipse cx="576" cy="140" rx="46" ry="15" className="drift-slow" />
         </g>
         <path
           d="M0 320C158.08 270 324.48 296 465.92 286C607.36 276 715.52 262 832 292V480H0V320Z"

@@ -2,7 +2,7 @@ import { Play, Square } from 'lucide-react';
 import { useState } from 'react';
 import { GroveTree } from '../components/grove/GroveTree';
 import { SceneBackdrop } from '../components/grove/SceneBackdrop';
-import { ButtonLink, Card, Tag } from '../components/ui';
+import { ButtonLink, Card, Tag, stagger } from '../components/ui';
 import { speak, speechSupported, stopSpeaking } from '../lib/speech';
 import { useLocalReadiness } from '../stores/progressStore';
 
@@ -40,15 +40,15 @@ export function WelcomePage() {
     <div className="space-y-10">
       <section className="grid items-center gap-8 lg:grid-cols-2">
         <div>
-          <Tag>COS212 · Pre-lecture prep</Tag>
-          <h1 className="text-display-l sm:text-display-xl mt-4">
+          <Tag className="rise">COS212 · Pre-lecture prep</Tag>
+          <h1 className="text-display-l sm:text-display-xl rise mt-4" style={stagger(1)}>
             Learn B-trees one branch at a time.
           </h1>
-          <p className="text-ink-muted text-body mt-4 max-w-lg">
+          <p className="text-ink-muted text-body rise mt-4 max-w-lg" style={stagger(2)}>
             Meet the B-tree. Learn how it works, watch it grow, try it yourself, and grow your own
             tree as you go.
           </p>
-          <div className="mt-6 flex flex-wrap gap-3">
+          <div className="rise mt-6 flex flex-wrap gap-3" style={stagger(3)}>
             <ButtonLink to="/warm-up" size="lg">
               Start the 2-minute warm-up
             </ButtonLink>
@@ -56,13 +56,13 @@ export function WelcomePage() {
               I&apos;ve been here before
             </ButtonLink>
           </div>
-          <p className="text-ink-muted text-small mt-3">
+          <p className="text-ink-muted text-small rise mt-3" style={stagger(4)}>
             No prior knowledge needed · about 45 minutes · progress saves automatically
           </p>
         </div>
 
         <SceneBackdrop
-          className="aspect-[16/10]"
+          className="pop aspect-[16/10]"
           art={<GroveTree stage={r.stage === 'seed' ? 'sprout' : r.stage} />}
         >
           <div className="flex items-center gap-3 p-5">
@@ -80,7 +80,7 @@ export function WelcomePage() {
               Intro · 60 s
             </span>
           </div>
-          <div className="bg-paper shadow-paper-stack-sm text-label mx-auto mt-2 w-fit -rotate-2 rounded-sm px-3 py-1.5 font-bold">
+          <div className="bg-paper shadow-paper-stack-sm text-label bob mx-auto mt-2 w-fit rounded-sm px-3 py-1.5 font-bold">
             Your seed is waiting. It sprouts after module 1.
           </div>
         </SceneBackdrop>
@@ -91,9 +91,9 @@ export function WelcomePage() {
           What you&apos;ll do
         </h2>
         <ol className="grid gap-4 md:grid-cols-3">
-          {STEPS.map((s) => (
-            <li key={s.n}>
-              <Card className="h-full">
+          {STEPS.map((s, i) => (
+            <li key={s.n} className="rise" style={stagger(i + 4)}>
+              <Card className="h-full transition-transform duration-200 hover:-translate-y-1">
                 <span
                   className={`font-display shadow-paper-stack-sm rounded-pill grid h-10 w-10 place-items-center ${s.n === 3 ? 'bg-highlight text-on-highlight' : 'bg-paper'}`}
                 >

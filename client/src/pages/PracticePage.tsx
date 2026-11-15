@@ -27,6 +27,7 @@ import {
   PageHeader,
   ProgressSegments,
   cn,
+  stagger,
 } from '../components/ui';
 import { useBadges, useMe } from '../api/hooks';
 import { miniLessonPath } from '../lib/miniLessons';
@@ -137,7 +138,7 @@ export function PracticePage() {
     return (
       <div>
         <PageHeader title="Practice" subtitle="All four activities are done for today." />
-        <Card className="mx-auto max-w-xl text-center">
+        <Card className="pop mx-auto max-w-xl text-center">
           <PartyPopper className="text-leaf mx-auto h-10 w-10" aria-hidden />
           <CardTitle className="mt-2">You've finished today's practice</CardTitle>
           <p>New practice questions will be ready tomorrow. Until then, you can:</p>
@@ -260,7 +261,7 @@ export function PracticePage() {
           )}
         </Card>
 
-        <aside className="space-y-4 lg:col-start-2 lg:row-start-2">
+        <aside className="rise space-y-4 lg:col-start-2 lg:row-start-2" style={stagger(2)}>
           <Card>
             <CardTitle>Stuck?</CardTitle>
             <ul className="text-label space-y-3 font-bold">

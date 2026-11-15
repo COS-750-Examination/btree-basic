@@ -1,5 +1,5 @@
 import { motion } from 'motion/react';
-import { BEAD_R } from '../../lib/layout';
+import { BEAD_R, TREE_SPRING } from '../../lib/layout';
 
 export type BeadState = 'normal' | 'new' | 'median' | 'found';
 
@@ -23,15 +23,23 @@ export function KeyBead({
     <motion.g
       initial={{ scale: 0.6, opacity: 0 }}
       animate={{ x, scale: 1, opacity: 1 }}
-      exit={{ scale: 0.6, opacity: 0 }}
+      exit={{ scale: 0.6, opacity: 0, transition: { duration: 0.25 } }}
+      transition={TREE_SPRING}
     >
-      <circle r={BEAD_R} fill={fill} stroke={ring} strokeWidth={state === 'new' ? 4 : 3.5} />
+      <circle
+        r={BEAD_R}
+        style={{
+          fill,
+          stroke: ring,
+          strokeWidth: state === 'new' ? 4 : 3.5,
+          transition: 'fill 0.45s ease, stroke 0.45s ease',
+        }}
+      />
       <text
         textAnchor="middle"
         dominantBaseline="central"
-        fill={text}
         className="font-display"
-        style={{ fontSize: value >= 100 ? 12 : 15 }}
+        style={{ fontSize: value >= 100 ? 12 : 15, fill: text, transition: 'fill 0.45s ease' }}
       >
         {value}
       </text>

@@ -35,6 +35,7 @@ export function TracePlayer({ trace, autoPlay = false }: { trace: Trace; autoPla
         <BTreeView
           {...stepView(trace, index)}
           scene
+          calloutSpace
           label={`Step ${index + 1} of ${trace.steps.length}: ${narrate(step)}`}
         />
       </div>

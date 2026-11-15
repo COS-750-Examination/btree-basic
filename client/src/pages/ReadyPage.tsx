@@ -23,6 +23,7 @@ import {
   PageHeader,
   ProgressBar,
   StatusBadge,
+  stagger,
 } from '../components/ui';
 import { masteryHint } from '../lib/mastery';
 import { miniLessonPath } from '../lib/miniLessons';
@@ -112,7 +113,8 @@ export function ReadyPage() {
                 return (
                   <li
                     key={o.objective}
-                    className="grid grid-cols-[24px_1fr] items-center gap-x-3 gap-y-1 sm:grid-cols-[24px_1fr_160px_48px_110px]"
+                    style={stagger(i)}
+                    className="rise grid grid-cols-[24px_1fr] items-center gap-x-3 gap-y-1 sm:grid-cols-[24px_1fr_160px_48px_110px]"
                   >
                     <span className="font-display">{i + 1}</span>
                     <span>
@@ -153,7 +155,7 @@ export function ReadyPage() {
           <BadgeCard signedIn={Boolean(me.data)} />
         </div>
 
-        <aside className="space-y-4">
+        <aside className="rise space-y-4" style={stagger(2)}>
           <Card>
             <CardTitle>Revisit before the lecture</CardTitle>
             {toRevisit.length === 0 ? (

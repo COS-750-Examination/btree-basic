@@ -1,7 +1,9 @@
 import { useEffect } from 'react';
 
-const BASE_DELAY_MS = 1400;
-export const AFTER_SPEECH_MS = 350;
+/** Time on each step when the voice is off, at 1x speed. Long enough to read the note and watch the move settle. */
+export const BASE_DELAY_MS = 5000;
+/** Breathing room after the narration ends, before the next step starts. */
+export const AFTER_SPEECH_MS = 1000;
 
 export function usePlayback(
   playing: boolean,

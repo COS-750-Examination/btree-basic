@@ -1,4 +1,5 @@
 import { X } from 'lucide-react';
+import { AnimatePresence, motion } from 'motion/react';
 import { useEffect } from 'react';
 import { useProgressStore } from '../../stores/progressStore';
 import { LeafIcon } from '../ui';
@@ -26,22 +27,31 @@ export function RewardToast() {
       aria-live="polite"
       className="pointer-events-none fixed inset-x-0 bottom-6 z-40 flex justify-center px-4"
     >
-      {bonus && (
-        <div className="bg-highlight text-on-highlight shadow-paper-stack pointer-events-auto flex items-center gap-3 rounded-lg px-4 py-3">
-          <LeafIcon className="h-5 w-5 shrink-0" />
-          <p className="font-bold">
-            +{bonus.amount} leaves: {MESSAGE[bonus.reason]}
-          </p>
-          <button
-            type="button"
-            onClick={dismiss}
-            aria-label="Close"
-            className="rounded-sm p-1 hover:bg-white/30"
+      <AnimatePresence>
+        {bonus && (
+          <motion.div
+            key={`${bonus.reason}-${bonus.amount}`}
+            initial={{ opacity: 0, y: 40, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 24, scale: 0.95 }}
+            transition={{ type: 'spring', stiffness: 380, damping: 24 }}
+            className="bg-highlight text-on-highlight shadow-paper-stack pointer-events-auto flex items-center gap-3 rounded-lg px-4 py-3"
           >
-            <X className="h-4 w-4" aria-hidden />
-          </button>
-        </div>
-      )}
+            <LeafIcon className="wiggle-once h-5 w-5 shrink-0" />
+            <p className="font-bold">
+              +{bonus.amount} leaves: {MESSAGE[bonus.reason]}
+            </p>
+            <button
+              type="button"
+              onClick={dismiss}
+              aria-label="Close"
+              className="rounded-sm p-1 hover:bg-white/30"
+            >
+              <X className="h-4 w-4" aria-hidden />
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

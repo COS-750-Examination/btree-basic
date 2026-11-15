@@ -50,7 +50,9 @@ export function AppShell() {
       <main id="main" className="mx-auto max-w-6xl px-4 py-8">
         {/* Keyed by route: a crash on one screen is cleared by moving to another. */}
         <ErrorBoundary key={pathname}>
-          <Outlet />
+          <div className="page-enter">
+            <Outlet />
+          </div>
         </ErrorBoundary>
       </main>
       <RewardToast />

@@ -6,7 +6,7 @@ type Variant = 'primary' | 'outline' | 'accent' | 'ghost';
 type Size = 'sm' | 'md' | 'lg';
 
 const base =
-  'inline-flex items-center justify-center gap-2 rounded-lg font-display transition-transform active:translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50';
+  'inline-flex items-center justify-center gap-2 rounded-lg font-display transition-transform duration-150 hover:-translate-y-0.5 active:translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0';
 
 const variants: Record<Variant, string> = {
   primary: 'bg-leaf text-on-leaf shadow-press-leaf',

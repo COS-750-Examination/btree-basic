@@ -98,3 +98,6 @@ export function viewFrame(layout: TreeLayout, scene: boolean, hasCallouts: boole
     offsetY,
   };
 }
+
+/** Soft, unhurried spring with almost no overshoot, so keys and branches glide rather than snap. */
+export const TREE_SPRING = { type: 'spring', stiffness: 120, damping: 22, mass: 1 } as const;

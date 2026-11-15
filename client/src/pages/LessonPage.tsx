@@ -162,7 +162,8 @@ export function LessonPage() {
           ))}
         </div>
 
-        <Card className="mt-4" role="tabpanel">
+        {/* Re-keyed so switching read / watch / listen fades the new view in. */}
+        <Card key={mode} className="rise mt-4" role="tabpanel">
           {mode === 'watch' && trace ? (
             <TracePlayer trace={trace} />
           ) : (

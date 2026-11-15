@@ -2,6 +2,7 @@ import { lazy, Suspense, type ComponentType } from 'react';
 import { Route, Routes } from 'react-router';
 import { AppShell } from './components/layout/AppShell';
 import { ErrorBoundary } from './components/layout/ErrorBoundary';
+import { LeafIcon } from './components/ui/LeafIcon';
 import { WelcomePage } from './pages/WelcomePage';
 
 // Each screen is its own chunk so mobile-data users only download what they open.
@@ -32,7 +33,11 @@ export function App() {
     <ErrorBoundary>
       <Suspense
         fallback={
-          <p role="status" className="text-ink-muted p-8 text-center">
+          <p
+            role="status"
+            className="text-ink-muted flex flex-col items-center gap-3 p-8 text-center"
+          >
+            <LeafIcon className="sprout h-8 w-8" />
             Growing…
           </p>
         }

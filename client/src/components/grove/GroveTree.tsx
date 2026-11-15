@@ -390,14 +390,17 @@ export function GroveTree({
         aria-label={label}
       >
         {treeScale && (
-          <g transform={`${TRUNK_BASE} scale(${treeScale}) translate(-416 -400)`}>
-            <Tree stage={stage} />
-            {spot && <Swing solid={false} />}
-            {visible
-              .filter((d) => d.id !== 'butterflies')
-              .map((d) => (
-                <g key={d.id}>{movableDeco(d.id, treeScale, hangingArt(d.id))}</g>
-              ))}
+          // Sways in the breeze, but holds still while decorations are being arranged.
+          <g className={movable ? undefined : 'sway'}>
+            <g transform={`${TRUNK_BASE} scale(${treeScale}) translate(-416 -400)`}>
+              <Tree stage={stage} />
+              {spot && <Swing solid={false} />}
+              {visible
+                .filter((d) => d.id !== 'butterflies')
+                .map((d) => (
+                  <g key={d.id}>{movableDeco(d.id, treeScale, hangingArt(d.id))}</g>
+                ))}
+            </g>
           </g>
         )}
         {show.has('butterflies') && movableDeco('butterflies', 1, <Butterflies />)}
@@ -405,10 +408,12 @@ export function GroveTree({
         {smallScale && (
           <g>
             <ellipse cx="416" cy={GROUND_Y} rx="48" ry="10" fill="var(--branch-dark)" />
-            <g
-              transform={`translate(${416 - 30 * smallScale} ${GROUND_Y - 48 * smallScale}) scale(${smallScale})`}
-            >
-              <StageArt stage={stage} withGround={false} />
+            <g className="sway" style={{ transformOrigin: `416px ${GROUND_Y}px` }}>
+              <g
+                transform={`translate(${416 - 30 * smallScale} ${GROUND_Y - 48 * smallScale}) scale(${smallScale})`}
+              >
+                <StageArt stage={stage} withGround={false} />
+              </g>
             </g>
           </g>
         )}

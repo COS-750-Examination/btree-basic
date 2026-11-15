@@ -9,6 +9,7 @@ import {
   PageHeader,
   ProgressSegments,
   cn,
+  stagger,
 } from '../components/ui';
 import {
   isRequired,
@@ -39,27 +40,28 @@ export function LessonsPage() {
       />
       <div className="grid gap-6 lg:grid-cols-[1fr_340px]">
         <ol className="space-y-3">
-          {MODULES.map((m) => {
+          {MODULES.map((m, i) => {
             const status = moduleStatus(m.id, s);
             const optional = !isRequired(m.id, s.needsRecap);
             const part = s.modules[m.id]?.part;
             return (
-              <li key={m.id}>
+              <li key={m.id} className="rise" style={stagger(i)}>
                 <Link
                   to={status === 'locked' ? '#' : `/lessons/${m.id}`}
                   aria-disabled={status === 'locked'}
                   onClick={(e) => status === 'locked' && e.preventDefault()}
                   className={cn(
-                    'flex items-center gap-4 rounded-lg px-4 py-3 transition-transform',
+                    'group flex items-center gap-4 rounded-lg px-4 py-3 transition-transform duration-150',
                     status === 'locked' &&
                       'border-ink/60 text-ink-muted cursor-not-allowed border-2 border-dashed',
                     status === 'current' && 'bg-highlight text-on-highlight shadow-press-highlight',
+                    status === 'current' && 'hover:-translate-y-0.5',
                     (status === 'done' || status === 'available') &&
                       'bg-paper shadow-paper-stack hover:-translate-y-0.5',
                   )}
                 >
                   {status === 'done' ? (
-                    <LeafIcon className="h-6 w-6 shrink-0" title="Completed" />
+                    <LeafIcon className="wiggle-hover h-6 w-6 shrink-0" title="Completed" />
                   ) : (
                     <span
                       className={cn(
@@ -98,7 +100,7 @@ export function LessonsPage() {
           })}
         </ol>
 
-        <aside className="space-y-4">
+        <aside className="rise space-y-4" style={stagger(3)}>
           <Card>
             <div className="flex items-center gap-3">
               <div className="w-16">
