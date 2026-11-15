@@ -14,8 +14,8 @@ import {
   type NodeSpec,
 } from '@btree/engine';
 import { OBJECTIVES, SPLITTER_RUN, type ObjectiveId, type QuizItem } from '@btree/shared';
-import { Award } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { Award, Check, PartyPopper } from 'lucide-react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router';
 import { QuestionCard, type Answer } from '../components/quiz/QuestionCard';
 import { BTreeView } from '../components/tree/BTreeView';
@@ -28,8 +28,9 @@ import {
   ProgressSegments,
   cn,
 } from '../components/ui';
-import { useBadges } from '../api/hooks';
+import { useBadges, useMe } from '../api/hooks';
 import { miniLessonPath } from '../lib/miniLessons';
+import { loadDone, nextUnfinished, practiceDay, saveDone } from '../lib/practiceDay';
 import { splitRun } from '../lib/rewards';
 import { useProgressStore } from '../stores/progressStore';
 
@@ -37,7 +38,6 @@ const ACTIVITIES = [
   { id: 'predict-search-path', label: 'Predict the search path', objective: 'O3' },
   { id: 'where-does-it-go', label: 'Where does it go?', objective: 'O4' },
   { id: 'split-it-yourself', label: 'Split it yourself', objective: 'O5' },
-  { id: 'build-the-tree', label: 'Build the tree', objective: 'O6' },
   { id: 'valid-or-not', label: 'Valid or not?', objective: 'O2' },
 ] as const satisfies readonly { id: string; label: string; objective: ObjectiveId }[];
 
@@ -61,8 +61,21 @@ function pathTo(tree: BTree, key: number): { id: string; keys: string }[] {
 export function PracticePage() {
   const navigate = useNavigate();
   const activityParam = useParams().activity;
-  const activity = (ACTIVITIES.find((a) => a.id === activityParam) ?? ACTIVITIES[2])
-    .id as ActivityId;
+  const me = useMe();
+  const account = me.data?.id ?? 'guest';
+  const day = practiceDay();
+  const storeId = `${account}:${day}`;
+  const [doneState, setDoneState] = useState(() => ({
+    id: storeId,
+    list: loadDone(account, day),
+  }));
+  const done = doneState.id === storeId ? doneState.list : loadDone(account, day);
+  const allDone = ACTIVITIES.every((a) => done.includes(a.id));
+  const [celebrate, setCelebrate] = useState(false);
+  const order = ACTIVITIES.map((a) => a.id);
+  const activity = (ACTIVITIES.find((a) => a.id === activityParam) ??
+    ACTIVITIES.find((a) => !done.includes(a.id)) ??
+    ACTIVITIES[0])!.id as ActivityId;
   const meta = ACTIVITIES.find((a) => a.id === activity)!;
   const recordAttempt = useProgressStore((s) => s.recordAttempt);
   const signedIn = useProgressStore((s) => s.signedIn);
@@ -87,12 +100,71 @@ export function PracticePage() {
     setTries((t) => t + 1);
   };
 
-  const nextExercise = () => {
+  const goTo = (id: ActivityId) => {
+    navigate(`/practice/${id}`);
     setSeed((s) => s + 1);
     setResult(null);
     setTries(0);
-    setExercise((e) => (e % EXERCISES_PER_ACTIVITY) + 1);
+    setExercise(1);
   };
+
+  const withThis = done.includes(activity) ? done : [...done, activity];
+  const lastExercise = exercise >= EXERCISES_PER_ACTIVITY;
+  const following = nextUnfinished(order, withThis, activity);
+
+  const finishActivity = () => {
+    saveDone(account, day, withThis);
+    setDoneState({ id: storeId, list: withThis });
+    if (following) goTo(following);
+    else {
+      setResult(null);
+      setCelebrate(true);
+    }
+  };
+
+  const nextExercise = () => {
+    if (lastExercise) {
+      finishActivity();
+      return;
+    }
+    setSeed((s) => s + 1);
+    setResult(null);
+    setTries(0);
+    setExercise((e) => e + 1);
+  };
+
+  if (allDone) {
+    return (
+      <div>
+        <PageHeader title="Practice" subtitle="All four activities are done for today." />
+        <Card className="mx-auto max-w-xl text-center">
+          <PartyPopper className="text-leaf mx-auto h-10 w-10" aria-hidden />
+          <CardTitle className="mt-2">You've finished today's practice</CardTitle>
+          <p>New practice questions will be ready tomorrow. Until then, you can:</p>
+          <ul className="text-label mt-3 space-y-2 font-bold">
+            {me.data && (
+              <li>
+                <Link to="/daily" className="hover:underline">
+                  Play the Daily b-tree
+                </Link>
+              </li>
+            )}
+            <li>
+              <Link to="/quiz" className="hover:underline">
+                Take a quiz
+              </Link>
+            </li>
+            <li>
+              <Link to="/visualiser" className="hover:underline">
+                Explore the visualiser
+              </Link>
+            </li>
+          </ul>
+        </Card>
+        {celebrate && <CongratsDialog onClose={() => setCelebrate(false)} />}
+      </div>
+    );
+  }
 
   const props = { seed, onResult: report, locked: Boolean(result?.correct) };
 
@@ -100,7 +172,7 @@ export function PracticePage() {
     <div>
       <PageHeader
         title="Practice"
-        subtitle="Five ways to practise. Every correct answer earns leaves, and hints are always free."
+        subtitle="Four ways to practise. Every correct answer earns leaves, and hints are always free."
       />
       <div role="tablist" aria-label="Practice activities" className="mb-6 flex flex-wrap gap-2">
         {ACTIVITIES.map((a, i) => (
@@ -109,28 +181,49 @@ export function PracticePage() {
             role="tab"
             type="button"
             aria-selected={a.id === activity}
-            onClick={() => {
-              navigate(`/practice/${a.id}`);
-              setResult(null);
-              setTries(0);
-              setExercise(1);
-            }}
+            onClick={() => goTo(a.id)}
             className={cn(
               'shadow-paper-stack-sm text-small rounded-sm px-3 py-1.5 font-bold',
               a.id === activity ? 'bg-highlight text-on-highlight' : 'bg-paper',
             )}
           >
-            {i + 1} · {a.label}
+            <span className="inline-flex items-center gap-1">
+              {i + 1} · {a.label}
+              {done.includes(a.id) && (
+                <>
+                  <Check className="h-3.5 w-3.5" aria-hidden />
+                  <span className="sr-only">{' (done today)'}</span>
+                </>
+              )}
+            </span>
           </button>
         ))}
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
-        <Card role="tabpanel" key={`${activity}-${seed}`}>
+      <div className="grid gap-6 lg:grid-cols-[1fr_320px] lg:grid-rows-[auto_1fr] lg:items-start">
+        <Card className="lg:col-start-2 lg:row-start-1">
+          <CardTitle>This activity</CardTitle>
+          <p className="font-bold">
+            Exercise {exercise} of {EXERCISES_PER_ACTIVITY}
+          </p>
+          <p className="text-ink-muted text-small mb-3">
+            Objective {meta.objective.slice(1)}: {meta.label.toLowerCase()}
+          </p>
+          <ProgressSegments
+            total={EXERCISES_PER_ACTIVITY}
+            done={exercise - 1}
+            current={exercise - 1}
+            label="Exercises done"
+          />
+        </Card>
+        <Card
+          role="tabpanel"
+          key={`${activity}-${seed}`}
+          className="lg:col-start-1 lg:row-span-2 lg:row-start-1"
+        >
           {activity === 'predict-search-path' && <PredictPath {...props} />}
           {activity === 'where-does-it-go' && <WhereDoesItGo {...props} />}
           {activity === 'split-it-yourself' && <SplitItYourself {...props} />}
-          {activity === 'build-the-tree' && <BuildTheTree />}
           {activity === 'valid-or-not' && <ValidOrNot {...props} />}
 
           <div
@@ -160,27 +253,14 @@ export function PracticePage() {
                   Try again
                 </Button>
               )}
-              <Button onClick={nextExercise}>Next exercise</Button>
+              <Button onClick={nextExercise}>
+                {lastExercise ? (following ? 'Next activity' : 'Finish practice') : 'Next exercise'}
+              </Button>
             </div>
           )}
         </Card>
 
-        <aside className="space-y-4">
-          <Card>
-            <CardTitle>This activity</CardTitle>
-            <p className="font-bold">
-              Exercise {exercise} of {EXERCISES_PER_ACTIVITY}
-            </p>
-            <p className="text-ink-muted text-small mb-3">
-              Objective {meta.objective.slice(1)}: {meta.label.toLowerCase()}
-            </p>
-            <ProgressSegments
-              total={EXERCISES_PER_ACTIVITY}
-              done={exercise - 1}
-              current={exercise - 1}
-              label="Exercises done"
-            />
-          </Card>
+        <aside className="space-y-4 lg:col-start-2 lg:row-start-2">
           <Card>
             <CardTitle>Stuck?</CardTitle>
             <ul className="text-label space-y-3 font-bold">
@@ -234,6 +314,41 @@ export function PracticePage() {
             </Card>
           )}
         </aside>
+      </div>
+    </div>
+  );
+}
+
+function CongratsDialog({ onClose }: { onClose: () => void }) {
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    ref.current?.focus();
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [onClose]);
+  return (
+    <div className="bg-ink/40 fixed inset-0 z-50 grid place-items-center p-4">
+      <div
+        ref={ref}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="practice-done-title"
+        tabIndex={-1}
+        className="bg-paper shadow-paper-stack w-full max-w-md rounded-lg p-6 text-center outline-none"
+      >
+        <PartyPopper className="text-leaf mx-auto h-12 w-12" aria-hidden />
+        <h2 id="practice-done-title" className="text-display-l mt-2">
+          Congrats!
+        </h2>
+        <p className="mt-2">
+          You completed all the practice questions for today. Come back tomorrow for more.
+        </p>
+        <Button className="mt-5" onClick={onClose}>
+          Got it
+        </Button>
       </div>
     </div>
   );
@@ -532,23 +647,6 @@ function SplitItYourself({ seed, onResult, locked }: ActivityProps) {
         </Button>
       </div>
     </DndContext>
-  );
-}
-
-function BuildTheTree() {
-  // TODO(iteration 2): insert a short key sequence and ask the student to predict the final tree (objective O6).
-  return (
-    <>
-      <h2 className="text-heading">Build the tree</h2>
-      <p className="text-ink-muted mt-2">
-        Coming next iteration: insert a sequence of keys and predict the final tree, including
-        whether it grows taller. Until then, try the{' '}
-        <Link to="/visualiser" className="font-bold underline">
-          visualiser
-        </Link>{' '}
-        with the &ldquo;The root splits&rdquo; example.
-      </p>
-    </>
   );
 }
 

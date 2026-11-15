@@ -18,6 +18,7 @@ const SECTIONS = [
   'badges',
   'cheersReceived',
   'cheersSent',
+  'dailyRuns',
   'decorations',
   'exportedAt',
   'friendships',

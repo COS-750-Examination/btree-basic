@@ -235,6 +235,7 @@ export type UserWhereInput = {
   friendsReceived?: Prisma.FriendshipListRelationFilter
   cheersSent?: Prisma.CheerListRelationFilter
   cheersReceived?: Prisma.CheerListRelationFilter
+  dailyRuns?: Prisma.DailyRunListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -261,6 +262,7 @@ export type UserOrderByWithRelationInput = {
   friendsReceived?: Prisma.FriendshipOrderByRelationAggregateInput
   cheersSent?: Prisma.CheerOrderByRelationAggregateInput
   cheersReceived?: Prisma.CheerOrderByRelationAggregateInput
+  dailyRuns?: Prisma.DailyRunOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -290,6 +292,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   friendsReceived?: Prisma.FriendshipListRelationFilter
   cheersSent?: Prisma.CheerListRelationFilter
   cheersReceived?: Prisma.CheerListRelationFilter
+  dailyRuns?: Prisma.DailyRunListRelationFilter
 }, "id" | "email" | "inviteCode">
 
 export type UserOrderByWithAggregationInput = {
@@ -348,6 +351,7 @@ export type UserCreateInput = {
   friendsReceived?: Prisma.FriendshipCreateNestedManyWithoutAddresseeInput
   cheersSent?: Prisma.CheerCreateNestedManyWithoutFromInput
   cheersReceived?: Prisma.CheerCreateNestedManyWithoutToInput
+  dailyRuns?: Prisma.DailyRunCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -374,6 +378,7 @@ export type UserUncheckedCreateInput = {
   friendsReceived?: Prisma.FriendshipUncheckedCreateNestedManyWithoutAddresseeInput
   cheersSent?: Prisma.CheerUncheckedCreateNestedManyWithoutFromInput
   cheersReceived?: Prisma.CheerUncheckedCreateNestedManyWithoutToInput
+  dailyRuns?: Prisma.DailyRunUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -400,6 +405,7 @@ export type UserUpdateInput = {
   friendsReceived?: Prisma.FriendshipUpdateManyWithoutAddresseeNestedInput
   cheersSent?: Prisma.CheerUpdateManyWithoutFromNestedInput
   cheersReceived?: Prisma.CheerUpdateManyWithoutToNestedInput
+  dailyRuns?: Prisma.DailyRunUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -426,6 +432,7 @@ export type UserUncheckedUpdateInput = {
   friendsReceived?: Prisma.FriendshipUncheckedUpdateManyWithoutAddresseeNestedInput
   cheersSent?: Prisma.CheerUncheckedUpdateManyWithoutFromNestedInput
   cheersReceived?: Prisma.CheerUncheckedUpdateManyWithoutToNestedInput
+  dailyRuns?: Prisma.DailyRunUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -713,6 +720,20 @@ export type UserUpdateOneRequiredWithoutCheersReceivedNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutCheersReceivedInput, Prisma.UserUpdateWithoutCheersReceivedInput>, Prisma.UserUncheckedUpdateWithoutCheersReceivedInput>
 }
 
+export type UserCreateNestedOneWithoutDailyRunsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutDailyRunsInput, Prisma.UserUncheckedCreateWithoutDailyRunsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutDailyRunsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutDailyRunsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutDailyRunsInput, Prisma.UserUncheckedCreateWithoutDailyRunsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutDailyRunsInput
+  upsert?: Prisma.UserUpsertWithoutDailyRunsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutDailyRunsInput, Prisma.UserUpdateWithoutDailyRunsInput>, Prisma.UserUncheckedUpdateWithoutDailyRunsInput>
+}
+
 export type UserCreateWithoutModulesInput = {
   id?: string
   email: string
@@ -736,6 +757,7 @@ export type UserCreateWithoutModulesInput = {
   friendsReceived?: Prisma.FriendshipCreateNestedManyWithoutAddresseeInput
   cheersSent?: Prisma.CheerCreateNestedManyWithoutFromInput
   cheersReceived?: Prisma.CheerCreateNestedManyWithoutToInput
+  dailyRuns?: Prisma.DailyRunCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutModulesInput = {
@@ -761,6 +783,7 @@ export type UserUncheckedCreateWithoutModulesInput = {
   friendsReceived?: Prisma.FriendshipUncheckedCreateNestedManyWithoutAddresseeInput
   cheersSent?: Prisma.CheerUncheckedCreateNestedManyWithoutFromInput
   cheersReceived?: Prisma.CheerUncheckedCreateNestedManyWithoutToInput
+  dailyRuns?: Prisma.DailyRunUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutModulesInput = {
@@ -802,6 +825,7 @@ export type UserUpdateWithoutModulesInput = {
   friendsReceived?: Prisma.FriendshipUpdateManyWithoutAddresseeNestedInput
   cheersSent?: Prisma.CheerUpdateManyWithoutFromNestedInput
   cheersReceived?: Prisma.CheerUpdateManyWithoutToNestedInput
+  dailyRuns?: Prisma.DailyRunUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutModulesInput = {
@@ -827,6 +851,7 @@ export type UserUncheckedUpdateWithoutModulesInput = {
   friendsReceived?: Prisma.FriendshipUncheckedUpdateManyWithoutAddresseeNestedInput
   cheersSent?: Prisma.CheerUncheckedUpdateManyWithoutFromNestedInput
   cheersReceived?: Prisma.CheerUncheckedUpdateManyWithoutToNestedInput
+  dailyRuns?: Prisma.DailyRunUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAttemptsInput = {
@@ -852,6 +877,7 @@ export type UserCreateWithoutAttemptsInput = {
   friendsReceived?: Prisma.FriendshipCreateNestedManyWithoutAddresseeInput
   cheersSent?: Prisma.CheerCreateNestedManyWithoutFromInput
   cheersReceived?: Prisma.CheerCreateNestedManyWithoutToInput
+  dailyRuns?: Prisma.DailyRunCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAttemptsInput = {
@@ -877,6 +903,7 @@ export type UserUncheckedCreateWithoutAttemptsInput = {
   friendsReceived?: Prisma.FriendshipUncheckedCreateNestedManyWithoutAddresseeInput
   cheersSent?: Prisma.CheerUncheckedCreateNestedManyWithoutFromInput
   cheersReceived?: Prisma.CheerUncheckedCreateNestedManyWithoutToInput
+  dailyRuns?: Prisma.DailyRunUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAttemptsInput = {
@@ -918,6 +945,7 @@ export type UserUpdateWithoutAttemptsInput = {
   friendsReceived?: Prisma.FriendshipUpdateManyWithoutAddresseeNestedInput
   cheersSent?: Prisma.CheerUpdateManyWithoutFromNestedInput
   cheersReceived?: Prisma.CheerUpdateManyWithoutToNestedInput
+  dailyRuns?: Prisma.DailyRunUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAttemptsInput = {
@@ -943,6 +971,7 @@ export type UserUncheckedUpdateWithoutAttemptsInput = {
   friendsReceived?: Prisma.FriendshipUncheckedUpdateManyWithoutAddresseeNestedInput
   cheersSent?: Prisma.CheerUncheckedUpdateManyWithoutFromNestedInput
   cheersReceived?: Prisma.CheerUncheckedUpdateManyWithoutToNestedInput
+  dailyRuns?: Prisma.DailyRunUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutMasteryInput = {
@@ -968,6 +997,7 @@ export type UserCreateWithoutMasteryInput = {
   friendsReceived?: Prisma.FriendshipCreateNestedManyWithoutAddresseeInput
   cheersSent?: Prisma.CheerCreateNestedManyWithoutFromInput
   cheersReceived?: Prisma.CheerCreateNestedManyWithoutToInput
+  dailyRuns?: Prisma.DailyRunCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutMasteryInput = {
@@ -993,6 +1023,7 @@ export type UserUncheckedCreateWithoutMasteryInput = {
   friendsReceived?: Prisma.FriendshipUncheckedCreateNestedManyWithoutAddresseeInput
   cheersSent?: Prisma.CheerUncheckedCreateNestedManyWithoutFromInput
   cheersReceived?: Prisma.CheerUncheckedCreateNestedManyWithoutToInput
+  dailyRuns?: Prisma.DailyRunUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutMasteryInput = {
@@ -1034,6 +1065,7 @@ export type UserUpdateWithoutMasteryInput = {
   friendsReceived?: Prisma.FriendshipUpdateManyWithoutAddresseeNestedInput
   cheersSent?: Prisma.CheerUpdateManyWithoutFromNestedInput
   cheersReceived?: Prisma.CheerUpdateManyWithoutToNestedInput
+  dailyRuns?: Prisma.DailyRunUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutMasteryInput = {
@@ -1059,6 +1091,7 @@ export type UserUncheckedUpdateWithoutMasteryInput = {
   friendsReceived?: Prisma.FriendshipUncheckedUpdateManyWithoutAddresseeNestedInput
   cheersSent?: Prisma.CheerUncheckedUpdateManyWithoutFromNestedInput
   cheersReceived?: Prisma.CheerUncheckedUpdateManyWithoutToNestedInput
+  dailyRuns?: Prisma.DailyRunUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutLeavesInput = {
@@ -1084,6 +1117,7 @@ export type UserCreateWithoutLeavesInput = {
   friendsReceived?: Prisma.FriendshipCreateNestedManyWithoutAddresseeInput
   cheersSent?: Prisma.CheerCreateNestedManyWithoutFromInput
   cheersReceived?: Prisma.CheerCreateNestedManyWithoutToInput
+  dailyRuns?: Prisma.DailyRunCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutLeavesInput = {
@@ -1109,6 +1143,7 @@ export type UserUncheckedCreateWithoutLeavesInput = {
   friendsReceived?: Prisma.FriendshipUncheckedCreateNestedManyWithoutAddresseeInput
   cheersSent?: Prisma.CheerUncheckedCreateNestedManyWithoutFromInput
   cheersReceived?: Prisma.CheerUncheckedCreateNestedManyWithoutToInput
+  dailyRuns?: Prisma.DailyRunUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutLeavesInput = {
@@ -1150,6 +1185,7 @@ export type UserUpdateWithoutLeavesInput = {
   friendsReceived?: Prisma.FriendshipUpdateManyWithoutAddresseeNestedInput
   cheersSent?: Prisma.CheerUpdateManyWithoutFromNestedInput
   cheersReceived?: Prisma.CheerUpdateManyWithoutToNestedInput
+  dailyRuns?: Prisma.DailyRunUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutLeavesInput = {
@@ -1175,6 +1211,7 @@ export type UserUncheckedUpdateWithoutLeavesInput = {
   friendsReceived?: Prisma.FriendshipUncheckedUpdateManyWithoutAddresseeNestedInput
   cheersSent?: Prisma.CheerUncheckedUpdateManyWithoutFromNestedInput
   cheersReceived?: Prisma.CheerUncheckedUpdateManyWithoutToNestedInput
+  dailyRuns?: Prisma.DailyRunUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutDecorationsInput = {
@@ -1200,6 +1237,7 @@ export type UserCreateWithoutDecorationsInput = {
   friendsReceived?: Prisma.FriendshipCreateNestedManyWithoutAddresseeInput
   cheersSent?: Prisma.CheerCreateNestedManyWithoutFromInput
   cheersReceived?: Prisma.CheerCreateNestedManyWithoutToInput
+  dailyRuns?: Prisma.DailyRunCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutDecorationsInput = {
@@ -1225,6 +1263,7 @@ export type UserUncheckedCreateWithoutDecorationsInput = {
   friendsReceived?: Prisma.FriendshipUncheckedCreateNestedManyWithoutAddresseeInput
   cheersSent?: Prisma.CheerUncheckedCreateNestedManyWithoutFromInput
   cheersReceived?: Prisma.CheerUncheckedCreateNestedManyWithoutToInput
+  dailyRuns?: Prisma.DailyRunUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutDecorationsInput = {
@@ -1266,6 +1305,7 @@ export type UserUpdateWithoutDecorationsInput = {
   friendsReceived?: Prisma.FriendshipUpdateManyWithoutAddresseeNestedInput
   cheersSent?: Prisma.CheerUpdateManyWithoutFromNestedInput
   cheersReceived?: Prisma.CheerUpdateManyWithoutToNestedInput
+  dailyRuns?: Prisma.DailyRunUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutDecorationsInput = {
@@ -1291,6 +1331,7 @@ export type UserUncheckedUpdateWithoutDecorationsInput = {
   friendsReceived?: Prisma.FriendshipUncheckedUpdateManyWithoutAddresseeNestedInput
   cheersSent?: Prisma.CheerUncheckedUpdateManyWithoutFromNestedInput
   cheersReceived?: Prisma.CheerUncheckedUpdateManyWithoutToNestedInput
+  dailyRuns?: Prisma.DailyRunUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutLectureQuestionsInput = {
@@ -1316,6 +1357,7 @@ export type UserCreateWithoutLectureQuestionsInput = {
   friendsReceived?: Prisma.FriendshipCreateNestedManyWithoutAddresseeInput
   cheersSent?: Prisma.CheerCreateNestedManyWithoutFromInput
   cheersReceived?: Prisma.CheerCreateNestedManyWithoutToInput
+  dailyRuns?: Prisma.DailyRunCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutLectureQuestionsInput = {
@@ -1341,6 +1383,7 @@ export type UserUncheckedCreateWithoutLectureQuestionsInput = {
   friendsReceived?: Prisma.FriendshipUncheckedCreateNestedManyWithoutAddresseeInput
   cheersSent?: Prisma.CheerUncheckedCreateNestedManyWithoutFromInput
   cheersReceived?: Prisma.CheerUncheckedCreateNestedManyWithoutToInput
+  dailyRuns?: Prisma.DailyRunUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutLectureQuestionsInput = {
@@ -1382,6 +1425,7 @@ export type UserUpdateWithoutLectureQuestionsInput = {
   friendsReceived?: Prisma.FriendshipUpdateManyWithoutAddresseeNestedInput
   cheersSent?: Prisma.CheerUpdateManyWithoutFromNestedInput
   cheersReceived?: Prisma.CheerUpdateManyWithoutToNestedInput
+  dailyRuns?: Prisma.DailyRunUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutLectureQuestionsInput = {
@@ -1407,6 +1451,7 @@ export type UserUncheckedUpdateWithoutLectureQuestionsInput = {
   friendsReceived?: Prisma.FriendshipUncheckedUpdateManyWithoutAddresseeNestedInput
   cheersSent?: Prisma.CheerUncheckedUpdateManyWithoutFromNestedInput
   cheersReceived?: Prisma.CheerUncheckedUpdateManyWithoutToNestedInput
+  dailyRuns?: Prisma.DailyRunUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutHintViewsInput = {
@@ -1432,6 +1477,7 @@ export type UserCreateWithoutHintViewsInput = {
   friendsReceived?: Prisma.FriendshipCreateNestedManyWithoutAddresseeInput
   cheersSent?: Prisma.CheerCreateNestedManyWithoutFromInput
   cheersReceived?: Prisma.CheerCreateNestedManyWithoutToInput
+  dailyRuns?: Prisma.DailyRunCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutHintViewsInput = {
@@ -1457,6 +1503,7 @@ export type UserUncheckedCreateWithoutHintViewsInput = {
   friendsReceived?: Prisma.FriendshipUncheckedCreateNestedManyWithoutAddresseeInput
   cheersSent?: Prisma.CheerUncheckedCreateNestedManyWithoutFromInput
   cheersReceived?: Prisma.CheerUncheckedCreateNestedManyWithoutToInput
+  dailyRuns?: Prisma.DailyRunUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutHintViewsInput = {
@@ -1498,6 +1545,7 @@ export type UserUpdateWithoutHintViewsInput = {
   friendsReceived?: Prisma.FriendshipUpdateManyWithoutAddresseeNestedInput
   cheersSent?: Prisma.CheerUpdateManyWithoutFromNestedInput
   cheersReceived?: Prisma.CheerUpdateManyWithoutToNestedInput
+  dailyRuns?: Prisma.DailyRunUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutHintViewsInput = {
@@ -1523,6 +1571,7 @@ export type UserUncheckedUpdateWithoutHintViewsInput = {
   friendsReceived?: Prisma.FriendshipUncheckedUpdateManyWithoutAddresseeNestedInput
   cheersSent?: Prisma.CheerUncheckedUpdateManyWithoutFromNestedInput
   cheersReceived?: Prisma.CheerUncheckedUpdateManyWithoutToNestedInput
+  dailyRuns?: Prisma.DailyRunUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutWarmupsInput = {
@@ -1548,6 +1597,7 @@ export type UserCreateWithoutWarmupsInput = {
   friendsReceived?: Prisma.FriendshipCreateNestedManyWithoutAddresseeInput
   cheersSent?: Prisma.CheerCreateNestedManyWithoutFromInput
   cheersReceived?: Prisma.CheerCreateNestedManyWithoutToInput
+  dailyRuns?: Prisma.DailyRunCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutWarmupsInput = {
@@ -1573,6 +1623,7 @@ export type UserUncheckedCreateWithoutWarmupsInput = {
   friendsReceived?: Prisma.FriendshipUncheckedCreateNestedManyWithoutAddresseeInput
   cheersSent?: Prisma.CheerUncheckedCreateNestedManyWithoutFromInput
   cheersReceived?: Prisma.CheerUncheckedCreateNestedManyWithoutToInput
+  dailyRuns?: Prisma.DailyRunUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutWarmupsInput = {
@@ -1614,6 +1665,7 @@ export type UserUpdateWithoutWarmupsInput = {
   friendsReceived?: Prisma.FriendshipUpdateManyWithoutAddresseeNestedInput
   cheersSent?: Prisma.CheerUpdateManyWithoutFromNestedInput
   cheersReceived?: Prisma.CheerUpdateManyWithoutToNestedInput
+  dailyRuns?: Prisma.DailyRunUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutWarmupsInput = {
@@ -1639,6 +1691,7 @@ export type UserUncheckedUpdateWithoutWarmupsInput = {
   friendsReceived?: Prisma.FriendshipUncheckedUpdateManyWithoutAddresseeNestedInput
   cheersSent?: Prisma.CheerUncheckedUpdateManyWithoutFromNestedInput
   cheersReceived?: Prisma.CheerUncheckedUpdateManyWithoutToNestedInput
+  dailyRuns?: Prisma.DailyRunUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutBadgesInput = {
@@ -1664,6 +1717,7 @@ export type UserCreateWithoutBadgesInput = {
   friendsReceived?: Prisma.FriendshipCreateNestedManyWithoutAddresseeInput
   cheersSent?: Prisma.CheerCreateNestedManyWithoutFromInput
   cheersReceived?: Prisma.CheerCreateNestedManyWithoutToInput
+  dailyRuns?: Prisma.DailyRunCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutBadgesInput = {
@@ -1689,6 +1743,7 @@ export type UserUncheckedCreateWithoutBadgesInput = {
   friendsReceived?: Prisma.FriendshipUncheckedCreateNestedManyWithoutAddresseeInput
   cheersSent?: Prisma.CheerUncheckedCreateNestedManyWithoutFromInput
   cheersReceived?: Prisma.CheerUncheckedCreateNestedManyWithoutToInput
+  dailyRuns?: Prisma.DailyRunUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutBadgesInput = {
@@ -1730,6 +1785,7 @@ export type UserUpdateWithoutBadgesInput = {
   friendsReceived?: Prisma.FriendshipUpdateManyWithoutAddresseeNestedInput
   cheersSent?: Prisma.CheerUpdateManyWithoutFromNestedInput
   cheersReceived?: Prisma.CheerUpdateManyWithoutToNestedInput
+  dailyRuns?: Prisma.DailyRunUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutBadgesInput = {
@@ -1755,6 +1811,7 @@ export type UserUncheckedUpdateWithoutBadgesInput = {
   friendsReceived?: Prisma.FriendshipUncheckedUpdateManyWithoutAddresseeNestedInput
   cheersSent?: Prisma.CheerUncheckedUpdateManyWithoutFromNestedInput
   cheersReceived?: Prisma.CheerUncheckedUpdateManyWithoutToNestedInput
+  dailyRuns?: Prisma.DailyRunUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutFriendsRequestedInput = {
@@ -1780,6 +1837,7 @@ export type UserCreateWithoutFriendsRequestedInput = {
   friendsReceived?: Prisma.FriendshipCreateNestedManyWithoutAddresseeInput
   cheersSent?: Prisma.CheerCreateNestedManyWithoutFromInput
   cheersReceived?: Prisma.CheerCreateNestedManyWithoutToInput
+  dailyRuns?: Prisma.DailyRunCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutFriendsRequestedInput = {
@@ -1805,6 +1863,7 @@ export type UserUncheckedCreateWithoutFriendsRequestedInput = {
   friendsReceived?: Prisma.FriendshipUncheckedCreateNestedManyWithoutAddresseeInput
   cheersSent?: Prisma.CheerUncheckedCreateNestedManyWithoutFromInput
   cheersReceived?: Prisma.CheerUncheckedCreateNestedManyWithoutToInput
+  dailyRuns?: Prisma.DailyRunUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutFriendsRequestedInput = {
@@ -1835,6 +1894,7 @@ export type UserCreateWithoutFriendsReceivedInput = {
   friendsRequested?: Prisma.FriendshipCreateNestedManyWithoutRequesterInput
   cheersSent?: Prisma.CheerCreateNestedManyWithoutFromInput
   cheersReceived?: Prisma.CheerCreateNestedManyWithoutToInput
+  dailyRuns?: Prisma.DailyRunCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutFriendsReceivedInput = {
@@ -1860,6 +1920,7 @@ export type UserUncheckedCreateWithoutFriendsReceivedInput = {
   friendsRequested?: Prisma.FriendshipUncheckedCreateNestedManyWithoutRequesterInput
   cheersSent?: Prisma.CheerUncheckedCreateNestedManyWithoutFromInput
   cheersReceived?: Prisma.CheerUncheckedCreateNestedManyWithoutToInput
+  dailyRuns?: Prisma.DailyRunUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutFriendsReceivedInput = {
@@ -1901,6 +1962,7 @@ export type UserUpdateWithoutFriendsRequestedInput = {
   friendsReceived?: Prisma.FriendshipUpdateManyWithoutAddresseeNestedInput
   cheersSent?: Prisma.CheerUpdateManyWithoutFromNestedInput
   cheersReceived?: Prisma.CheerUpdateManyWithoutToNestedInput
+  dailyRuns?: Prisma.DailyRunUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFriendsRequestedInput = {
@@ -1926,6 +1988,7 @@ export type UserUncheckedUpdateWithoutFriendsRequestedInput = {
   friendsReceived?: Prisma.FriendshipUncheckedUpdateManyWithoutAddresseeNestedInput
   cheersSent?: Prisma.CheerUncheckedUpdateManyWithoutFromNestedInput
   cheersReceived?: Prisma.CheerUncheckedUpdateManyWithoutToNestedInput
+  dailyRuns?: Prisma.DailyRunUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutFriendsReceivedInput = {
@@ -1962,6 +2025,7 @@ export type UserUpdateWithoutFriendsReceivedInput = {
   friendsRequested?: Prisma.FriendshipUpdateManyWithoutRequesterNestedInput
   cheersSent?: Prisma.CheerUpdateManyWithoutFromNestedInput
   cheersReceived?: Prisma.CheerUpdateManyWithoutToNestedInput
+  dailyRuns?: Prisma.DailyRunUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFriendsReceivedInput = {
@@ -1987,6 +2051,7 @@ export type UserUncheckedUpdateWithoutFriendsReceivedInput = {
   friendsRequested?: Prisma.FriendshipUncheckedUpdateManyWithoutRequesterNestedInput
   cheersSent?: Prisma.CheerUncheckedUpdateManyWithoutFromNestedInput
   cheersReceived?: Prisma.CheerUncheckedUpdateManyWithoutToNestedInput
+  dailyRuns?: Prisma.DailyRunUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutCheersSentInput = {
@@ -2012,6 +2077,7 @@ export type UserCreateWithoutCheersSentInput = {
   friendsRequested?: Prisma.FriendshipCreateNestedManyWithoutRequesterInput
   friendsReceived?: Prisma.FriendshipCreateNestedManyWithoutAddresseeInput
   cheersReceived?: Prisma.CheerCreateNestedManyWithoutToInput
+  dailyRuns?: Prisma.DailyRunCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCheersSentInput = {
@@ -2037,6 +2103,7 @@ export type UserUncheckedCreateWithoutCheersSentInput = {
   friendsRequested?: Prisma.FriendshipUncheckedCreateNestedManyWithoutRequesterInput
   friendsReceived?: Prisma.FriendshipUncheckedCreateNestedManyWithoutAddresseeInput
   cheersReceived?: Prisma.CheerUncheckedCreateNestedManyWithoutToInput
+  dailyRuns?: Prisma.DailyRunUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCheersSentInput = {
@@ -2067,6 +2134,7 @@ export type UserCreateWithoutCheersReceivedInput = {
   friendsRequested?: Prisma.FriendshipCreateNestedManyWithoutRequesterInput
   friendsReceived?: Prisma.FriendshipCreateNestedManyWithoutAddresseeInput
   cheersSent?: Prisma.CheerCreateNestedManyWithoutFromInput
+  dailyRuns?: Prisma.DailyRunCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCheersReceivedInput = {
@@ -2092,6 +2160,7 @@ export type UserUncheckedCreateWithoutCheersReceivedInput = {
   friendsRequested?: Prisma.FriendshipUncheckedCreateNestedManyWithoutRequesterInput
   friendsReceived?: Prisma.FriendshipUncheckedCreateNestedManyWithoutAddresseeInput
   cheersSent?: Prisma.CheerUncheckedCreateNestedManyWithoutFromInput
+  dailyRuns?: Prisma.DailyRunUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCheersReceivedInput = {
@@ -2133,6 +2202,7 @@ export type UserUpdateWithoutCheersSentInput = {
   friendsRequested?: Prisma.FriendshipUpdateManyWithoutRequesterNestedInput
   friendsReceived?: Prisma.FriendshipUpdateManyWithoutAddresseeNestedInput
   cheersReceived?: Prisma.CheerUpdateManyWithoutToNestedInput
+  dailyRuns?: Prisma.DailyRunUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCheersSentInput = {
@@ -2158,6 +2228,7 @@ export type UserUncheckedUpdateWithoutCheersSentInput = {
   friendsRequested?: Prisma.FriendshipUncheckedUpdateManyWithoutRequesterNestedInput
   friendsReceived?: Prisma.FriendshipUncheckedUpdateManyWithoutAddresseeNestedInput
   cheersReceived?: Prisma.CheerUncheckedUpdateManyWithoutToNestedInput
+  dailyRuns?: Prisma.DailyRunUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutCheersReceivedInput = {
@@ -2194,6 +2265,7 @@ export type UserUpdateWithoutCheersReceivedInput = {
   friendsRequested?: Prisma.FriendshipUpdateManyWithoutRequesterNestedInput
   friendsReceived?: Prisma.FriendshipUpdateManyWithoutAddresseeNestedInput
   cheersSent?: Prisma.CheerUpdateManyWithoutFromNestedInput
+  dailyRuns?: Prisma.DailyRunUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCheersReceivedInput = {
@@ -2219,6 +2291,127 @@ export type UserUncheckedUpdateWithoutCheersReceivedInput = {
   friendsRequested?: Prisma.FriendshipUncheckedUpdateManyWithoutRequesterNestedInput
   friendsReceived?: Prisma.FriendshipUncheckedUpdateManyWithoutAddresseeNestedInput
   cheersSent?: Prisma.CheerUncheckedUpdateManyWithoutFromNestedInput
+  dailyRuns?: Prisma.DailyRunUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutDailyRunsInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  displayName: string
+  theme?: $Enums.Theme | null
+  inviteCode?: string | null
+  requestsSeenAt?: Date | string | null
+  plantedAt?: Date | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  modules?: Prisma.ModuleProgressCreateNestedManyWithoutUserInput
+  attempts?: Prisma.QuizAttemptCreateNestedManyWithoutUserInput
+  mastery?: Prisma.MasteryCreateNestedManyWithoutUserInput
+  leaves?: Prisma.LeafTransactionCreateNestedManyWithoutUserInput
+  decorations?: Prisma.UserDecorationCreateNestedManyWithoutUserInput
+  lectureQuestions?: Prisma.LectureQuestionCreateNestedManyWithoutUserInput
+  warmups?: Prisma.WarmupResultCreateNestedManyWithoutUserInput
+  hintViews?: Prisma.HintViewCreateNestedManyWithoutUserInput
+  badges?: Prisma.UserBadgeCreateNestedManyWithoutUserInput
+  friendsRequested?: Prisma.FriendshipCreateNestedManyWithoutRequesterInput
+  friendsReceived?: Prisma.FriendshipCreateNestedManyWithoutAddresseeInput
+  cheersSent?: Prisma.CheerCreateNestedManyWithoutFromInput
+  cheersReceived?: Prisma.CheerCreateNestedManyWithoutToInput
+}
+
+export type UserUncheckedCreateWithoutDailyRunsInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  displayName: string
+  theme?: $Enums.Theme | null
+  inviteCode?: string | null
+  requestsSeenAt?: Date | string | null
+  plantedAt?: Date | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  modules?: Prisma.ModuleProgressUncheckedCreateNestedManyWithoutUserInput
+  attempts?: Prisma.QuizAttemptUncheckedCreateNestedManyWithoutUserInput
+  mastery?: Prisma.MasteryUncheckedCreateNestedManyWithoutUserInput
+  leaves?: Prisma.LeafTransactionUncheckedCreateNestedManyWithoutUserInput
+  decorations?: Prisma.UserDecorationUncheckedCreateNestedManyWithoutUserInput
+  lectureQuestions?: Prisma.LectureQuestionUncheckedCreateNestedManyWithoutUserInput
+  warmups?: Prisma.WarmupResultUncheckedCreateNestedManyWithoutUserInput
+  hintViews?: Prisma.HintViewUncheckedCreateNestedManyWithoutUserInput
+  badges?: Prisma.UserBadgeUncheckedCreateNestedManyWithoutUserInput
+  friendsRequested?: Prisma.FriendshipUncheckedCreateNestedManyWithoutRequesterInput
+  friendsReceived?: Prisma.FriendshipUncheckedCreateNestedManyWithoutAddresseeInput
+  cheersSent?: Prisma.CheerUncheckedCreateNestedManyWithoutFromInput
+  cheersReceived?: Prisma.CheerUncheckedCreateNestedManyWithoutToInput
+}
+
+export type UserCreateOrConnectWithoutDailyRunsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutDailyRunsInput, Prisma.UserUncheckedCreateWithoutDailyRunsInput>
+}
+
+export type UserUpsertWithoutDailyRunsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutDailyRunsInput, Prisma.UserUncheckedUpdateWithoutDailyRunsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutDailyRunsInput, Prisma.UserUncheckedCreateWithoutDailyRunsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutDailyRunsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutDailyRunsInput, Prisma.UserUncheckedUpdateWithoutDailyRunsInput>
+}
+
+export type UserUpdateWithoutDailyRunsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  displayName?: Prisma.StringFieldUpdateOperationsInput | string
+  theme?: Prisma.NullableEnumThemeFieldUpdateOperationsInput | $Enums.Theme | null
+  inviteCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requestsSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  plantedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  modules?: Prisma.ModuleProgressUpdateManyWithoutUserNestedInput
+  attempts?: Prisma.QuizAttemptUpdateManyWithoutUserNestedInput
+  mastery?: Prisma.MasteryUpdateManyWithoutUserNestedInput
+  leaves?: Prisma.LeafTransactionUpdateManyWithoutUserNestedInput
+  decorations?: Prisma.UserDecorationUpdateManyWithoutUserNestedInput
+  lectureQuestions?: Prisma.LectureQuestionUpdateManyWithoutUserNestedInput
+  warmups?: Prisma.WarmupResultUpdateManyWithoutUserNestedInput
+  hintViews?: Prisma.HintViewUpdateManyWithoutUserNestedInput
+  badges?: Prisma.UserBadgeUpdateManyWithoutUserNestedInput
+  friendsRequested?: Prisma.FriendshipUpdateManyWithoutRequesterNestedInput
+  friendsReceived?: Prisma.FriendshipUpdateManyWithoutAddresseeNestedInput
+  cheersSent?: Prisma.CheerUpdateManyWithoutFromNestedInput
+  cheersReceived?: Prisma.CheerUpdateManyWithoutToNestedInput
+}
+
+export type UserUncheckedUpdateWithoutDailyRunsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  displayName?: Prisma.StringFieldUpdateOperationsInput | string
+  theme?: Prisma.NullableEnumThemeFieldUpdateOperationsInput | $Enums.Theme | null
+  inviteCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requestsSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  plantedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  modules?: Prisma.ModuleProgressUncheckedUpdateManyWithoutUserNestedInput
+  attempts?: Prisma.QuizAttemptUncheckedUpdateManyWithoutUserNestedInput
+  mastery?: Prisma.MasteryUncheckedUpdateManyWithoutUserNestedInput
+  leaves?: Prisma.LeafTransactionUncheckedUpdateManyWithoutUserNestedInput
+  decorations?: Prisma.UserDecorationUncheckedUpdateManyWithoutUserNestedInput
+  lectureQuestions?: Prisma.LectureQuestionUncheckedUpdateManyWithoutUserNestedInput
+  warmups?: Prisma.WarmupResultUncheckedUpdateManyWithoutUserNestedInput
+  hintViews?: Prisma.HintViewUncheckedUpdateManyWithoutUserNestedInput
+  badges?: Prisma.UserBadgeUncheckedUpdateManyWithoutUserNestedInput
+  friendsRequested?: Prisma.FriendshipUncheckedUpdateManyWithoutRequesterNestedInput
+  friendsReceived?: Prisma.FriendshipUncheckedUpdateManyWithoutAddresseeNestedInput
+  cheersSent?: Prisma.CheerUncheckedUpdateManyWithoutFromNestedInput
+  cheersReceived?: Prisma.CheerUncheckedUpdateManyWithoutToNestedInput
 }
 
 
@@ -2240,6 +2433,7 @@ export type UserCountOutputType = {
   friendsReceived: number
   cheersSent: number
   cheersReceived: number
+  dailyRuns: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2256,6 +2450,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   friendsReceived?: boolean | UserCountOutputTypeCountFriendsReceivedArgs
   cheersSent?: boolean | UserCountOutputTypeCountCheersSentArgs
   cheersReceived?: boolean | UserCountOutputTypeCountCheersReceivedArgs
+  dailyRuns?: boolean | UserCountOutputTypeCountDailyRunsArgs
 }
 
 /**
@@ -2359,6 +2554,13 @@ export type UserCountOutputTypeCountCheersReceivedArgs<ExtArgs extends runtime.T
   where?: Prisma.CheerWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountDailyRunsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.DailyRunWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -2384,6 +2586,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   friendsReceived?: boolean | Prisma.User$friendsReceivedArgs<ExtArgs>
   cheersSent?: boolean | Prisma.User$cheersSentArgs<ExtArgs>
   cheersReceived?: boolean | Prisma.User$cheersReceivedArgs<ExtArgs>
+  dailyRuns?: boolean | Prisma.User$dailyRunsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -2441,6 +2644,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   friendsReceived?: boolean | Prisma.User$friendsReceivedArgs<ExtArgs>
   cheersSent?: boolean | Prisma.User$cheersSentArgs<ExtArgs>
   cheersReceived?: boolean | Prisma.User$cheersReceivedArgs<ExtArgs>
+  dailyRuns?: boolean | Prisma.User$dailyRunsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -2462,6 +2666,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     friendsReceived: Prisma.$FriendshipPayload<ExtArgs>[]
     cheersSent: Prisma.$CheerPayload<ExtArgs>[]
     cheersReceived: Prisma.$CheerPayload<ExtArgs>[]
+    dailyRuns: Prisma.$DailyRunPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2881,6 +3086,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   friendsReceived<T extends Prisma.User$friendsReceivedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$friendsReceivedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FriendshipPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   cheersSent<T extends Prisma.User$cheersSentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$cheersSentArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CheerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   cheersReceived<T extends Prisma.User$cheersReceivedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$cheersReceivedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CheerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  dailyRuns<T extends Prisma.User$dailyRunsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$dailyRunsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DailyRunPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3622,6 +3828,30 @@ export type User$cheersReceivedArgs<ExtArgs extends runtime.Types.Extensions.Int
   take?: number
   skip?: number
   distinct?: Prisma.CheerScalarFieldEnum | Prisma.CheerScalarFieldEnum[]
+}
+
+/**
+ * User.dailyRuns
+ */
+export type User$dailyRunsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DailyRun
+   */
+  select?: Prisma.DailyRunSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the DailyRun
+   */
+  omit?: Prisma.DailyRunOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DailyRunInclude<ExtArgs> | null
+  where?: Prisma.DailyRunWhereInput
+  orderBy?: Prisma.DailyRunOrderByWithRelationInput | Prisma.DailyRunOrderByWithRelationInput[]
+  cursor?: Prisma.DailyRunWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.DailyRunScalarFieldEnum | Prisma.DailyRunScalarFieldEnum[]
 }
 
 /**

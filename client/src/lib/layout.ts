@@ -80,3 +80,21 @@ export function beadOffset(i: number, keyCount: number): number {
   const w = nodeWidth(keyCount) - NODE_PAD * 2;
   return -w / 2 + BEAD_R + i * (BEAD_R * 2 + BEAD_GAP);
 }
+
+export interface ViewFrame {
+  width: number;
+  height: number;
+  offsetX: number;
+  offsetY: number;
+}
+
+export function viewFrame(layout: TreeLayout, scene: boolean, hasCallouts: boolean): ViewFrame {
+  const width = Math.max(layout.width, 640);
+  const offsetY = hasCallouts ? 24 : 0;
+  return {
+    width,
+    height: layout.height + (scene ? 60 : 0) + offsetY,
+    offsetX: (width - layout.width) / 2,
+    offsetY,
+  };
+}

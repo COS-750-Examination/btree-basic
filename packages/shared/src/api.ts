@@ -257,3 +257,68 @@ export const InviteResult = z.object({
   friendId: z.string().nullable(),
 });
 export type InviteResult = z.infer<typeof InviteResult>;
+
+export const DailyPlay = z.object({
+  tries: z
+    .array(z.union([z.string().max(32), z.number().int()]))
+    .min(1)
+    .max(32),
+  hint: z.boolean(),
+});
+export type DailyPlay = z.infer<typeof DailyPlay>;
+
+export const DailyFinishBody = z.object({
+  day: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  plays: z.array(DailyPlay).max(64),
+});
+export type DailyFinishBody = z.infer<typeof DailyFinishBody>;
+
+export const DailyRoundResult = z.object({
+  score: z.number().min(0).max(100),
+  timeMs: z.number().int(),
+  penaltyMs: z.number().int(),
+  finalMs: z.number().int(),
+  mistakes: z.number().int(),
+  hints: z.number().int(),
+  moves: z.number().int(),
+});
+export type DailyRoundResult = z.infer<typeof DailyRoundResult>;
+
+export const DailyRoundState = z.object({
+  round: z.number().int().min(1).max(3),
+  startedAt: z.string().nullable(),
+  result: DailyRoundResult.nullable(),
+});
+export type DailyRoundState = z.infer<typeof DailyRoundState>;
+
+export const DailyContent = z.object({
+  path: z.object({ keys: z.array(z.number().int()), seed: z.number().int() }).nullable(),
+  valid: z
+    .object({ keySets: z.array(z.array(z.number().int())), seed: z.number().int() })
+    .nullable(),
+  build: z.object({ keys: z.array(z.number().int()) }).nullable(),
+});
+export type DailyContent = z.infer<typeof DailyContent>;
+
+const roundScore = z.number().min(0).max(100);
+
+export const DailyEntry = z.object({
+  userId: z.string(),
+  displayName: z.string(),
+  total: roundScore,
+  path: roundScore,
+  valid: roundScore,
+  build: roundScore,
+  isMe: z.boolean(),
+});
+export type DailyEntry = z.infer<typeof DailyEntry>;
+
+export const DailyState = z.object({
+  day: z.string(),
+  resetsAt: z.string(),
+  rounds: z.array(DailyRoundState).length(3),
+  content: DailyContent,
+  total: roundScore.nullable(),
+  leaderboard: z.array(DailyEntry).nullable(),
+});
+export type DailyState = z.infer<typeof DailyState>;

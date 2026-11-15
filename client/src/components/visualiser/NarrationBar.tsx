@@ -1,6 +1,5 @@
 import { Volume2, VolumeX } from 'lucide-react';
-import { useEffect } from 'react';
-import { speak, speechSupported, stopSpeaking } from '../../lib/speech';
+import { speechSupported } from '../../lib/speech';
 import { Card, LeafIcon } from '../ui';
 
 /** Plain-language sentence for the current step (FR4), optionally read aloud. */
@@ -13,11 +12,6 @@ export function NarrationBar({
   voice: boolean;
   onVoice: (v: boolean) => void;
 }) {
-  useEffect(() => {
-    if (voice) speak(text);
-  }, [text, voice]);
-  useEffect(() => () => stopSpeaking(), []);
-
   return (
     <Card className="flex items-center gap-3 py-4">
       <LeafIcon className="h-6 w-6 shrink-0" />

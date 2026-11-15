@@ -1,18 +1,17 @@
 import { useEffect } from 'react';
 
 const BASE_DELAY_MS = 1400;
+export const AFTER_SPEECH_MS = 350;
 
-/** Advances `next` on a timer while `playing`; delay scales with `speed`. */
 export function usePlayback(
   playing: boolean,
   speed: number,
   next: () => void,
-  deps: unknown[] = [],
+  { step, voice = false, spoken = true }: { step: number; voice?: boolean; spoken?: boolean },
 ) {
   useEffect(() => {
-    if (!playing) return;
-    const id = window.setInterval(next, BASE_DELAY_MS / speed);
-    return () => window.clearInterval(id);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [playing, speed, next, ...deps]);
+    if (!playing || !spoken) return;
+    const id = window.setTimeout(next, voice ? AFTER_SPEECH_MS : BASE_DELAY_MS / speed);
+    return () => window.clearTimeout(id);
+  }, [playing, speed, next, step, voice, spoken]);
 }

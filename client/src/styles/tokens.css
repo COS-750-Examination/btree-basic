@@ -137,6 +137,9 @@
   --color-leaf: var(--leaf);
   --color-leaf-dark: var(--leaf-dark);
   --color-leaf-light: var(--leaf-light);
+  --color-blossom: var(--blossom);
+  --color-bunting-blue: var(--bunting-blue);
+  --color-coral: var(--coral);
   --color-on-leaf: var(--on-leaf);
   --color-highlight: var(--highlight);
   --color-highlight-dark: var(--highlight-dark);
@@ -157,6 +160,7 @@
   --shadow-paper-stack-sm: 3px 4px 0 var(--paper-back);
   --shadow-press-leaf: 3px 4px 0 var(--leaf-dark);
   --shadow-press-highlight: 3px 4px 0 var(--highlight-dark);
+  --shadow-press-coral: 3px 4px 0 var(--coral);
   --shadow-lift: 2px 3px 0 var(--shadow);
   --drop-shadow-*: initial;
   --drop-shadow-lift: 2px 3px 0 var(--shadow);

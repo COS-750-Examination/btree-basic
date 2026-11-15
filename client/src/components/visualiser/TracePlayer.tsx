@@ -5,6 +5,7 @@ import { stepView } from '../../lib/stepView';
 import { BTreeView } from '../tree/BTreeView';
 import { NarrationBar } from './NarrationBar';
 import { PlaybackControls } from './PlaybackControls';
+import { useNarration } from './useNarration';
 import { usePlayback } from './usePlayback';
 
 /** Self-contained animated worked example for lessons ("Watch" tab) and practice help. */
@@ -24,9 +25,10 @@ export function TracePlayer({ trace, autoPlay = false }: { trace: Trace; autoPla
       return i + 1;
     });
   }, [last]);
-  usePlayback(playing, speed, next);
-
   const step = trace.steps[index]!;
+  const spoken = useNarration(narrate(step), index, voice, speed);
+  usePlayback(playing, speed, next, { step: index, voice, spoken });
+
   return (
     <div className="space-y-4">
       <div className="rounded-lg bg-sky-200 p-2">

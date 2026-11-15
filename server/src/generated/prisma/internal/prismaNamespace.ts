@@ -409,7 +409,9 @@ export const ModelName = {
   WarmupResult: 'WarmupResult',
   UserBadge: 'UserBadge',
   Friendship: 'Friendship',
-  Cheer: 'Cheer'
+  Cheer: 'Cheer',
+  DailyRun: 'DailyRun',
+  DailyRound: 'DailyRound'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -425,7 +427,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "moduleProgress" | "quizAttempt" | "mastery" | "leafTransaction" | "decoration" | "userDecoration" | "lectureQuestion" | "hintView" | "warmupResult" | "userBadge" | "friendship" | "cheer"
+    modelProps: "user" | "moduleProgress" | "quizAttempt" | "mastery" | "leafTransaction" | "decoration" | "userDecoration" | "lectureQuestion" | "hintView" | "warmupResult" | "userBadge" | "friendship" | "cheer" | "dailyRun" | "dailyRound"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1391,6 +1393,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    DailyRun: {
+      payload: Prisma.$DailyRunPayload<ExtArgs>
+      fields: Prisma.DailyRunFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.DailyRunFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyRunPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.DailyRunFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyRunPayload>
+        }
+        findFirst: {
+          args: Prisma.DailyRunFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyRunPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.DailyRunFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyRunPayload>
+        }
+        findMany: {
+          args: Prisma.DailyRunFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyRunPayload>[]
+        }
+        create: {
+          args: Prisma.DailyRunCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyRunPayload>
+        }
+        createMany: {
+          args: Prisma.DailyRunCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.DailyRunCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyRunPayload>[]
+        }
+        delete: {
+          args: Prisma.DailyRunDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyRunPayload>
+        }
+        update: {
+          args: Prisma.DailyRunUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyRunPayload>
+        }
+        deleteMany: {
+          args: Prisma.DailyRunDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.DailyRunUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.DailyRunUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyRunPayload>[]
+        }
+        upsert: {
+          args: Prisma.DailyRunUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyRunPayload>
+        }
+        aggregate: {
+          args: Prisma.DailyRunAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateDailyRun>
+        }
+        groupBy: {
+          args: Prisma.DailyRunGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DailyRunGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.DailyRunCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DailyRunCountAggregateOutputType> | number
+        }
+      }
+    }
+    DailyRound: {
+      payload: Prisma.$DailyRoundPayload<ExtArgs>
+      fields: Prisma.DailyRoundFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.DailyRoundFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyRoundPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.DailyRoundFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyRoundPayload>
+        }
+        findFirst: {
+          args: Prisma.DailyRoundFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyRoundPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.DailyRoundFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyRoundPayload>
+        }
+        findMany: {
+          args: Prisma.DailyRoundFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyRoundPayload>[]
+        }
+        create: {
+          args: Prisma.DailyRoundCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyRoundPayload>
+        }
+        createMany: {
+          args: Prisma.DailyRoundCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.DailyRoundCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyRoundPayload>[]
+        }
+        delete: {
+          args: Prisma.DailyRoundDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyRoundPayload>
+        }
+        update: {
+          args: Prisma.DailyRoundUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyRoundPayload>
+        }
+        deleteMany: {
+          args: Prisma.DailyRoundDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.DailyRoundUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.DailyRoundUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyRoundPayload>[]
+        }
+        upsert: {
+          args: Prisma.DailyRoundUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyRoundPayload>
+        }
+        aggregate: {
+          args: Prisma.DailyRoundAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateDailyRound>
+        }
+        groupBy: {
+          args: Prisma.DailyRoundGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DailyRoundGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.DailyRoundCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DailyRoundCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1585,6 +1735,39 @@ export const CheerScalarFieldEnum = {
 } as const
 
 export type CheerScalarFieldEnum = (typeof CheerScalarFieldEnum)[keyof typeof CheerScalarFieldEnum]
+
+
+export const DailyRunScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  day: 'day',
+  keys: 'keys',
+  pathKeys: 'pathKeys',
+  validKeys: 'validKeys',
+  seed: 'seed',
+  startedAt: 'startedAt',
+  finishedAt: 'finishedAt',
+  score: 'score'
+} as const
+
+export type DailyRunScalarFieldEnum = (typeof DailyRunScalarFieldEnum)[keyof typeof DailyRunScalarFieldEnum]
+
+
+export const DailyRoundScalarFieldEnum = {
+  id: 'id',
+  runId: 'runId',
+  round: 'round',
+  startedAt: 'startedAt',
+  finishedAt: 'finishedAt',
+  moves: 'moves',
+  mistakes: 'mistakes',
+  hints: 'hints',
+  timeMs: 'timeMs',
+  penaltyMs: 'penaltyMs',
+  score: 'score'
+} as const
+
+export type DailyRoundScalarFieldEnum = (typeof DailyRoundScalarFieldEnum)[keyof typeof DailyRoundScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1899,6 +2082,8 @@ export type GlobalOmitConfig = {
   userBadge?: Prisma.UserBadgeOmit
   friendship?: Prisma.FriendshipOmit
   cheer?: Prisma.CheerOmit
+  dailyRun?: Prisma.DailyRunOmit
+  dailyRound?: Prisma.DailyRoundOmit
 }
 
 /* Types for Logging */

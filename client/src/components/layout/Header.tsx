@@ -16,6 +16,7 @@ const NAV = [
   { to: '/visualiser', label: 'Visualiser' },
   { to: '/practice', label: 'Practice' },
   { to: '/quiz', label: 'Quiz' },
+  { to: '/daily', label: 'Daily b-tree', signedIn: true },
   { to: '/grove', label: 'My grove' },
 ];
 
@@ -66,6 +67,7 @@ export function Header() {
   const requests = newRequests(useFriends(Boolean(me.data)).data).length;
   const requestText = requests === 1 ? '1 new friend request' : `${requests} new friend requests`;
   const countFor = (to: string) => (to === '/grove' ? newCheers : 0);
+  const nav = NAV.filter((n) => !('signedIn' in n) || me.data);
 
   return (
     <header className="bg-sky-200">
@@ -76,7 +78,7 @@ export function Header() {
         </Link>
 
         <nav aria-label="Main" className="mx-auto hidden gap-2 md:flex">
-          {NAV.map((n) => (
+          {nav.map((n) => (
             <NavItem key={n.to} to={n.to} label={n.label} count={countFor(n.to)} />
           ))}
         </nav>
@@ -161,7 +163,7 @@ export function Header() {
           aria-label="Main"
           className="mx-auto flex max-w-6xl flex-wrap gap-2 px-4 pt-3 md:hidden"
         >
-          {NAV.map((n) => (
+          {nav.map((n) => (
             <NavItem
               key={n.to}
               to={n.to}

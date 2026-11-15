@@ -188,3 +188,15 @@ export type DecorationId = (typeof DECORATIONS)[number]['id'];
 
 export const THEMES = ['day', 'dusk'] as const;
 export type Theme = (typeof THEMES)[number];
+
+export const DAILY_MAX_SCORE = 100;
+export const DAILY_WRONG_PENALTY_MS = 10_000;
+export const DAILY_HINT_PENALTY_MS = 30_000;
+
+export const DAILY_ROUNDS = [
+  { id: 1, key: 'path', label: 'Find the path', objective: 'O3', pointsPerSecond: 0.7 },
+  { id: 2, key: 'valid', label: 'Valid or not?', objective: 'O2', pointsPerSecond: 0.5 },
+  { id: 3, key: 'build', label: 'Build it', objective: 'O6', pointsPerSecond: 0.25 },
+] as const;
+export type DailyRoundId = (typeof DAILY_ROUNDS)[number]['id'];
+export type DailyRoundKey = (typeof DAILY_ROUNDS)[number]['key'];

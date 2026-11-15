@@ -38,6 +38,7 @@ model User {
   friendsReceived  Friendship[]      @relation("addressee")
   cheersSent       Cheer[]           @relation("cheerFrom")
   cheersReceived   Cheer[]           @relation("cheerTo")
+  dailyRuns        DailyRun[]
 }
 
 model ModuleProgress {
@@ -199,4 +200,39 @@ model Cheer {
   to        User     @relation("cheerTo", fields: [toId], references: [id], onDelete: Cascade)
 
   @@index([toId])
+}
+
+model DailyRun {
+  id         String       @id @default(cuid())
+  userId     String
+  day        String
+  keys       Int[]
+  pathKeys   Int[]
+  validKeys  Int[]
+  seed       Int
+  startedAt  DateTime     @default(now())
+  finishedAt DateTime?
+  score      Float?
+  user       User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  rounds     DailyRound[]
+
+  @@unique([userId, day])
+  @@index([day])
+}
+
+model DailyRound {
+  id         String    @id @default(cuid())
+  runId      String
+  round      Int
+  startedAt  DateTime  @default(now())
+  finishedAt DateTime?
+  moves      Int?
+  mistakes   Int?
+  hints      Int?
+  timeMs     Int?
+  penaltyMs  Int?
+  score      Float?
+  run        DailyRun  @relation(fields: [runId], references: [id], onDelete: Cascade)
+
+  @@unique([runId, round])
 }
