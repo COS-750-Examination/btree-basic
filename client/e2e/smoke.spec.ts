@@ -1,5 +1,5 @@
 import AxeBuilder from '@axe-core/playwright';
-import { expect, test } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
 
 /** Screens 01–09 and the account page load, and have no serious accessibility violations (NFR4: WCAG 2.1 AA). */
 const SCREENS = [
@@ -15,10 +15,26 @@ const SCREENS = [
   '/account',
 ];
 
+/**
+ * Entrance animations fade text in from transparent, and axe would measure contrast mid-fade.
+ * Wait until every finite animation has finished; looping ambient ones (swaying tree, drifting
+ * clouds) never touch text opacity, so they are left running.
+ */
+async function settleAnimations(page: Page) {
+  await page.waitForFunction(() =>
+    document
+      .getAnimations()
+      .every(
+        (a) => a.playState !== 'running' || a.effect?.getComputedTiming().iterations === Infinity,
+      ),
+  );
+}
+
 for (const path of SCREENS) {
   test(`${path} renders without serious a11y violations`, async ({ page }) => {
     await page.goto(path);
     await expect(page.locator('main')).toBeVisible();
+    await settleAnimations(page);
     const results = await new AxeBuilder({ page })
       .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
       .analyze();
