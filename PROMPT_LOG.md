@@ -1196,6 +1196,42 @@ Several fonts were tried in turn at the requester's direction: Spectral, Gravita
 
 ---
 
+## Entry 025: Narration cut off during playback
+
+| Field        | Detail                                                                                                        |
+| ------------ | ------------------------------------------------------------------------------------------------------------- |
+| Date         | 15 November 2026                                                                                              |
+| Requested by | Taylor Sergel, frontend                                                                                       |
+| Tool         | Claude Code (Anthropic), model Claude Opus 5.5                                                                |
+| Scope        | `usePlayback.ts`, `useNarration.ts`, `NarrationBar.tsx`, `TracePlayer.tsx`, `VisualiserPage.tsx`, `speech.ts` |
+| Status       | Completed; left uncommitted on branch `feat/ui-updates` for review                                            |
+
+### Request
+
+> In the lesson Watch tab and the Visualiser, Play moves on before the narrator finishes the sentence. Either remove Play or make it wait until she has finished. Which is better?
+
+### Clarifications provided
+
+- Recommended keeping Play and waiting for the speech to end, with a brief pause, a speed-based voice rate, and a fallback timer. The user agreed and asked that the pause stay short.
+
+### Deliverables
+
+- Play waits for the narration to end, then pauses 0.35 s. The voice rate follows the speed control. A fallback (about 140 words a minute plus 2 s) stops playback from hanging. Timing with the voice off is unchanged.
+
+### Verification summary
+
+| Check                                        | Result          |
+| -------------------------------------------- | --------------- |
+| Client tests                                 | 154 / 154 pass  |
+| Engine and server tests                      | 23 and 128 pass |
+| ESLint, TypeScript (strict), Prettier, build | Pass            |
+
+### Human review required
+
+- Listen in Chrome, Safari and Edge: voices differ in speed, and the fallback is an estimate.
+
+---
+
 ## Entry template
 
 ```markdown

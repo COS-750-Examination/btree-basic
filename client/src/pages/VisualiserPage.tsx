@@ -8,6 +8,7 @@ import { NarrationBar } from '../components/visualiser/NarrationBar';
 import { PlaybackControls } from '../components/visualiser/PlaybackControls';
 import { PseudocodePanel } from '../components/visualiser/PseudocodePanel';
 import { StepsPanel } from '../components/visualiser/StepsPanel';
+import { useNarration } from '../components/visualiser/useNarration';
 import { usePlayback } from '../components/visualiser/usePlayback';
 import { Button, Card, PageHeader } from '../components/ui';
 import { presets } from '../lib/content';
@@ -25,7 +26,6 @@ export function VisualiserPage() {
   const [voice, setVoice] = useState(false);
 
   const next = useCallback(() => useVisualiserStore.getState().next(), []);
-  usePlayback(v.playing, v.speed, next);
 
   const run = (op: Operation) => (e?: FormEvent) => {
     e?.preventDefault();
@@ -44,6 +44,8 @@ export function VisualiserPage() {
   const narration = step
     ? narrate(step)
     : 'Pick a key and press Insert, Search or Delete to watch the algorithm step by step.';
+  const spoken = useNarration(narration, v.index, voice, v.speed);
+  usePlayback(v.playing, v.speed, next, { step: v.index, voice, spoken });
   const opLabel = trace
     ? `${trace.operation === 'insert' ? 'Inserting' : trace.operation === 'search' ? 'Searching for' : 'Deleting'} ${trace.key}`
     : 'Ready';
