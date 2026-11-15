@@ -25,7 +25,7 @@ Tick items off as they land, and move finished work into the CHANGELOG.
 
 ### Features
 
-- [ ] Practice activity 4, **Build the tree** (O6), is still a stub (`client/src/pages/PracticePage.tsx`).
+- [x] Practice activity 4, **Build the tree** (O6): replaced by the **Daily b-tree** tab, a once-a-day build-the-tree puzzle with a friends-only leaderboard. Done 15 November 2026.
 - [x] Badges (Explorer, Splitter, Root Raiser, Lecture Ready): show them on the Ready and Grove screens. Done 14 November 2026. The server side is ready: `GET /api/badges` returns all four, with `awardedAt` (or null while locked).
 - [x] Drag decorations into place on the grove. The server has `PUT /api/grove/placement`, but nothing on the client calls it. Done 15 November 2026.
 - [x] Friend requests: add decline and unfriend buttons, and show pending requests outside the Account page. The server side is ready: `POST /api/friends/requests/:id/decline`, `DELETE /api/friends/requests/:id` (cancel), `DELETE /api/friends/:id` (unfriend), and `GET /api/friends` now also lists `outgoing` requests. Show the 429 message ("Slow down a little and try again later") when a student sends too many requests or cheers. Done 14 November 2026.

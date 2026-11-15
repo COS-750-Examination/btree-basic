@@ -37,7 +37,6 @@ const ACTIVITIES = [
   { id: 'predict-search-path', label: 'Predict the search path', objective: 'O3' },
   { id: 'where-does-it-go', label: 'Where does it go?', objective: 'O4' },
   { id: 'split-it-yourself', label: 'Split it yourself', objective: 'O5' },
-  { id: 'build-the-tree', label: 'Build the tree', objective: 'O6' },
   { id: 'valid-or-not', label: 'Valid or not?', objective: 'O2' },
 ] as const satisfies readonly { id: string; label: string; objective: ObjectiveId }[];
 
@@ -100,7 +99,7 @@ export function PracticePage() {
     <div>
       <PageHeader
         title="Practice"
-        subtitle="Five ways to practise. Every correct answer earns leaves, and hints are always free."
+        subtitle="Four ways to practise. Every correct answer earns leaves, and hints are always free."
       />
       <div role="tablist" aria-label="Practice activities" className="mb-6 flex flex-wrap gap-2">
         {ACTIVITIES.map((a, i) => (
@@ -130,7 +129,6 @@ export function PracticePage() {
           {activity === 'predict-search-path' && <PredictPath {...props} />}
           {activity === 'where-does-it-go' && <WhereDoesItGo {...props} />}
           {activity === 'split-it-yourself' && <SplitItYourself {...props} />}
-          {activity === 'build-the-tree' && <BuildTheTree />}
           {activity === 'valid-or-not' && <ValidOrNot {...props} />}
 
           <div
@@ -532,23 +530,6 @@ function SplitItYourself({ seed, onResult, locked }: ActivityProps) {
         </Button>
       </div>
     </DndContext>
-  );
-}
-
-function BuildTheTree() {
-  // TODO(iteration 2): insert a short key sequence and ask the student to predict the final tree (objective O6).
-  return (
-    <>
-      <h2 className="text-heading">Build the tree</h2>
-      <p className="text-ink-muted mt-2">
-        Coming next iteration: insert a sequence of keys and predict the final tree, including
-        whether it grows taller. Until then, try the{' '}
-        <Link to="/visualiser" className="font-bold underline">
-          visualiser
-        </Link>{' '}
-        with the &ldquo;The root splits&rdquo; example.
-      </p>
-    </>
   );
 }
 

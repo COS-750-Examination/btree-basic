@@ -1,5 +1,9 @@
 import type { ObjectiveMastery, ReadinessSummary } from './api';
 import {
+  DAILY_HINT_PENALTY_MS,
+  DAILY_MAX_SCORE,
+  DAILY_POINTS_PER_SECOND,
+  DAILY_WRONG_PENALTY_MS,
   DECORATIONS,
   GROWTH_STAGE_IDS,
   GROWTH_STAGES,
@@ -73,3 +77,9 @@ export function readiness(
     leaves,
   };
 }
+
+export const dailyPenaltyMs = (mistakes: number, hints: number): number =>
+  mistakes * DAILY_WRONG_PENALTY_MS + hints * DAILY_HINT_PENALTY_MS;
+
+export const dailyScore = (finalMs: number): number =>
+  Math.max(0, Math.round(DAILY_MAX_SCORE - (DAILY_POINTS_PER_SECOND * finalMs) / 1000));

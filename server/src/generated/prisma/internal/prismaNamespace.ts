@@ -409,7 +409,8 @@ export const ModelName = {
   WarmupResult: 'WarmupResult',
   UserBadge: 'UserBadge',
   Friendship: 'Friendship',
-  Cheer: 'Cheer'
+  Cheer: 'Cheer',
+  DailyRun: 'DailyRun'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -425,7 +426,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "moduleProgress" | "quizAttempt" | "mastery" | "leafTransaction" | "decoration" | "userDecoration" | "lectureQuestion" | "hintView" | "warmupResult" | "userBadge" | "friendship" | "cheer"
+    modelProps: "user" | "moduleProgress" | "quizAttempt" | "mastery" | "leafTransaction" | "decoration" | "userDecoration" | "lectureQuestion" | "hintView" | "warmupResult" | "userBadge" | "friendship" | "cheer" | "dailyRun"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1391,6 +1392,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    DailyRun: {
+      payload: Prisma.$DailyRunPayload<ExtArgs>
+      fields: Prisma.DailyRunFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.DailyRunFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyRunPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.DailyRunFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyRunPayload>
+        }
+        findFirst: {
+          args: Prisma.DailyRunFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyRunPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.DailyRunFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyRunPayload>
+        }
+        findMany: {
+          args: Prisma.DailyRunFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyRunPayload>[]
+        }
+        create: {
+          args: Prisma.DailyRunCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyRunPayload>
+        }
+        createMany: {
+          args: Prisma.DailyRunCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.DailyRunCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyRunPayload>[]
+        }
+        delete: {
+          args: Prisma.DailyRunDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyRunPayload>
+        }
+        update: {
+          args: Prisma.DailyRunUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyRunPayload>
+        }
+        deleteMany: {
+          args: Prisma.DailyRunDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.DailyRunUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.DailyRunUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyRunPayload>[]
+        }
+        upsert: {
+          args: Prisma.DailyRunUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyRunPayload>
+        }
+        aggregate: {
+          args: Prisma.DailyRunAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateDailyRun>
+        }
+        groupBy: {
+          args: Prisma.DailyRunGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DailyRunGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.DailyRunCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DailyRunCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1585,6 +1660,24 @@ export const CheerScalarFieldEnum = {
 } as const
 
 export type CheerScalarFieldEnum = (typeof CheerScalarFieldEnum)[keyof typeof CheerScalarFieldEnum]
+
+
+export const DailyRunScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  day: 'day',
+  keys: 'keys',
+  startedAt: 'startedAt',
+  finishedAt: 'finishedAt',
+  score: 'score',
+  moves: 'moves',
+  mistakes: 'mistakes',
+  hints: 'hints',
+  timeMs: 'timeMs',
+  penaltyMs: 'penaltyMs'
+} as const
+
+export type DailyRunScalarFieldEnum = (typeof DailyRunScalarFieldEnum)[keyof typeof DailyRunScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1899,6 +1992,7 @@ export type GlobalOmitConfig = {
   userBadge?: Prisma.UserBadgeOmit
   friendship?: Prisma.FriendshipOmit
   cheer?: Prisma.CheerOmit
+  dailyRun?: Prisma.DailyRunOmit
 }
 
 /* Types for Logging */

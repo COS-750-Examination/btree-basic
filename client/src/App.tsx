@@ -14,6 +14,7 @@ const LessonPage = named(() => import('./pages/LessonPage'), 'LessonPage');
 const VisualiserPage = named(() => import('./pages/VisualiserPage'), 'VisualiserPage');
 const PracticePage = named(() => import('./pages/PracticePage'), 'PracticePage');
 const QuizPage = named(() => import('./pages/QuizPage'), 'QuizPage');
+const DailyPage = named(() => import('./pages/DailyPage'), 'DailyPage');
 const ReadyPage = named(() => import('./pages/ReadyPage'), 'ReadyPage');
 const GrovePage = named(() => import('./pages/GrovePage'), 'GrovePage');
 const FriendGrovePage = named(() => import('./pages/FriendGrovePage'), 'FriendGrovePage');
@@ -45,6 +46,7 @@ export function App() {
             <Route path="visualiser" element={<VisualiserPage />} />
             <Route path="practice/:activity?" element={<PracticePage />} />
             <Route path="quiz/:moduleId?" element={<QuizPage />} />
+            <Route path="daily" element={<DailyPage />} />
             <Route path="ready" element={<ReadyPage />} />
             <Route path="grove" element={<GrovePage />} />
             <Route path="grove/:friendId" element={<FriendGrovePage />} />

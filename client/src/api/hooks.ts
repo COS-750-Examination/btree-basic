@@ -1,6 +1,7 @@
 import {
   Badge,
   Cheer,
+  DailyState,
   FriendGrove,
   FriendsList,
   InviteCode,
@@ -9,6 +10,7 @@ import {
   PublicUser,
   StreakSummary,
   type AccountPatchBody,
+  type DailyFinishBody,
   type LoginBody,
   type RegisterBody,
 } from '@btree/shared';
@@ -178,5 +180,28 @@ export function useMarkRequestsSeen() {
       qc.setQueryData<FriendsList>(['friends'], (old) =>
         old && (old.requestsSeenAt ?? '') < upTo ? { ...old, requestsSeenAt: upTo } : old,
       ),
+  });
+}
+
+export function useDaily(enabled: boolean) {
+  return useQuery({
+    queryKey: ['daily'],
+    queryFn: () => api.get('/daily', DailyState),
+    enabled,
+    refetchInterval: (q) => (q.state.data?.result ? 60_000 : false),
+  });
+}
+
+export function useStartDaily() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: () => api.post('/daily/start', {}, DailyState),
+    onSuccess: (state) => qc.setQueryData(['daily'], state),
+  });
+}
+
+export function useFinishDaily() {
+  return useMutation({
+    mutationFn: (body: DailyFinishBody) => api.post('/daily/finish', body, DailyState),
   });
 }

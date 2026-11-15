@@ -1,7 +1,7 @@
 import type { BTree, BTreeNode } from '@btree/engine';
 import { AnimatePresence, motion } from 'motion/react';
 import { useMemo } from 'react';
-import { BEAD_R, beadOffset, layoutTree, type PositionedNode } from '../../lib/layout';
+import { BEAD_R, beadOffset, layoutTree, viewFrame, type PositionedNode } from '../../lib/layout';
 import { cn } from '../ui/cn';
 import { KeyBead, type BeadState } from './KeyBead';
 
@@ -60,10 +60,7 @@ export function BTreeView({
   className,
 }: BTreeViewProps) {
   const layout = useMemo(() => layoutTree(tree), [tree]);
-  // A floor on the canvas width keeps small trees from being blown up to fill the card.
-  const width = Math.max(layout.width, 640);
-  const height = layout.height + (scene ? 60 : 0) + (callouts.length ? 24 : 0);
-  const offsetX = (width - layout.width) / 2;
+  const { width, height, offsetX, offsetY } = viewFrame(layout, scene, callouts.length > 0);
   const yarn = new Set(yarnEdges);
   const byId = new Map(layout.nodes.map((n) => [n.node.id, n]));
 
@@ -97,7 +94,7 @@ export function BTreeView({
           />
         </g>
       )}
-      <g transform={`translate(${offsetX} ${callouts.length ? 24 : 0})`}>
+      <g transform={`translate(${offsetX} ${offsetY})`}>
         {layout.edges.map((e) => (
           <motion.path
             key={e.id}

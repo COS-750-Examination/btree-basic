@@ -1150,6 +1150,52 @@ Several fonts were tried in turn at the requester's direction: Spectral, Gravita
 
 ---
 
+## Entry 024: Daily b-tree
+
+| Field        | Detail                                                                                                                                                                                                |
+| ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Date         | 15 November 2026                                                                                                                                                                                      |
+| Requested by | Taylor Sergel, frontend                                                                                                                                                                               |
+| Tool         | Claude Code (Anthropic), model Claude Opus 5.5                                                                                                                                                        |
+| Scope        | `DailyPage.tsx`, `Header.tsx`, `App.tsx`, `PracticePage.tsx`, `api/hooks.ts`, `routes/daily.ts`, `lib/daily.ts`, `lib/export.ts`, Prisma schema, `engine/daily.ts`, shared schemas and scoring, tests |
+| Status       | Completed; left uncommitted on branch `feat/ui-updates` for review                                                                                                                                    |
+
+### Request
+
+> Replace the Build the tree placeholder on Practice with its own tab, "Daily b-tree", between Quiz and My grove. Based on the Puzzlit app: new keys every day, build the correct tree as fast as possible, one go per account per day, then a leaderboard for that day with a podium for the top three and a list from 4th onwards. Only friends appear on the leaderboard (POPIA).
+
+### Clarifications provided
+
+- Gameplay: insert key by key (tap the leaf, then pick the key that moves up on overflow), not drawing the final tree.
+- Mistakes (first version): the right move is shown and the student carries on.
+- Follow-up from the same session: tap the key that moves up in the tree itself instead of buttons below it. A wrong tap must be retried, and there is a hint for each step. Penalties are added as time: +10 s per wrong tap and +30 s per hint (once per step). Score = 1000 minus 2 points per second of final time.
+- Second follow-up: build the tree from the first key. Every step only says "Insert N": nothing (red node or "too full" text) shows where a split is needed unless a hint is taken. Keep hints short. Make it drag and drop, with tapping as a fallback. After placing a key, the student either drags the key that moves up into the node above (or onto a "New root" spot), or taps **Next key**. The first key is dropped on a dashed root spot. All existing runs were deleted from the local database so every account could replay.
+- Guests: the tab is hidden; opening `/daily` directly shows a sign-in prompt.
+- Leaving mid-game: the clock keeps running from the first Start, and the game picks up where it left off.
+
+### Deliverables
+
+- Daily b-tree page with intro, timed game, results, the day's finished tree, and a friends-only leaderboard (podium plus list).
+- `GET /api/daily`, `POST /api/daily/start`, `POST /api/daily/finish`, and a `DailyRun` table. Scoring runs on the server.
+- Build the tree removed from Practice.
+
+### Verification summary
+
+| Check                                 | Result         |
+| ------------------------------------- | -------------- |
+| Engine tests                          | 23 / 23 pass   |
+| Client tests                          | 151 / 151 pass |
+| Server tests (with database)          | 128 / 128 pass |
+| ESLint, TypeScript (strict), Prettier | Pass           |
+
+### Human review required
+
+- **Figma:** the Daily b-tree page, drag board and podium have no Figma frame.
+- **Scoring:** the 10 s and 30 s penalties and 2 points per second are a first guess. Adjust them after trying the game.
+- **ID team:** check the hint and mistake wording in `client/src/lib/dailyHints.ts`.
+
+---
+
 ## Entry template
 
 ```markdown

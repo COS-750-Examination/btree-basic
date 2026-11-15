@@ -82,3 +82,8 @@ export type Friendship = Prisma.FriendshipModel
  * 
  */
 export type Cheer = Prisma.CheerModel
+/**
+ * Model DailyRun
+ * 
+ */
+export type DailyRun = Prisma.DailyRunModel

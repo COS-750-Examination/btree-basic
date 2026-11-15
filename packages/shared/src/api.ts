@@ -257,3 +257,49 @@ export const InviteResult = z.object({
   friendId: z.string().nullable(),
 });
 export type InviteResult = z.infer<typeof InviteResult>;
+
+export const DailyPlay = z.object({
+  tries: z
+    .array(z.union([z.string().max(32), z.number().int()]))
+    .min(1)
+    .max(32),
+  hint: z.boolean(),
+});
+export type DailyPlay = z.infer<typeof DailyPlay>;
+
+export const DailyFinishBody = z.object({
+  day: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  plays: z.array(DailyPlay).max(64),
+});
+export type DailyFinishBody = z.infer<typeof DailyFinishBody>;
+
+export const DailyResult = z.object({
+  score: z.number().int(),
+  timeMs: z.number().int(),
+  penaltyMs: z.number().int(),
+  finalMs: z.number().int(),
+  mistakes: z.number().int(),
+  hints: z.number().int(),
+  moves: z.number().int(),
+});
+export type DailyResult = z.infer<typeof DailyResult>;
+
+export const DailyEntry = z.object({
+  rank: z.number().int(),
+  userId: z.string(),
+  displayName: z.string(),
+  score: z.number().int(),
+  finalMs: z.number().int(),
+  isMe: z.boolean(),
+});
+export type DailyEntry = z.infer<typeof DailyEntry>;
+
+export const DailyState = z.object({
+  day: z.string(),
+  resetsAt: z.string(),
+  startedAt: z.string().nullable(),
+  keys: z.array(z.number().int()).nullable(),
+  result: DailyResult.nullable(),
+  leaderboard: z.array(DailyEntry).nullable(),
+});
+export type DailyState = z.infer<typeof DailyState>;

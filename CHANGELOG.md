@@ -25,6 +25,16 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ### Added
 
+- **Daily b-tree**, a new tab between Quiz and My grove, shown only to signed-in students. It replaces Practice activity 4 (Build the tree, O6), so Practice now has four activities.
+  - Every day (midnight, South African time) everyone gets the same 8 keys and builds the whole order-3 B-tree from empty. Each key is one "Insert 31" step: drag the key onto the leaf it belongs in (the first key goes on a dashed root spot). Then the student checks the tree: if a node has too many keys, they drag the key that moves up into the node above it (or onto a "New root" spot); otherwise they tap **Next key**. Cascading splits repeat the check.
+  - Nothing shows which node is full: no red node and no "too full" text. Every key can be dragged, and the only fixed reminder is "Order 3: at most 2 keys in a node". Tapping works as well as dragging (tap a key, then tap where it goes), for keyboards and small screens.
+  - A wrong move adds 10 s and the student tries the same step again (the same wrong move twice is only charged once). The **Hint** button gives a short hint for the current step only (e.g. "At the root, 28 > 12: go right."). On a split step it also turns the full node red. Opening it adds 30 s, once per step.
+  - Score = 1000 minus 2 points per second of final time (clock plus penalties). `dailyPenaltyMs` and `dailyScore` live in `@btree/shared`.
+  - One go a day. The server records the start time (`POST /api/daily/start`). On finish (`POST /api/daily/finish`), it re-checks every step's tries and hints and works out the time, penalties and score itself, refusing runs with an unsolved step. Leaving the page doesn't stop the clock, and the run picks up where it left off. The keys come from an HMAC of the day with the server secret, so they can't be worked out before pressing Start.
+  - After finishing, a leaderboard for that day: podium for 1st to 3rd, then a list from 4th. Only the student and their accepted friends appear (POPIA). Ties go to the faster time.
+  - Finishing records one O6 attempt (correct when there were no wrong taps or hints).
+  - New `DailyRun` table (migrations `20261115065915_daily_runs` and `20261115083000_daily_penalties`), included in the account data export. Steps and tallies come from `dailyMoves` and `dailyTally` in `@btree/engine`. The drop targets sit over the tree using `viewFrame` from `lib/layout.ts`, which `BTreeView` now uses too (`components/daily/DailyBoard.tsx`).
+  - Tests: 4 engine, 11 server, 5 page and 4 hint tests on the client.
 - **Mini-lessons for every learning objective (O1–O8)** (FRONTEND_PLAN Task 8). A short recap for students who are stuck: the key idea, a worked example, common mistakes ("Watch out"), and a "Check yourself" question with a **Show answer** button.
   - Opened from **Need more?** on the quiz (for the current question's objective), **Stuck?** on Practice, and a **Mini-lesson (3 min)** link under each objective that isn't mastered yet on Ready. Each page links back to where the student came from, to a matching practice activity, and to the full lesson.
   - Content lives in `client/src/content/mini-lessons/O1.md` to `O8.md`, so the ID team can edit it like the lessons. It uses the same trees and rules as the lessons (order 3, promote the left middle key, predecessor on delete, left sibling first).
@@ -164,7 +174,6 @@ All notable changes to this project are documented here. The format follows [Kee
 ### To do (next iterations)
 
 - Pixel pass of each screen against its Figma frame (layout and spacing; tokens are done).
-- Practice activity 4, **Build the tree** (objective O6), is a stub.
 - The ID lead should review the new lessons and quiz items (see the prompt log, Entry 004).
 - **"Requests you sent" reveals whether an email has an account.** The server only stores a request when the email belongs to a student, so a request to a made-up email never appears in the list. The 10-per-hour limit slows this down but doesn't stop it.
 - Not planned for the prototype: password reset by email, revocable sessions (the 14-day sign-in cookie stays valid after a password change), and database backups.

@@ -63,7 +63,8 @@ export const ModelName = {
   WarmupResult: 'WarmupResult',
   UserBadge: 'UserBadge',
   Friendship: 'Friendship',
-  Cheer: 'Cheer'
+  Cheer: 'Cheer',
+  DailyRun: 'DailyRun'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -237,6 +238,24 @@ export const CheerScalarFieldEnum = {
 } as const
 
 export type CheerScalarFieldEnum = (typeof CheerScalarFieldEnum)[keyof typeof CheerScalarFieldEnum]
+
+
+export const DailyRunScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  day: 'day',
+  keys: 'keys',
+  startedAt: 'startedAt',
+  finishedAt: 'finishedAt',
+  score: 'score',
+  moves: 'moves',
+  mistakes: 'mistakes',
+  hints: 'hints',
+  timeMs: 'timeMs',
+  penaltyMs: 'penaltyMs'
+} as const
+
+export type DailyRunScalarFieldEnum = (typeof DailyRunScalarFieldEnum)[keyof typeof DailyRunScalarFieldEnum]
 
 
 export const SortOrder = {

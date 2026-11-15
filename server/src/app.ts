@@ -8,6 +8,7 @@ import { loadSession } from './middleware/auth';
 import { errorHandler, notFoundHandler } from './middleware/error';
 import { accountRouter } from './routes/account';
 import { authRouter } from './routes/auth';
+import { dailyRouter } from './routes/daily';
 import { friendsRouter } from './routes/friends';
 import { groveRouter } from './routes/grove';
 import { healthRouter } from './routes/health';
@@ -46,6 +47,7 @@ export function createApp() {
   app.use('/api', groveRouter);
   app.use('/api', friendsRouter);
   app.use('/api', invitesRouter);
+  app.use('/api', dailyRouter);
 
   app.use(notFoundHandler);
   app.use(errorHandler);

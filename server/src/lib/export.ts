@@ -15,6 +15,7 @@ export async function exportUserData(userId: string) {
     friendships,
     cheersSent,
     cheersReceived,
+    dailyRuns,
   ] = await Promise.all([
     prisma.user.findUniqueOrThrow({
       where: { id: userId },
@@ -114,6 +115,21 @@ export async function exportUserData(userId: string) {
         from: { select: { displayName: true } },
       },
     }),
+    prisma.dailyRun.findMany({
+      where: { userId },
+      orderBy: { day: 'asc' },
+      select: {
+        day: true,
+        startedAt: true,
+        finishedAt: true,
+        score: true,
+        moves: true,
+        mistakes: true,
+        hints: true,
+        timeMs: true,
+        penaltyMs: true,
+      },
+    }),
   ]);
 
   return {
@@ -140,6 +156,7 @@ export async function exportUserData(userId: string) {
     }),
     cheersSent: cheersSent.map(({ to, ...c }) => ({ toName: to.displayName, ...c })),
     cheersReceived: cheersReceived.map(({ from, ...c }) => ({ fromName: from.displayName, ...c })),
+    dailyRuns,
   };
 }
 
