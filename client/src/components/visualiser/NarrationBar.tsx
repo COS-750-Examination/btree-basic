@@ -16,7 +16,10 @@ export function NarrationBar({
     <Card className="flex items-center gap-3 py-4">
       <LeafIcon className="h-6 w-6 shrink-0" />
       <p className="text-body flex-1" aria-live="polite">
-        {text}
+        {/* Re-keyed so each new sentence fades in rather than swapping abruptly. */}
+        <span key={text} className="fade-in block">
+          {text}
+        </span>
       </p>
       {speechSupported() && (
         <button

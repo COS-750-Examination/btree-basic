@@ -21,12 +21,12 @@ export function RoundStrip({ state, current }: { state: DailyState; current: num
             key={r.id}
             aria-current={playing ? 'step' : undefined}
             className={cn(
-              'shadow-paper-stack-sm flex items-center gap-2 rounded-md px-3 py-2',
+              'shadow-paper-stack-sm flex items-center gap-2 rounded-md px-3 py-2 transition-colors duration-300',
               playing ? 'bg-highlight text-on-highlight' : 'bg-paper',
             )}
           >
             {result ? (
-              <LeafIcon className="h-6 w-6 shrink-0" />
+              <LeafIcon className="pop h-6 w-6 shrink-0" />
             ) : (
               <span
                 aria-hidden
@@ -125,6 +125,7 @@ export function FeedbackBox({
         'text-small mt-5 rounded-lg border-2 border-dashed p-4',
         wrong ? 'border-danger' : message ? 'border-leaf' : 'border-ink/50 text-ink-muted',
         wrong && shake > 0 && 'shake',
+        message && !wrong && 'pop',
       )}
     >
       {wrong ? (

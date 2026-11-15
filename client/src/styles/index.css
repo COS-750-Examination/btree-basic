@@ -48,6 +48,8 @@
     *::before,
     *::after {
       animation-duration: 0.01ms !important;
+      animation-delay: 0ms !important;
+      animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
     }
   }
@@ -96,4 +98,170 @@
 
 .shake {
   animation: shake 0.3s ease-in-out;
+}
+
+/*
+ * Motion kit. Entrance animations use fill-mode "backwards" so no transform lingers afterwards
+ * (a leftover transform would trap position:fixed children such as drag overlays).
+ * Set --i on an element to stagger it in a list. The reduced-motion rule above flattens all of it.
+ */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+
+@keyframes pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.04);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes bump {
+  40% {
+    transform: scale(1.25);
+  }
+}
+
+@keyframes wiggle {
+  25% {
+    transform: rotate(-12deg);
+  }
+  75% {
+    transform: rotate(10deg);
+  }
+}
+
+@keyframes sway {
+  0%,
+  100% {
+    transform: rotate(-0.8deg);
+  }
+  50% {
+    transform: rotate(0.8deg);
+  }
+}
+
+@keyframes drift {
+  0%,
+  100% {
+    transform: translateX(-14px);
+  }
+  50% {
+    transform: translateX(14px);
+  }
+}
+
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.25;
+  }
+}
+
+@keyframes bob {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-2deg);
+  }
+  50% {
+    transform: translateY(-4px) rotate(-1deg);
+  }
+}
+
+@keyframes sprout {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-6px) scale(1.1);
+  }
+}
+
+@keyframes fill-in {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+.fill-in {
+  transform-origin: left;
+  animation: fill-in 0.8s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}
+
+.fade-in {
+  animation: fade-in 0.4s ease-out backwards;
+}
+
+.page-enter {
+  animation: rise 0.35s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+
+.rise {
+  animation: rise 0.45s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+  animation-delay: calc(var(--i, 0) * 60ms);
+}
+
+.pop {
+  animation: pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+}
+
+.bump {
+  animation: bump 0.4s ease-out;
+}
+
+.wiggle-hover:hover,
+.group:hover .wiggle-hover {
+  animation: wiggle 0.5s ease-in-out;
+}
+
+.wiggle-once {
+  animation: wiggle 0.6s ease-in-out 0.25s 2 backwards;
+}
+
+.bob {
+  animation: bob 4s ease-in-out infinite;
+}
+
+.sprout {
+  animation: sprout 1.2s ease-in-out infinite;
+}
+
+/* SVG scene life: the tree sways from its trunk base, clouds drift, fireflies twinkle. */
+.sway {
+  transform-box: view-box;
+  transform-origin: 416px 400px;
+  animation: sway 6s ease-in-out infinite;
+}
+
+.drift {
+  animation: drift 18s ease-in-out infinite;
+}
+
+.drift-slow {
+  animation: drift 26s ease-in-out infinite reverse;
+}
+
+.twinkle {
+  animation: twinkle 2.6s ease-in-out infinite;
 }

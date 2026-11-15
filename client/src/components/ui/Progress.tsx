@@ -27,7 +27,7 @@ export function ProgressSegments({
         <span
           key={i}
           className={cn(
-            'rounded-pill h-2 flex-1',
+            'rounded-pill h-2 flex-1 transition-colors duration-300',
             i < done
               ? 'bg-leaf'
               : i === current
@@ -62,7 +62,10 @@ export function ProgressBar({
       className={cn('rounded-pill h-2.5 w-full bg-sky-100', className)}
     >
       <div
-        className={cn('rounded-pill h-full', tone === 'primary' ? 'bg-leaf' : 'bg-yarn')}
+        className={cn(
+          'rounded-pill fill-in h-full transition-[width] duration-700 ease-out',
+          tone === 'primary' ? 'bg-leaf' : 'bg-yarn',
+        )}
         style={{ width: `${pct}%` }}
       />
     </div>

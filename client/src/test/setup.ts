@@ -1,5 +1,6 @@
 import '@testing-library/jest-dom/vitest';
 import { cleanup } from '@testing-library/react';
+import { MotionGlobalConfig } from 'motion/react';
 import { afterEach } from 'vitest';
 
 afterEach(() => cleanup());
@@ -18,3 +19,6 @@ if (!window.matchMedia) {
       dispatchEvent: () => false,
     }) as MediaQueryList;
 }
+
+// Animations finish instantly in tests, so exit transitions don't keep removed nodes around.
+MotionGlobalConfig.skipAnimations = true;

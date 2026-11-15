@@ -2,6 +2,7 @@ import { fromSpec, insert } from '@btree/engine';
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { TracePlayer } from './TracePlayer';
+import { AFTER_SPEECH_MS, BASE_DELAY_MS } from './usePlayback';
 
 const speech = vi.hoisted(() => ({
   ends: [] as (() => void)[],
@@ -42,7 +43,7 @@ describe('TracePlayer playback', () => {
     expect(stepNumber()).toBe(1);
 
     act(() => speech.ends.at(-1)!());
-    wait(349);
+    wait(AFTER_SPEECH_MS - 1);
     expect(stepNumber()).toBe(1);
     wait(1);
     expect(stepNumber()).toBe(2);
@@ -57,7 +58,7 @@ describe('TracePlayer playback', () => {
     wait(19_999);
     expect(stepNumber()).toBe(1);
     wait(1);
-    wait(350);
+    wait(AFTER_SPEECH_MS);
     expect(stepNumber()).toBe(2);
   });
 
@@ -65,7 +66,7 @@ describe('TracePlayer playback', () => {
     render(<TracePlayer trace={trace} />);
     fireEvent.click(screen.getByRole('button', { name: 'Play' }));
 
-    wait(1399);
+    wait(BASE_DELAY_MS - 1);
     expect(stepNumber()).toBe(1);
     wait(1);
     expect(stepNumber()).toBe(2);

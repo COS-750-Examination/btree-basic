@@ -3,7 +3,7 @@ import type { Confidence, QuizItem } from '@btree/shared';
 import { useMemo, useState } from 'react';
 import { BSTView } from '../tree/BSTView';
 import { BTreeView } from '../tree/BTreeView';
-import { Button, ConfidencePicker, cn } from '../ui';
+import { Button, ConfidencePicker, cn, stagger } from '../ui';
 import { mark, type Answer } from './mark';
 import { RULE_LABELS } from './rules';
 import { shuffledOptions } from './shuffle';
@@ -54,7 +54,7 @@ export function QuestionCard({
 
   const submit = (c: string) => onSubmit(c, mark(item, c));
 
-  const optionButton = (id: string, text: string) => {
+  const optionButton = (id: string, text: string, index: number) => {
     const picked = choice === id;
     const wrong = picked && answer && !answer.correct;
     const right = picked && answer?.correct;
@@ -68,10 +68,11 @@ export function QuestionCard({
           setChoice(id);
           submit(id);
         }}
+        style={stagger(index)}
         className={cn(
-          'bg-paper shadow-paper-stack w-full rounded-lg px-4 py-3 text-left font-bold transition-transform hover:-translate-y-0.5 disabled:hover:translate-y-0',
-          wrong && 'border-danger border-2',
-          right && 'border-leaf border-2',
+          'bg-paper shadow-paper-stack rise w-full rounded-lg px-4 py-3 text-left font-bold transition-transform hover:-translate-y-0.5 disabled:hover:translate-y-0',
+          wrong && 'border-danger shake border-2',
+          right && 'border-leaf pop border-2',
         )}
       >
         {text}
@@ -79,7 +80,7 @@ export function QuestionCard({
           <span
             role="status"
             className={cn(
-              'text-small mt-1 block',
+              'text-small rise mt-1 block',
               answer.correct ? 'text-leaf' : 'text-danger-text',
             )}
           >
@@ -120,6 +121,7 @@ export function QuestionCard({
             optionButton(
               o.id,
               item.type === 'bst-mcq' ? `${String.fromCharCode(65 + i)}. ${o.text}` : o.text,
+              i,
             ),
           )}
         </div>
@@ -146,10 +148,11 @@ export function QuestionCard({
                   submit(String(k));
                 }}
                 className={cn(
-                  'font-display rounded-pill grid h-12 w-12 place-items-center border-4',
+                  'font-display rounded-pill grid h-12 w-12 place-items-center border-4 transition-transform duration-150 hover:-translate-y-1 disabled:hover:translate-y-0',
                   choice === String(k)
                     ? 'border-yarn bg-highlight text-on-highlight'
                     : 'border-branch bg-node-fill',
+                  choice === String(k) && answer && (answer.correct ? 'pop' : 'shake'),
                 )}
               >
                 {k}
@@ -161,6 +164,7 @@ export function QuestionCard({
               role="status"
               className={cn(
                 'text-label mt-2 font-bold',
+                answer.correct ? 'pop' : 'shake',
                 answer.correct ? 'text-leaf' : 'text-danger-text',
               )}
             >
@@ -191,6 +195,7 @@ export function QuestionCard({
               role="status"
               className={cn(
                 'text-label mt-2 font-bold',
+                answer.correct ? 'pop' : 'shake',
                 answer.correct ? 'text-leaf' : 'text-danger-text',
               )}
             >
@@ -214,7 +219,7 @@ export function QuestionCard({
               <label
                 key={v}
                 className={cn(
-                  'shadow-paper-stack-sm cursor-pointer rounded-md px-4 py-2 font-bold',
+                  'shadow-paper-stack-sm cursor-pointer rounded-md px-4 py-2 font-bold transition-colors',
                   choice === v ? 'bg-highlight text-on-highlight' : 'bg-paper',
                 )}
               >
@@ -254,6 +259,7 @@ export function QuestionCard({
               role="status"
               className={cn(
                 'text-label w-full font-bold',
+                answer.correct ? 'pop' : 'shake',
                 answer.correct ? 'text-leaf' : 'text-danger-text',
               )}
             >

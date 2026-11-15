@@ -22,7 +22,7 @@ export function ConfidencePicker({
         <label
           key={c}
           className={cn(
-            'shadow-paper-stack-sm has-[:focus-visible]:outline-yarn text-small cursor-pointer rounded-sm px-2.5 py-1 font-bold has-[:focus-visible]:outline-2',
+            'shadow-paper-stack-sm has-[:focus-visible]:outline-yarn text-small cursor-pointer rounded-sm px-2.5 py-1 font-bold transition-colors has-[:focus-visible]:outline-2',
             value === c ? 'bg-highlight text-on-highlight' : 'bg-paper',
           )}
         >

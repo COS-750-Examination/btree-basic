@@ -1,4 +1,5 @@
 export { cn } from './cn';
+export { stagger } from './stagger';
 export { Button, ButtonLink } from './Button';
 export { Card, CardTitle } from './Card';
 export { Tag } from './Tag';

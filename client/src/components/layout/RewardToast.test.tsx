@@ -1,4 +1,4 @@
-import { act, render, screen } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { useProgressStore } from '../../stores/progressStore';
@@ -17,7 +17,7 @@ describe('RewardToast', () => {
     expect(screen.getByRole('status')).toBeEmptyDOMElement();
   });
 
-  it('closes by itself after a few seconds', () => {
+  it('closes by itself after a few seconds', async () => {
     vi.useFakeTimers();
     render(<RewardToast />);
     act(() =>
@@ -26,6 +26,8 @@ describe('RewardToast', () => {
     expect(screen.getByRole('status')).toHaveTextContent("You're ready for the lecture!");
 
     act(() => vi.advanceTimersByTime(TOAST_MS));
-    expect(screen.getByRole('status')).toBeEmptyDOMElement();
+    // Real timers again so the exit animation can finish and unmount the toast.
+    vi.useRealTimers();
+    await waitFor(() => expect(screen.getByRole('status')).toBeEmptyDOMElement());
   });
 });

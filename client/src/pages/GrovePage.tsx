@@ -21,6 +21,7 @@ import {
   ProgressBar,
   Tag,
   cn,
+  stagger,
 } from '../components/ui';
 import { placedDecorations, useLocalReadiness, useProgressStore } from '../stores/progressStore';
 
@@ -109,15 +110,16 @@ export function GrovePage() {
                 use the arrow keys (hold Shift to move further).
               </p>
               <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-6">
-                {DECORATIONS.map((d) => {
+                {DECORATIONS.map((d, i) => {
                   const owned = ownedDecorations.includes(d.id);
                   const hidden = hiddenDecorations.includes(d.id);
                   const unlocked = reachedStage(r.stage, d.minStage);
                   return (
                     <li
                       key={d.id}
+                      style={stagger(i)}
                       className={cn(
-                        'flex flex-col items-center gap-1 rounded-lg px-2 pt-3 pb-3 text-center',
+                        'rise flex flex-col items-center gap-1 rounded-lg px-2 pt-3 pb-3 text-center',
                         unlocked
                           ? 'bg-paper shadow-paper-stack-sm'
                           : 'border-ink-muted text-ink-muted border-2 border-dashed',
@@ -182,7 +184,7 @@ export function GrovePage() {
           </Card>
         </div>
 
-        <aside className="space-y-4">
+        <aside className="rise space-y-4" style={stagger(2)}>
           <Card>
             <p className="flex items-baseline gap-2">
               <LeafIcon className="h-6 w-6 self-center" />

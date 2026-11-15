@@ -149,7 +149,7 @@ export function VisualiserPage() {
                 </span>
               )}
             </div>
-            <BTreeView {...view} scene label={`${opLabel}. ${narration}`} />
+            <BTreeView {...view} scene calloutSpace label={`${opLabel}. ${narration}`} />
           </div>
           {bst && (
             <Card>

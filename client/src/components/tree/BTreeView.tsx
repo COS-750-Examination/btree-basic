@@ -1,7 +1,14 @@
 import type { BTree, BTreeNode } from '@btree/engine';
 import { AnimatePresence, motion } from 'motion/react';
 import { useMemo } from 'react';
-import { BEAD_R, beadOffset, layoutTree, viewFrame, type PositionedNode } from '../../lib/layout';
+import {
+  BEAD_R,
+  TREE_SPRING,
+  beadOffset,
+  layoutTree,
+  viewFrame,
+  type PositionedNode,
+} from '../../lib/layout';
 import { cn } from '../ui/cn';
 import { KeyBead, type BeadState } from './KeyBead';
 
@@ -24,6 +31,11 @@ export interface BTreeViewProps {
   /** Edge ids ("parentId>childId") drawn as the golden yarn of the search path. */
   yarnEdges?: string[];
   callouts?: Callout[];
+  /**
+   * Always keep headroom for callouts, even on steps without one. Set wherever callouts come and
+   * go (step-through traces), so the picture doesn't change height and nudge the page each step.
+   */
+  calloutSpace?: boolean;
   /** Makes nodes keyboard-focusable buttons (practice and quiz items). */
   onNodeClick?: (node: BTreeNode) => void;
   selectedNodeIds?: string[];
@@ -32,7 +44,8 @@ export interface BTreeViewProps {
   className?: string;
 }
 
-const spring = { type: 'spring', stiffness: 260, damping: 28 } as const;
+/** Colour changes (highlight, overflow, yarn) cross-fade instead of flicking. */
+const COLOUR_FADE = { transition: 'fill 0.45s ease, stroke 0.45s ease, stroke-width 0.45s ease' };
 
 function edgePath(from: PositionedNode, to: PositionedNode, childIndex: number): string {
   const keys = Math.max(1, from.node.keys.length);
@@ -54,13 +67,18 @@ export function BTreeView({
   highlightNodeIds = [],
   yarnEdges = [],
   callouts = [],
+  calloutSpace = false,
   onNodeClick,
   selectedNodeIds = [],
   scene = false,
   className,
 }: BTreeViewProps) {
   const layout = useMemo(() => layoutTree(tree), [tree]);
-  const { width, height, offsetX, offsetY } = viewFrame(layout, scene, callouts.length > 0);
+  const { width, height, offsetX, offsetY } = viewFrame(
+    layout,
+    scene,
+    calloutSpace || callouts.length > 0,
+  );
   const yarn = new Set(yarnEdges);
   const byId = new Map(layout.nodes.map((n) => [n.node.id, n]));
 
@@ -100,10 +118,13 @@ export function BTreeView({
             key={e.id}
             initial={false}
             animate={{ d: edgePath(e.from, e.to, e.childIndex) }}
-            transition={spring}
+            transition={TREE_SPRING}
             fill="none"
-            stroke={yarn.has(e.id) ? 'var(--yarn)' : 'var(--branch)'}
-            strokeWidth={yarn.has(e.id) ? 4 : 2}
+            style={{
+              ...COLOUR_FADE,
+              stroke: yarn.has(e.id) ? 'var(--yarn)' : 'var(--branch)',
+              strokeWidth: yarn.has(e.id) ? 4 : 2,
+            }}
             strokeDasharray={yarn.has(e.id) ? undefined : '6 5'}
             strokeLinecap="round"
           />
@@ -123,7 +144,7 @@ export function BTreeView({
               key={node.id}
               initial={false}
               animate={{ x: p.x, y: p.y }}
-              transition={spring}
+              transition={TREE_SPRING}
               role={interactive ? 'button' : undefined}
               tabIndex={interactive ? 0 : undefined}
               aria-label={interactive ? nodeLabel : undefined}
@@ -151,8 +172,11 @@ export function BTreeView({
                 width={p.width}
                 height={BEAD_R * 2 + 12}
                 rx={BEAD_R + 6}
-                fill={overflow ? 'var(--danger)' : 'var(--branch)'}
-                stroke={highlighted ? 'var(--yarn)' : 'transparent'}
+                style={{
+                  ...COLOUR_FADE,
+                  fill: overflow ? 'var(--danger)' : 'var(--branch)',
+                  stroke: highlighted ? 'var(--yarn)' : 'transparent',
+                }}
                 strokeWidth={4}
                 className="drop-shadow-lift"
               />
@@ -170,36 +194,45 @@ export function BTreeView({
           );
         })}
 
-        {callouts.map((c) => {
-          const p = byId.get(c.nodeId);
-          if (!p) return null;
-          const w = c.text.length * 7 + 20;
-          // Keep the label inside the canvas.
-          const x = Math.max(
-            -offsetX + 4,
-            Math.min(p.x + p.width / 2 - 10, width - offsetX - w - 4),
-          );
-          const y = p.y - BEAD_R - 34;
-          return (
-            <g key={c.nodeId + c.text} transform={`translate(${x} ${y}) rotate(-2)`} aria-hidden>
-              <rect
-                width={w}
-                height={24}
-                rx={4}
-                fill={c.tone === 'danger' ? 'var(--paper)' : 'var(--highlight)'}
-              />
-              <text
-                x={10}
-                y={16}
-                className="font-sans font-bold"
-                style={{ fontSize: 12 }}
-                fill={c.tone === 'danger' ? 'var(--danger-text)' : 'var(--on-highlight)'}
+        <AnimatePresence>
+          {callouts.map((c) => {
+            const p = byId.get(c.nodeId);
+            if (!p) return null;
+            const w = c.text.length * 7 + 20;
+            // Keep the label inside the canvas.
+            const x = Math.max(
+              -offsetX + 4,
+              Math.min(p.x + p.width / 2 - 10, width - offsetX - w - 4),
+            );
+            const y = p.y - BEAD_R - 34;
+            return (
+              <motion.g
+                key={c.nodeId + c.text}
+                initial={{ opacity: 0, x, y: y + 8, rotate: -2 }}
+                animate={{ opacity: 1, x, y, rotate: -2 }}
+                exit={{ opacity: 0, transition: { duration: 0.2 } }}
+                transition={TREE_SPRING}
+                aria-hidden
               >
-                {c.text}
-              </text>
-            </g>
-          );
-        })}
+                <rect
+                  width={w}
+                  height={24}
+                  rx={4}
+                  fill={c.tone === 'danger' ? 'var(--paper)' : 'var(--highlight)'}
+                />
+                <text
+                  x={10}
+                  y={16}
+                  className="font-sans font-bold"
+                  style={{ fontSize: 12 }}
+                  fill={c.tone === 'danger' ? 'var(--danger-text)' : 'var(--on-highlight)'}
+                >
+                  {c.text}
+                </text>
+              </motion.g>
+            );
+          })}
+        </AnimatePresence>
       </g>
     </svg>
   );

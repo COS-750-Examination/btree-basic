@@ -31,7 +31,7 @@ export function HintLadder({
           i < shown ? (
             <li
               key={i}
-              className="bg-highlight text-on-highlight shadow-press-highlight rounded-lg p-4"
+              className="bg-highlight text-on-highlight shadow-press-highlight pop rounded-lg p-4"
             >
               <p className="font-display text-small">
                 Hint {i + 1} · {TITLES[i] ?? 'Hint'}

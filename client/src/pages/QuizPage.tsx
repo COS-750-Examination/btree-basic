@@ -69,7 +69,7 @@ function Quiz({ quiz }: { quiz: QuizFile }) {
     const score = firstTryCorrect / quiz.items.length;
     const needsHelp = score < REMEDIATION_THRESHOLD;
     return (
-      <Card className="mx-auto max-w-xl text-center">
+      <Card className="pop mx-auto max-w-xl text-center">
         <h1 className="text-display-l">
           {needsHelp ? 'Good effort, let’s firm this up' : 'Nice work!'}
         </h1>

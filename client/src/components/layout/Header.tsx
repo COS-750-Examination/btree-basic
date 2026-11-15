@@ -9,6 +9,7 @@ import { useLocalReadiness } from '../../stores/progressStore';
 import { Avatar } from '../ui/Avatar';
 import { cn } from '../ui/cn';
 import { LeafIcon } from '../ui/LeafIcon';
+import { stagger } from '../ui/stagger';
 import { HillBand } from './HillBand';
 
 const NAV = [
@@ -22,7 +23,7 @@ const NAV = [
 
 const navClass = ({ isActive }: { isActive: boolean }) =>
   cn(
-    'rounded-md px-3.5 py-2 text-label font-bold shadow-paper-stack-sm transition-colors',
+    'rounded-md px-3.5 py-2 text-label font-bold shadow-paper-stack-sm transition-[background-color,transform] duration-150 hover:-translate-y-0.5',
     isActive ? 'bg-highlight text-on-highlight' : 'bg-paper text-ink hover:bg-highlight/60',
   );
 
@@ -30,18 +31,24 @@ function NavItem({
   to,
   label,
   count,
+  index,
   onClick,
 }: {
   to: string;
   label: string;
   count: number;
+  /** Set in the mobile menu so items cascade in as it opens. */
+  index?: number;
   onClick?: () => void;
 }) {
   const news = count === 1 ? '1 new cheer' : `${count} new cheers`;
   return (
     <NavLink
       to={to}
-      className={(s) => cn(navClass(s), 'inline-flex items-center gap-1.5')}
+      className={(s) =>
+        cn(navClass(s), 'inline-flex items-center gap-1.5', index != null && 'rise')
+      }
+      style={index != null ? stagger(index) : undefined}
       onClick={onClick}
       aria-label={count ? `${label}, ${news}` : undefined}
     >
@@ -49,7 +56,7 @@ function NavItem({
       {count > 0 && (
         <span
           aria-hidden
-          className="bg-leaf text-on-leaf rounded-pill text-small min-w-5 px-1.5 text-center leading-5"
+          className="bg-leaf text-on-leaf rounded-pill text-small pop min-w-5 px-1.5 text-center leading-5"
         >
           {count}
         </span>
@@ -72,8 +79,8 @@ export function Header() {
   return (
     <header className="bg-sky-200">
       <div className="mx-auto flex max-w-6xl items-center gap-4 px-4 pt-4">
-        <Link to="/" className="flex items-center gap-2" aria-label="B-Tree Basic home">
-          <LeafIcon className="h-7 w-7" />
+        <Link to="/" className="group flex items-center gap-2" aria-label="B-Tree Basic home">
+          <LeafIcon className="wiggle-hover h-7 w-7" />
           <span className="font-display text-heading">B-Tree Basic</span>
         </Link>
 
@@ -97,7 +104,10 @@ export function Header() {
             aria-label={`${r.leaves} leaves`}
           >
             <LeafIcon className="h-4 w-4" />
-            {r.leaves}
+            {/* Re-keyed so the count bumps each time leaves are earned or spent. */}
+            <span key={r.leaves} className="bump inline-block">
+              {r.leaves}
+            </span>
           </Link>
           <NavLink
             to="/account"
@@ -163,9 +173,10 @@ export function Header() {
           aria-label="Main"
           className="mx-auto flex max-w-6xl flex-wrap gap-2 px-4 pt-3 md:hidden"
         >
-          {nav.map((n) => (
+          {nav.map((n, i) => (
             <NavItem
               key={n.to}
+              index={i}
               to={n.to}
               label={n.label}
               count={countFor(n.to)}
