@@ -132,13 +132,13 @@ function NodeZone({ p, frame, onTap }: { p: PositionedNode; frame: Frame; onTap:
       aria-label={label}
       onClick={onTap}
       style={{
-        left: pct(frame.offsetX + p.x - p.width / 2, frame.width),
-        top: pct(frame.offsetY + p.y - NODE_H / 2, frame.height),
-        width: pct(p.width, frame.width),
-        height: pct(NODE_H, frame.height),
+        left: pct(frame.offsetX + p.x, frame.width),
+        top: pct(frame.offsetY + p.y, frame.height),
+        width: `max(44px, ${pct(p.width, frame.width)})`,
+        height: `max(44px, ${pct(NODE_H, frame.height)})`,
       }}
       className={cn(
-        'absolute rounded-full outline-none',
+        'absolute -translate-x-1/2 -translate-y-1/2 rounded-full outline-none',
         'hover:ring-yarn/60 focus-visible:ring-yarn hover:ring-4 focus-visible:ring-4',
         isOver && 'ring-yarn ring-4',
       )}

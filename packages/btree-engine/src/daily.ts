@@ -67,7 +67,11 @@ export interface DailyTally {
   complete: boolean;
 }
 
-export function dailyTally(moves: DailyMove[], plays: DailyPlay[]): DailyTally {
+export interface Answerable {
+  answer: string | number;
+}
+
+export function dailyTally(moves: readonly Answerable[], plays: DailyPlay[]): DailyTally {
   let mistakes = 0;
   let hints = 0;
   let complete = plays.length === moves.length;
@@ -82,4 +86,11 @@ export function dailyTally(moves: DailyMove[], plays: DailyPlay[]): DailyTally {
     if (play.hint) hints += 1;
   });
   return { mistakes, hints, complete };
+}
+
+export function dailyAnswerTally(moves: readonly Answerable[], plays: DailyPlay[]): DailyTally {
+  const complete =
+    plays.length === moves.length && plays.every((p) => p.tries.length === 1 && !p.hint);
+  const mistakes = moves.filter((m, i) => plays[i] && plays[i]!.tries[0] !== m.answer).length;
+  return { mistakes, hints: 0, complete };
 }

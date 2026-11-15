@@ -273,7 +273,7 @@ export const DailyFinishBody = z.object({
 });
 export type DailyFinishBody = z.infer<typeof DailyFinishBody>;
 
-export const DailyResult = z.object({
+export const DailyRoundResult = z.object({
   score: z.number().min(0).max(100),
   timeMs: z.number().int(),
   penaltyMs: z.number().int(),
@@ -282,14 +282,33 @@ export const DailyResult = z.object({
   hints: z.number().int(),
   moves: z.number().int(),
 });
-export type DailyResult = z.infer<typeof DailyResult>;
+export type DailyRoundResult = z.infer<typeof DailyRoundResult>;
+
+export const DailyRoundState = z.object({
+  round: z.number().int().min(1).max(3),
+  startedAt: z.string().nullable(),
+  result: DailyRoundResult.nullable(),
+});
+export type DailyRoundState = z.infer<typeof DailyRoundState>;
+
+export const DailyContent = z.object({
+  path: z.object({ keys: z.array(z.number().int()), seed: z.number().int() }).nullable(),
+  valid: z
+    .object({ keySets: z.array(z.array(z.number().int())), seed: z.number().int() })
+    .nullable(),
+  build: z.object({ keys: z.array(z.number().int()) }).nullable(),
+});
+export type DailyContent = z.infer<typeof DailyContent>;
+
+const roundScore = z.number().min(0).max(100);
 
 export const DailyEntry = z.object({
-  rank: z.number().int(),
   userId: z.string(),
   displayName: z.string(),
-  score: z.number().min(0).max(100),
-  finalMs: z.number().int(),
+  total: roundScore,
+  path: roundScore,
+  valid: roundScore,
+  build: roundScore,
   isMe: z.boolean(),
 });
 export type DailyEntry = z.infer<typeof DailyEntry>;
@@ -297,9 +316,9 @@ export type DailyEntry = z.infer<typeof DailyEntry>;
 export const DailyState = z.object({
   day: z.string(),
   resetsAt: z.string(),
-  startedAt: z.string().nullable(),
-  keys: z.array(z.number().int()).nullable(),
-  result: DailyResult.nullable(),
+  rounds: z.array(DailyRoundState).length(3),
+  content: DailyContent,
+  total: roundScore.nullable(),
   leaderboard: z.array(DailyEntry).nullable(),
 });
 export type DailyState = z.infer<typeof DailyState>;

@@ -80,3 +80,20 @@
 .deco-movable[data-dragging] {
   filter: drop-shadow(0 0 2px var(--ink)) drop-shadow(0 0 6px var(--highlight));
 }
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-6px);
+  }
+  75% {
+    transform: translateX(6px);
+  }
+}
+
+.shake {
+  animation: shake 0.3s ease-in-out;
+}

@@ -28,50 +28,38 @@ export type AggregateDailyRun = {
 
 export type DailyRunAvgAggregateOutputType = {
   keys: number | null
+  pathKeys: number | null
+  validKeys: number | null
+  seed: number | null
   score: number | null
-  moves: number | null
-  mistakes: number | null
-  hints: number | null
-  timeMs: number | null
-  penaltyMs: number | null
 }
 
 export type DailyRunSumAggregateOutputType = {
   keys: number[]
+  pathKeys: number[]
+  validKeys: number[]
+  seed: number | null
   score: number | null
-  moves: number | null
-  mistakes: number | null
-  hints: number | null
-  timeMs: number | null
-  penaltyMs: number | null
 }
 
 export type DailyRunMinAggregateOutputType = {
   id: string | null
   userId: string | null
   day: string | null
+  seed: number | null
   startedAt: Date | null
   finishedAt: Date | null
   score: number | null
-  moves: number | null
-  mistakes: number | null
-  hints: number | null
-  timeMs: number | null
-  penaltyMs: number | null
 }
 
 export type DailyRunMaxAggregateOutputType = {
   id: string | null
   userId: string | null
   day: string | null
+  seed: number | null
   startedAt: Date | null
   finishedAt: Date | null
   score: number | null
-  moves: number | null
-  mistakes: number | null
-  hints: number | null
-  timeMs: number | null
-  penaltyMs: number | null
 }
 
 export type DailyRunCountAggregateOutputType = {
@@ -79,64 +67,50 @@ export type DailyRunCountAggregateOutputType = {
   userId: number
   day: number
   keys: number
+  pathKeys: number
+  validKeys: number
+  seed: number
   startedAt: number
   finishedAt: number
   score: number
-  moves: number
-  mistakes: number
-  hints: number
-  timeMs: number
-  penaltyMs: number
   _all: number
 }
 
 
 export type DailyRunAvgAggregateInputType = {
   keys?: true
+  pathKeys?: true
+  validKeys?: true
+  seed?: true
   score?: true
-  moves?: true
-  mistakes?: true
-  hints?: true
-  timeMs?: true
-  penaltyMs?: true
 }
 
 export type DailyRunSumAggregateInputType = {
   keys?: true
+  pathKeys?: true
+  validKeys?: true
+  seed?: true
   score?: true
-  moves?: true
-  mistakes?: true
-  hints?: true
-  timeMs?: true
-  penaltyMs?: true
 }
 
 export type DailyRunMinAggregateInputType = {
   id?: true
   userId?: true
   day?: true
+  seed?: true
   startedAt?: true
   finishedAt?: true
   score?: true
-  moves?: true
-  mistakes?: true
-  hints?: true
-  timeMs?: true
-  penaltyMs?: true
 }
 
 export type DailyRunMaxAggregateInputType = {
   id?: true
   userId?: true
   day?: true
+  seed?: true
   startedAt?: true
   finishedAt?: true
   score?: true
-  moves?: true
-  mistakes?: true
-  hints?: true
-  timeMs?: true
-  penaltyMs?: true
 }
 
 export type DailyRunCountAggregateInputType = {
@@ -144,14 +118,12 @@ export type DailyRunCountAggregateInputType = {
   userId?: true
   day?: true
   keys?: true
+  pathKeys?: true
+  validKeys?: true
+  seed?: true
   startedAt?: true
   finishedAt?: true
   score?: true
-  moves?: true
-  mistakes?: true
-  hints?: true
-  timeMs?: true
-  penaltyMs?: true
   _all?: true
 }
 
@@ -246,14 +218,12 @@ export type DailyRunGroupByOutputType = {
   userId: string
   day: string
   keys: number[]
+  pathKeys: number[]
+  validKeys: number[]
+  seed: number
   startedAt: Date
   finishedAt: Date | null
   score: number | null
-  moves: number | null
-  mistakes: number | null
-  hints: number | null
-  timeMs: number | null
-  penaltyMs: number | null
   _count: DailyRunCountAggregateOutputType | null
   _avg: DailyRunAvgAggregateOutputType | null
   _sum: DailyRunSumAggregateOutputType | null
@@ -284,15 +254,14 @@ export type DailyRunWhereInput = {
   userId?: Prisma.StringFilter<"DailyRun"> | string
   day?: Prisma.StringFilter<"DailyRun"> | string
   keys?: Prisma.IntNullableListFilter<"DailyRun">
+  pathKeys?: Prisma.IntNullableListFilter<"DailyRun">
+  validKeys?: Prisma.IntNullableListFilter<"DailyRun">
+  seed?: Prisma.IntFilter<"DailyRun"> | number
   startedAt?: Prisma.DateTimeFilter<"DailyRun"> | Date | string
   finishedAt?: Prisma.DateTimeNullableFilter<"DailyRun"> | Date | string | null
   score?: Prisma.FloatNullableFilter<"DailyRun"> | number | null
-  moves?: Prisma.IntNullableFilter<"DailyRun"> | number | null
-  mistakes?: Prisma.IntNullableFilter<"DailyRun"> | number | null
-  hints?: Prisma.IntNullableFilter<"DailyRun"> | number | null
-  timeMs?: Prisma.IntNullableFilter<"DailyRun"> | number | null
-  penaltyMs?: Prisma.IntNullableFilter<"DailyRun"> | number | null
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  rounds?: Prisma.DailyRoundListRelationFilter
 }
 
 export type DailyRunOrderByWithRelationInput = {
@@ -300,15 +269,14 @@ export type DailyRunOrderByWithRelationInput = {
   userId?: Prisma.SortOrder
   day?: Prisma.SortOrder
   keys?: Prisma.SortOrder
+  pathKeys?: Prisma.SortOrder
+  validKeys?: Prisma.SortOrder
+  seed?: Prisma.SortOrder
   startedAt?: Prisma.SortOrder
   finishedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   score?: Prisma.SortOrderInput | Prisma.SortOrder
-  moves?: Prisma.SortOrderInput | Prisma.SortOrder
-  mistakes?: Prisma.SortOrderInput | Prisma.SortOrder
-  hints?: Prisma.SortOrderInput | Prisma.SortOrder
-  timeMs?: Prisma.SortOrderInput | Prisma.SortOrder
-  penaltyMs?: Prisma.SortOrderInput | Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
+  rounds?: Prisma.DailyRoundOrderByRelationAggregateInput
 }
 
 export type DailyRunWhereUniqueInput = Prisma.AtLeast<{
@@ -320,15 +288,14 @@ export type DailyRunWhereUniqueInput = Prisma.AtLeast<{
   userId?: Prisma.StringFilter<"DailyRun"> | string
   day?: Prisma.StringFilter<"DailyRun"> | string
   keys?: Prisma.IntNullableListFilter<"DailyRun">
+  pathKeys?: Prisma.IntNullableListFilter<"DailyRun">
+  validKeys?: Prisma.IntNullableListFilter<"DailyRun">
+  seed?: Prisma.IntFilter<"DailyRun"> | number
   startedAt?: Prisma.DateTimeFilter<"DailyRun"> | Date | string
   finishedAt?: Prisma.DateTimeNullableFilter<"DailyRun"> | Date | string | null
   score?: Prisma.FloatNullableFilter<"DailyRun"> | number | null
-  moves?: Prisma.IntNullableFilter<"DailyRun"> | number | null
-  mistakes?: Prisma.IntNullableFilter<"DailyRun"> | number | null
-  hints?: Prisma.IntNullableFilter<"DailyRun"> | number | null
-  timeMs?: Prisma.IntNullableFilter<"DailyRun"> | number | null
-  penaltyMs?: Prisma.IntNullableFilter<"DailyRun"> | number | null
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  rounds?: Prisma.DailyRoundListRelationFilter
 }, "id" | "userId_day">
 
 export type DailyRunOrderByWithAggregationInput = {
@@ -336,14 +303,12 @@ export type DailyRunOrderByWithAggregationInput = {
   userId?: Prisma.SortOrder
   day?: Prisma.SortOrder
   keys?: Prisma.SortOrder
+  pathKeys?: Prisma.SortOrder
+  validKeys?: Prisma.SortOrder
+  seed?: Prisma.SortOrder
   startedAt?: Prisma.SortOrder
   finishedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   score?: Prisma.SortOrderInput | Prisma.SortOrder
-  moves?: Prisma.SortOrderInput | Prisma.SortOrder
-  mistakes?: Prisma.SortOrderInput | Prisma.SortOrder
-  hints?: Prisma.SortOrderInput | Prisma.SortOrder
-  timeMs?: Prisma.SortOrderInput | Prisma.SortOrder
-  penaltyMs?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.DailyRunCountOrderByAggregateInput
   _avg?: Prisma.DailyRunAvgOrderByAggregateInput
   _max?: Prisma.DailyRunMaxOrderByAggregateInput
@@ -359,29 +324,26 @@ export type DailyRunScalarWhereWithAggregatesInput = {
   userId?: Prisma.StringWithAggregatesFilter<"DailyRun"> | string
   day?: Prisma.StringWithAggregatesFilter<"DailyRun"> | string
   keys?: Prisma.IntNullableListFilter<"DailyRun">
+  pathKeys?: Prisma.IntNullableListFilter<"DailyRun">
+  validKeys?: Prisma.IntNullableListFilter<"DailyRun">
+  seed?: Prisma.IntWithAggregatesFilter<"DailyRun"> | number
   startedAt?: Prisma.DateTimeWithAggregatesFilter<"DailyRun"> | Date | string
   finishedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"DailyRun"> | Date | string | null
   score?: Prisma.FloatNullableWithAggregatesFilter<"DailyRun"> | number | null
-  moves?: Prisma.IntNullableWithAggregatesFilter<"DailyRun"> | number | null
-  mistakes?: Prisma.IntNullableWithAggregatesFilter<"DailyRun"> | number | null
-  hints?: Prisma.IntNullableWithAggregatesFilter<"DailyRun"> | number | null
-  timeMs?: Prisma.IntNullableWithAggregatesFilter<"DailyRun"> | number | null
-  penaltyMs?: Prisma.IntNullableWithAggregatesFilter<"DailyRun"> | number | null
 }
 
 export type DailyRunCreateInput = {
   id?: string
   day: string
   keys?: Prisma.DailyRunCreatekeysInput | number[]
+  pathKeys?: Prisma.DailyRunCreatepathKeysInput | number[]
+  validKeys?: Prisma.DailyRunCreatevalidKeysInput | number[]
+  seed: number
   startedAt?: Date | string
   finishedAt?: Date | string | null
   score?: number | null
-  moves?: number | null
-  mistakes?: number | null
-  hints?: number | null
-  timeMs?: number | null
-  penaltyMs?: number | null
   user: Prisma.UserCreateNestedOneWithoutDailyRunsInput
+  rounds?: Prisma.DailyRoundCreateNestedManyWithoutRunInput
 }
 
 export type DailyRunUncheckedCreateInput = {
@@ -389,29 +351,27 @@ export type DailyRunUncheckedCreateInput = {
   userId: string
   day: string
   keys?: Prisma.DailyRunCreatekeysInput | number[]
+  pathKeys?: Prisma.DailyRunCreatepathKeysInput | number[]
+  validKeys?: Prisma.DailyRunCreatevalidKeysInput | number[]
+  seed: number
   startedAt?: Date | string
   finishedAt?: Date | string | null
   score?: number | null
-  moves?: number | null
-  mistakes?: number | null
-  hints?: number | null
-  timeMs?: number | null
-  penaltyMs?: number | null
+  rounds?: Prisma.DailyRoundUncheckedCreateNestedManyWithoutRunInput
 }
 
 export type DailyRunUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   day?: Prisma.StringFieldUpdateOperationsInput | string
   keys?: Prisma.DailyRunUpdatekeysInput | number[]
+  pathKeys?: Prisma.DailyRunUpdatepathKeysInput | number[]
+  validKeys?: Prisma.DailyRunUpdatevalidKeysInput | number[]
+  seed?: Prisma.IntFieldUpdateOperationsInput | number
   startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   finishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   score?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  moves?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  mistakes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  hints?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  timeMs?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  penaltyMs?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   user?: Prisma.UserUpdateOneRequiredWithoutDailyRunsNestedInput
+  rounds?: Prisma.DailyRoundUpdateManyWithoutRunNestedInput
 }
 
 export type DailyRunUncheckedUpdateInput = {
@@ -419,14 +379,13 @@ export type DailyRunUncheckedUpdateInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   day?: Prisma.StringFieldUpdateOperationsInput | string
   keys?: Prisma.DailyRunUpdatekeysInput | number[]
+  pathKeys?: Prisma.DailyRunUpdatepathKeysInput | number[]
+  validKeys?: Prisma.DailyRunUpdatevalidKeysInput | number[]
+  seed?: Prisma.IntFieldUpdateOperationsInput | number
   startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   finishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   score?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  moves?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  mistakes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  hints?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  timeMs?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  penaltyMs?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  rounds?: Prisma.DailyRoundUncheckedUpdateManyWithoutRunNestedInput
 }
 
 export type DailyRunCreateManyInput = {
@@ -434,28 +393,24 @@ export type DailyRunCreateManyInput = {
   userId: string
   day: string
   keys?: Prisma.DailyRunCreatekeysInput | number[]
+  pathKeys?: Prisma.DailyRunCreatepathKeysInput | number[]
+  validKeys?: Prisma.DailyRunCreatevalidKeysInput | number[]
+  seed: number
   startedAt?: Date | string
   finishedAt?: Date | string | null
   score?: number | null
-  moves?: number | null
-  mistakes?: number | null
-  hints?: number | null
-  timeMs?: number | null
-  penaltyMs?: number | null
 }
 
 export type DailyRunUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   day?: Prisma.StringFieldUpdateOperationsInput | string
   keys?: Prisma.DailyRunUpdatekeysInput | number[]
+  pathKeys?: Prisma.DailyRunUpdatepathKeysInput | number[]
+  validKeys?: Prisma.DailyRunUpdatevalidKeysInput | number[]
+  seed?: Prisma.IntFieldUpdateOperationsInput | number
   startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   finishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   score?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  moves?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  mistakes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  hints?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  timeMs?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  penaltyMs?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type DailyRunUncheckedUpdateManyInput = {
@@ -463,14 +418,12 @@ export type DailyRunUncheckedUpdateManyInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   day?: Prisma.StringFieldUpdateOperationsInput | string
   keys?: Prisma.DailyRunUpdatekeysInput | number[]
+  pathKeys?: Prisma.DailyRunUpdatepathKeysInput | number[]
+  validKeys?: Prisma.DailyRunUpdatevalidKeysInput | number[]
+  seed?: Prisma.IntFieldUpdateOperationsInput | number
   startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   finishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   score?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  moves?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  mistakes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  hints?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  timeMs?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  penaltyMs?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type DailyRunListRelationFilter = {
@@ -501,62 +454,53 @@ export type DailyRunCountOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   day?: Prisma.SortOrder
   keys?: Prisma.SortOrder
+  pathKeys?: Prisma.SortOrder
+  validKeys?: Prisma.SortOrder
+  seed?: Prisma.SortOrder
   startedAt?: Prisma.SortOrder
   finishedAt?: Prisma.SortOrder
   score?: Prisma.SortOrder
-  moves?: Prisma.SortOrder
-  mistakes?: Prisma.SortOrder
-  hints?: Prisma.SortOrder
-  timeMs?: Prisma.SortOrder
-  penaltyMs?: Prisma.SortOrder
 }
 
 export type DailyRunAvgOrderByAggregateInput = {
   keys?: Prisma.SortOrder
+  pathKeys?: Prisma.SortOrder
+  validKeys?: Prisma.SortOrder
+  seed?: Prisma.SortOrder
   score?: Prisma.SortOrder
-  moves?: Prisma.SortOrder
-  mistakes?: Prisma.SortOrder
-  hints?: Prisma.SortOrder
-  timeMs?: Prisma.SortOrder
-  penaltyMs?: Prisma.SortOrder
 }
 
 export type DailyRunMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   day?: Prisma.SortOrder
+  seed?: Prisma.SortOrder
   startedAt?: Prisma.SortOrder
   finishedAt?: Prisma.SortOrder
   score?: Prisma.SortOrder
-  moves?: Prisma.SortOrder
-  mistakes?: Prisma.SortOrder
-  hints?: Prisma.SortOrder
-  timeMs?: Prisma.SortOrder
-  penaltyMs?: Prisma.SortOrder
 }
 
 export type DailyRunMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   day?: Prisma.SortOrder
+  seed?: Prisma.SortOrder
   startedAt?: Prisma.SortOrder
   finishedAt?: Prisma.SortOrder
   score?: Prisma.SortOrder
-  moves?: Prisma.SortOrder
-  mistakes?: Prisma.SortOrder
-  hints?: Prisma.SortOrder
-  timeMs?: Prisma.SortOrder
-  penaltyMs?: Prisma.SortOrder
 }
 
 export type DailyRunSumOrderByAggregateInput = {
   keys?: Prisma.SortOrder
+  pathKeys?: Prisma.SortOrder
+  validKeys?: Prisma.SortOrder
+  seed?: Prisma.SortOrder
   score?: Prisma.SortOrder
-  moves?: Prisma.SortOrder
-  mistakes?: Prisma.SortOrder
-  hints?: Prisma.SortOrder
-  timeMs?: Prisma.SortOrder
-  penaltyMs?: Prisma.SortOrder
+}
+
+export type DailyRunScalarRelationFilter = {
+  is?: Prisma.DailyRunWhereInput
+  isNot?: Prisma.DailyRunWhereInput
 }
 
 export type DailyRunCreateNestedManyWithoutUserInput = {
@@ -605,37 +549,67 @@ export type DailyRunCreatekeysInput = {
   set: number[]
 }
 
+export type DailyRunCreatepathKeysInput = {
+  set: number[]
+}
+
+export type DailyRunCreatevalidKeysInput = {
+  set: number[]
+}
+
 export type DailyRunUpdatekeysInput = {
   set?: number[]
   push?: number | number[]
+}
+
+export type DailyRunUpdatepathKeysInput = {
+  set?: number[]
+  push?: number | number[]
+}
+
+export type DailyRunUpdatevalidKeysInput = {
+  set?: number[]
+  push?: number | number[]
+}
+
+export type DailyRunCreateNestedOneWithoutRoundsInput = {
+  create?: Prisma.XOR<Prisma.DailyRunCreateWithoutRoundsInput, Prisma.DailyRunUncheckedCreateWithoutRoundsInput>
+  connectOrCreate?: Prisma.DailyRunCreateOrConnectWithoutRoundsInput
+  connect?: Prisma.DailyRunWhereUniqueInput
+}
+
+export type DailyRunUpdateOneRequiredWithoutRoundsNestedInput = {
+  create?: Prisma.XOR<Prisma.DailyRunCreateWithoutRoundsInput, Prisma.DailyRunUncheckedCreateWithoutRoundsInput>
+  connectOrCreate?: Prisma.DailyRunCreateOrConnectWithoutRoundsInput
+  upsert?: Prisma.DailyRunUpsertWithoutRoundsInput
+  connect?: Prisma.DailyRunWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.DailyRunUpdateToOneWithWhereWithoutRoundsInput, Prisma.DailyRunUpdateWithoutRoundsInput>, Prisma.DailyRunUncheckedUpdateWithoutRoundsInput>
 }
 
 export type DailyRunCreateWithoutUserInput = {
   id?: string
   day: string
   keys?: Prisma.DailyRunCreatekeysInput | number[]
+  pathKeys?: Prisma.DailyRunCreatepathKeysInput | number[]
+  validKeys?: Prisma.DailyRunCreatevalidKeysInput | number[]
+  seed: number
   startedAt?: Date | string
   finishedAt?: Date | string | null
   score?: number | null
-  moves?: number | null
-  mistakes?: number | null
-  hints?: number | null
-  timeMs?: number | null
-  penaltyMs?: number | null
+  rounds?: Prisma.DailyRoundCreateNestedManyWithoutRunInput
 }
 
 export type DailyRunUncheckedCreateWithoutUserInput = {
   id?: string
   day: string
   keys?: Prisma.DailyRunCreatekeysInput | number[]
+  pathKeys?: Prisma.DailyRunCreatepathKeysInput | number[]
+  validKeys?: Prisma.DailyRunCreatevalidKeysInput | number[]
+  seed: number
   startedAt?: Date | string
   finishedAt?: Date | string | null
   score?: number | null
-  moves?: number | null
-  mistakes?: number | null
-  hints?: number | null
-  timeMs?: number | null
-  penaltyMs?: number | null
+  rounds?: Prisma.DailyRoundUncheckedCreateNestedManyWithoutRunInput
 }
 
 export type DailyRunCreateOrConnectWithoutUserInput = {
@@ -672,72 +646,161 @@ export type DailyRunScalarWhereInput = {
   userId?: Prisma.StringFilter<"DailyRun"> | string
   day?: Prisma.StringFilter<"DailyRun"> | string
   keys?: Prisma.IntNullableListFilter<"DailyRun">
+  pathKeys?: Prisma.IntNullableListFilter<"DailyRun">
+  validKeys?: Prisma.IntNullableListFilter<"DailyRun">
+  seed?: Prisma.IntFilter<"DailyRun"> | number
   startedAt?: Prisma.DateTimeFilter<"DailyRun"> | Date | string
   finishedAt?: Prisma.DateTimeNullableFilter<"DailyRun"> | Date | string | null
   score?: Prisma.FloatNullableFilter<"DailyRun"> | number | null
-  moves?: Prisma.IntNullableFilter<"DailyRun"> | number | null
-  mistakes?: Prisma.IntNullableFilter<"DailyRun"> | number | null
-  hints?: Prisma.IntNullableFilter<"DailyRun"> | number | null
-  timeMs?: Prisma.IntNullableFilter<"DailyRun"> | number | null
-  penaltyMs?: Prisma.IntNullableFilter<"DailyRun"> | number | null
+}
+
+export type DailyRunCreateWithoutRoundsInput = {
+  id?: string
+  day: string
+  keys?: Prisma.DailyRunCreatekeysInput | number[]
+  pathKeys?: Prisma.DailyRunCreatepathKeysInput | number[]
+  validKeys?: Prisma.DailyRunCreatevalidKeysInput | number[]
+  seed: number
+  startedAt?: Date | string
+  finishedAt?: Date | string | null
+  score?: number | null
+  user: Prisma.UserCreateNestedOneWithoutDailyRunsInput
+}
+
+export type DailyRunUncheckedCreateWithoutRoundsInput = {
+  id?: string
+  userId: string
+  day: string
+  keys?: Prisma.DailyRunCreatekeysInput | number[]
+  pathKeys?: Prisma.DailyRunCreatepathKeysInput | number[]
+  validKeys?: Prisma.DailyRunCreatevalidKeysInput | number[]
+  seed: number
+  startedAt?: Date | string
+  finishedAt?: Date | string | null
+  score?: number | null
+}
+
+export type DailyRunCreateOrConnectWithoutRoundsInput = {
+  where: Prisma.DailyRunWhereUniqueInput
+  create: Prisma.XOR<Prisma.DailyRunCreateWithoutRoundsInput, Prisma.DailyRunUncheckedCreateWithoutRoundsInput>
+}
+
+export type DailyRunUpsertWithoutRoundsInput = {
+  update: Prisma.XOR<Prisma.DailyRunUpdateWithoutRoundsInput, Prisma.DailyRunUncheckedUpdateWithoutRoundsInput>
+  create: Prisma.XOR<Prisma.DailyRunCreateWithoutRoundsInput, Prisma.DailyRunUncheckedCreateWithoutRoundsInput>
+  where?: Prisma.DailyRunWhereInput
+}
+
+export type DailyRunUpdateToOneWithWhereWithoutRoundsInput = {
+  where?: Prisma.DailyRunWhereInput
+  data: Prisma.XOR<Prisma.DailyRunUpdateWithoutRoundsInput, Prisma.DailyRunUncheckedUpdateWithoutRoundsInput>
+}
+
+export type DailyRunUpdateWithoutRoundsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  day?: Prisma.StringFieldUpdateOperationsInput | string
+  keys?: Prisma.DailyRunUpdatekeysInput | number[]
+  pathKeys?: Prisma.DailyRunUpdatepathKeysInput | number[]
+  validKeys?: Prisma.DailyRunUpdatevalidKeysInput | number[]
+  seed?: Prisma.IntFieldUpdateOperationsInput | number
+  startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  finishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  score?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  user?: Prisma.UserUpdateOneRequiredWithoutDailyRunsNestedInput
+}
+
+export type DailyRunUncheckedUpdateWithoutRoundsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  day?: Prisma.StringFieldUpdateOperationsInput | string
+  keys?: Prisma.DailyRunUpdatekeysInput | number[]
+  pathKeys?: Prisma.DailyRunUpdatepathKeysInput | number[]
+  validKeys?: Prisma.DailyRunUpdatevalidKeysInput | number[]
+  seed?: Prisma.IntFieldUpdateOperationsInput | number
+  startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  finishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  score?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
 }
 
 export type DailyRunCreateManyUserInput = {
   id?: string
   day: string
   keys?: Prisma.DailyRunCreatekeysInput | number[]
+  pathKeys?: Prisma.DailyRunCreatepathKeysInput | number[]
+  validKeys?: Prisma.DailyRunCreatevalidKeysInput | number[]
+  seed: number
   startedAt?: Date | string
   finishedAt?: Date | string | null
   score?: number | null
-  moves?: number | null
-  mistakes?: number | null
-  hints?: number | null
-  timeMs?: number | null
-  penaltyMs?: number | null
 }
 
 export type DailyRunUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   day?: Prisma.StringFieldUpdateOperationsInput | string
   keys?: Prisma.DailyRunUpdatekeysInput | number[]
+  pathKeys?: Prisma.DailyRunUpdatepathKeysInput | number[]
+  validKeys?: Prisma.DailyRunUpdatevalidKeysInput | number[]
+  seed?: Prisma.IntFieldUpdateOperationsInput | number
   startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   finishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   score?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  moves?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  mistakes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  hints?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  timeMs?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  penaltyMs?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  rounds?: Prisma.DailyRoundUpdateManyWithoutRunNestedInput
 }
 
 export type DailyRunUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   day?: Prisma.StringFieldUpdateOperationsInput | string
   keys?: Prisma.DailyRunUpdatekeysInput | number[]
+  pathKeys?: Prisma.DailyRunUpdatepathKeysInput | number[]
+  validKeys?: Prisma.DailyRunUpdatevalidKeysInput | number[]
+  seed?: Prisma.IntFieldUpdateOperationsInput | number
   startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   finishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   score?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  moves?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  mistakes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  hints?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  timeMs?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  penaltyMs?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  rounds?: Prisma.DailyRoundUncheckedUpdateManyWithoutRunNestedInput
 }
 
 export type DailyRunUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   day?: Prisma.StringFieldUpdateOperationsInput | string
   keys?: Prisma.DailyRunUpdatekeysInput | number[]
+  pathKeys?: Prisma.DailyRunUpdatepathKeysInput | number[]
+  validKeys?: Prisma.DailyRunUpdatevalidKeysInput | number[]
+  seed?: Prisma.IntFieldUpdateOperationsInput | number
   startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   finishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   score?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  moves?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  mistakes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  hints?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  timeMs?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  penaltyMs?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
+
+/**
+ * Count Type DailyRunCountOutputType
+ */
+
+export type DailyRunCountOutputType = {
+  rounds: number
+}
+
+export type DailyRunCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  rounds?: boolean | DailyRunCountOutputTypeCountRoundsArgs
+}
+
+/**
+ * DailyRunCountOutputType without action
+ */
+export type DailyRunCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DailyRunCountOutputType
+   */
+  select?: Prisma.DailyRunCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * DailyRunCountOutputType without action
+ */
+export type DailyRunCountOutputTypeCountRoundsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.DailyRoundWhereInput
+}
 
 
 export type DailyRunSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -745,15 +808,15 @@ export type DailyRunSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   userId?: boolean
   day?: boolean
   keys?: boolean
+  pathKeys?: boolean
+  validKeys?: boolean
+  seed?: boolean
   startedAt?: boolean
   finishedAt?: boolean
   score?: boolean
-  moves?: boolean
-  mistakes?: boolean
-  hints?: boolean
-  timeMs?: boolean
-  penaltyMs?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  rounds?: boolean | Prisma.DailyRun$roundsArgs<ExtArgs>
+  _count?: boolean | Prisma.DailyRunCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["dailyRun"]>
 
 export type DailyRunSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -761,14 +824,12 @@ export type DailyRunSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   userId?: boolean
   day?: boolean
   keys?: boolean
+  pathKeys?: boolean
+  validKeys?: boolean
+  seed?: boolean
   startedAt?: boolean
   finishedAt?: boolean
   score?: boolean
-  moves?: boolean
-  mistakes?: boolean
-  hints?: boolean
-  timeMs?: boolean
-  penaltyMs?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["dailyRun"]>
 
@@ -777,14 +838,12 @@ export type DailyRunSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   userId?: boolean
   day?: boolean
   keys?: boolean
+  pathKeys?: boolean
+  validKeys?: boolean
+  seed?: boolean
   startedAt?: boolean
   finishedAt?: boolean
   score?: boolean
-  moves?: boolean
-  mistakes?: boolean
-  hints?: boolean
-  timeMs?: boolean
-  penaltyMs?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["dailyRun"]>
 
@@ -793,19 +852,19 @@ export type DailyRunSelectScalar = {
   userId?: boolean
   day?: boolean
   keys?: boolean
+  pathKeys?: boolean
+  validKeys?: boolean
+  seed?: boolean
   startedAt?: boolean
   finishedAt?: boolean
   score?: boolean
-  moves?: boolean
-  mistakes?: boolean
-  hints?: boolean
-  timeMs?: boolean
-  penaltyMs?: boolean
 }
 
-export type DailyRunOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "day" | "keys" | "startedAt" | "finishedAt" | "score" | "moves" | "mistakes" | "hints" | "timeMs" | "penaltyMs", ExtArgs["result"]["dailyRun"]>
+export type DailyRunOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "day" | "keys" | "pathKeys" | "validKeys" | "seed" | "startedAt" | "finishedAt" | "score", ExtArgs["result"]["dailyRun"]>
 export type DailyRunInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  rounds?: boolean | Prisma.DailyRun$roundsArgs<ExtArgs>
+  _count?: boolean | Prisma.DailyRunCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type DailyRunIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -818,20 +877,19 @@ export type $DailyRunPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
   name: "DailyRun"
   objects: {
     user: Prisma.$UserPayload<ExtArgs>
+    rounds: Prisma.$DailyRoundPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     userId: string
     day: string
     keys: number[]
+    pathKeys: number[]
+    validKeys: number[]
+    seed: number
     startedAt: Date
     finishedAt: Date | null
     score: number | null
-    moves: number | null
-    mistakes: number | null
-    hints: number | null
-    timeMs: number | null
-    penaltyMs: number | null
   }, ExtArgs["result"]["dailyRun"]>
   composites: {}
 }
@@ -1227,6 +1285,7 @@ readonly fields: DailyRunFieldRefs;
 export interface Prisma__DailyRunClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  rounds<T extends Prisma.DailyRun$roundsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DailyRun$roundsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DailyRoundPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1260,14 +1319,12 @@ export interface DailyRunFieldRefs {
   readonly userId: Prisma.FieldRef<"DailyRun", 'String'>
   readonly day: Prisma.FieldRef<"DailyRun", 'String'>
   readonly keys: Prisma.FieldRef<"DailyRun", 'Int[]'>
+  readonly pathKeys: Prisma.FieldRef<"DailyRun", 'Int[]'>
+  readonly validKeys: Prisma.FieldRef<"DailyRun", 'Int[]'>
+  readonly seed: Prisma.FieldRef<"DailyRun", 'Int'>
   readonly startedAt: Prisma.FieldRef<"DailyRun", 'DateTime'>
   readonly finishedAt: Prisma.FieldRef<"DailyRun", 'DateTime'>
   readonly score: Prisma.FieldRef<"DailyRun", 'Float'>
-  readonly moves: Prisma.FieldRef<"DailyRun", 'Int'>
-  readonly mistakes: Prisma.FieldRef<"DailyRun", 'Int'>
-  readonly hints: Prisma.FieldRef<"DailyRun", 'Int'>
-  readonly timeMs: Prisma.FieldRef<"DailyRun", 'Int'>
-  readonly penaltyMs: Prisma.FieldRef<"DailyRun", 'Int'>
 }
     
 
@@ -1666,6 +1723,30 @@ export type DailyRunDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inte
    * Limit how many DailyRuns to delete.
    */
   limit?: number
+}
+
+/**
+ * DailyRun.rounds
+ */
+export type DailyRun$roundsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DailyRound
+   */
+  select?: Prisma.DailyRoundSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the DailyRound
+   */
+  omit?: Prisma.DailyRoundOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DailyRoundInclude<ExtArgs> | null
+  where?: Prisma.DailyRoundWhereInput
+  orderBy?: Prisma.DailyRoundOrderByWithRelationInput | Prisma.DailyRoundOrderByWithRelationInput[]
+  cursor?: Prisma.DailyRoundWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.DailyRoundScalarFieldEnum | Prisma.DailyRoundScalarFieldEnum[]
 }
 
 /**

@@ -87,3 +87,8 @@ export type Cheer = Prisma.CheerModel
  * 
  */
 export type DailyRun = Prisma.DailyRunModel
+/**
+ * Model DailyRound
+ * 
+ */
+export type DailyRound = Prisma.DailyRoundModel

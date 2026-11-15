@@ -188,20 +188,21 @@ export function useDaily(enabled: boolean) {
     queryKey: ['daily'],
     queryFn: () => api.get('/daily', DailyState),
     enabled,
-    refetchInterval: (q) => (q.state.data?.result ? 60_000 : false),
+    refetchInterval: (q) => (q.state.data?.total != null ? 60_000 : false),
   });
 }
 
-export function useStartDaily() {
+export function useStartRound() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: () => api.post('/daily/start', {}, DailyState),
+    mutationFn: (round: number) => api.post(`/daily/rounds/${round}/start`, {}, DailyState),
     onSuccess: (state) => qc.setQueryData(['daily'], state),
   });
 }
 
-export function useFinishDaily() {
+export function useFinishRound(round: number) {
   return useMutation({
-    mutationFn: (body: DailyFinishBody) => api.post('/daily/finish', body, DailyState),
+    mutationFn: (body: DailyFinishBody) =>
+      api.post(`/daily/rounds/${round}/finish`, body, DailyState),
   });
 }

@@ -1,75 +1,26 @@
-import {
-  DAILY_KEY_COUNT,
-  DAILY_ORDER,
-  buildTree,
-  createTree,
-  dailyMoves,
-  dailyTally,
-} from '@btree/engine';
+import { DAILY_ORDER, buildTree, createTree } from '@btree/engine';
 import {
   DAILY_HINT_PENALTY_MS,
   DAILY_MAX_SCORE,
-  DAILY_POINTS_PER_SECOND,
+  DAILY_ROUNDS,
   DAILY_WRONG_PENALTY_MS,
-  DailyPlay,
-  dailyPenaltyMs,
   type DailyEntry,
+  type DailyRoundKey,
+  type DailyRoundResult,
   type DailyState,
 } from '@btree/shared';
 import { useQueryClient } from '@tanstack/react-query';
-import { CalendarDays, Clock, Lightbulb, Trophy } from 'lucide-react';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { CalendarDays, Trophy } from 'lucide-react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router';
-import { useDaily, useFinishDaily, useMe, useStartDaily } from '../api/hooks';
-import { DailyBoard } from '../components/daily/DailyBoard';
+import { useDaily, useMe, useStartRound } from '../api/hooks';
+import { BuildRound } from '../components/daily/BuildRound';
+import { PathRound } from '../components/daily/PathRound';
+import { RoundStrip } from '../components/daily/RoundChrome';
+import { formatScore, formatTime, rankBy, useNow, type LeaderboardTab } from '../lib/dailyFormat';
+import { ValidRound } from '../components/daily/ValidRound';
 import { BTreeView } from '../components/tree/BTreeView';
 import { Avatar, Button, ButtonLink, Card, CardTitle, PageHeader, cn } from '../components/ui';
-import { dailyHint, dailyMistake } from '../lib/dailyHints';
-import { useProgressStore } from '../stores/progressStore';
-
-const formatScore = (score: number) => score.toFixed(2);
-
-function formatTime(ms: number): string {
-  const total = Math.max(0, Math.floor(ms / 1000));
-  return `${Math.floor(total / 60)}:${String(total % 60).padStart(2, '0')}`;
-}
-
-function useNow(intervalMs = 1000): number {
-  const [now, setNow] = useState(() => Date.now());
-  useEffect(() => {
-    const t = setInterval(() => setNow(Date.now()), intervalMs);
-    return () => clearInterval(t);
-  }, [intervalMs]);
-  return now;
-}
-
-const storageKey = (day: string) => `daily-steps:${day}`;
-
-function loadPlays(day: string): DailyPlay[] {
-  try {
-    const raw = localStorage.getItem(storageKey(day));
-    const parsed = DailyPlay.array().safeParse(raw ? JSON.parse(raw) : []);
-    return parsed.success ? parsed.data : [];
-  } catch {
-    return [];
-  }
-}
-
-function savePlays(day: string, plays: DailyPlay[]): void {
-  try {
-    localStorage.setItem(storageKey(day), JSON.stringify(plays));
-  } catch {
-    return;
-  }
-}
-
-function clearPlays(day: string): void {
-  try {
-    localStorage.removeItem(storageKey(day));
-  } catch {
-    return;
-  }
-}
 
 function Countdown({ resetsAt }: { resetsAt: string }) {
   const now = useNow(30_000);
@@ -80,7 +31,29 @@ function Countdown({ resetsAt }: { resetsAt: string }) {
   }, [left, qc]);
   const mins = Math.max(0, Math.ceil(left / 60_000));
   const text = mins >= 60 ? `${Math.floor(mins / 60)}h ${mins % 60}m` : `${mins}m`;
-  return <span>New tree in {text}</span>;
+  return <span>New trio in {text}</span>;
+}
+
+const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? '' : 's'}`;
+
+function ordinal(n: number): string {
+  const tens = n % 100;
+  if (tens >= 11 && tens <= 13) return `${n}th`;
+  return `${n}${['th', 'st', 'nd', 'rd'][n % 10] ?? 'th'}`;
+}
+
+type Phase =
+  | { kind: 'intro' }
+  | { kind: 'pause'; done: number }
+  | { kind: 'play'; round: number }
+  | { kind: 'results' };
+
+function phaseOf(state: DailyState): Phase {
+  if (state.total !== null) return { kind: 'results' };
+  const next = state.rounds.find((r) => !r.result);
+  if (!next) return { kind: 'results' };
+  if (next.startedAt) return { kind: 'play', round: next.round };
+  return next.round === 1 ? { kind: 'intro' } : { kind: 'pause', done: next.round - 1 };
 }
 
 export function DailyPage() {
@@ -93,7 +66,7 @@ export function DailyPage() {
   if (!signedIn) {
     return (
       <div className="mx-auto max-w-2xl space-y-6">
-        <PageHeader title="Daily b-tree" subtitle="A new tree to build every day" />
+        <PageHeader title="Daily b-tree" subtitle="Three short B-tree rounds every day" />
         <Card className="text-center">
           <p>Sign in to play the Daily b-tree and compare scores with your friends.</p>
           <div className="mt-4 flex flex-wrap justify-center gap-3">
@@ -108,379 +81,354 @@ export function DailyPage() {
   }
 
   const state = daily.data;
+  const phase = state ? phaseOf(state) : null;
   return (
     <div className="mx-auto max-w-4xl space-y-6">
       <PageHeader
         title="Daily b-tree"
-        subtitle="Same keys for everyone today. Build the tree right, and fast, to top your friends."
+        subtitle="Three rounds, the same for everyone today. Get them right, and fast, to top your friends."
       />
-      {daily.isPending && <p className="text-ink-muted">Loading today's tree…</p>}
+      {daily.isPending && <p className="text-ink-muted">Loading today's trio…</p>}
       {daily.isError && (
         <Card>
-          <p>We couldn't load today's tree. Check your connection and try again.</p>
+          <p>We couldn't load today's trio. Check your connection and try again.</p>
           <Button className="mt-3" onClick={() => void daily.refetch()}>
             Try again
           </Button>
         </Card>
       )}
-      {state && !state.startedAt && <Intro state={state} />}
-      {state && state.startedAt && !state.result && <Game key={state.day} state={state} />}
-      {state?.result && <Results state={state} />}
+      {state && phase?.kind === 'intro' && <Intro state={state} />}
+      {state && phase?.kind === 'pause' && <PauseCard state={state} done={phase.done} />}
+      {state && phase?.kind === 'play' && phase.round === 1 && (
+        <PathRound key={`${state.day}-1`} state={state} />
+      )}
+      {state && phase?.kind === 'play' && phase.round === 2 && (
+        <ValidRound key={`${state.day}-2`} state={state} />
+      )}
+      {state && phase?.kind === 'play' && phase.round === 3 && (
+        <BuildRound key={`${state.day}-3`} state={state} />
+      )}
+      {state && phase?.kind === 'results' && <Results state={state} />}
     </div>
   );
 }
 
-function Intro({ state }: { state: DailyState }) {
-  const start = useStartDaily();
+function StartButton({ round }: { round: number }) {
+  const start = useStartRound();
   return (
-    <Card>
-      <CardTitle className="flex items-center gap-2">
-        <CalendarDays className="h-5 w-5" aria-hidden />
-        Today's tree
-      </CardTitle>
-      <ul className="list-disc space-y-1 pl-5">
-        <li>
-          You get {DAILY_KEY_COUNT} keys to insert, one at a time, into an order-{DAILY_ORDER}{' '}
-          B-tree. The first one starts in the root.
-        </li>
-        <li>Drag the numbers, in order, onto the leaf each one belongs in.</li>
-        <li>
-          If a node ends up with too many keys, drag the key that moves up into the node above it,
-          or tap that key and press <strong>Split and move up</strong>.
-        </li>
-        <li>You can also tap a number or key, then tap where it goes.</li>
-        <li>
-          A wrong move adds {DAILY_WRONG_PENALTY_MS / 1000}s to your time and you try again. Stuck?
-          Each step has a hint, but it adds {DAILY_HINT_PENALTY_MS / 1000}s.
-        </li>
-        <li>
-          Your score is out of {DAILY_MAX_SCORE}: you lose {DAILY_POINTS_PER_SECOND} points for
-          every second of your final time (clock plus penalties).
-        </li>
-        <li>
-          You get <strong>one go a day</strong>. The clock starts when you press Start and keeps
-          running if you leave the page.
-        </li>
-      </ul>
-      <div className="mt-5 flex flex-wrap items-center gap-4">
-        <Button onClick={() => start.mutate()} disabled={start.isPending}>
-          {start.isPending ? 'Starting…' : 'Start'}
-        </Button>
-        <span className="text-small text-ink-muted">
-          <Countdown resetsAt={state.resetsAt} />
-        </span>
-      </div>
+    <>
+      <Button onClick={() => start.mutate(round)} disabled={start.isPending}>
+        {start.isPending ? 'Starting…' : `Start round ${round}`}
+      </Button>
       {start.isError && (
-        <p role="alert" className="text-danger-text text-small mt-3 font-bold">
+        <p role="alert" className="text-danger-text text-small mt-3 w-full font-bold">
           Couldn't start. Try again.
         </p>
       )}
-    </Card>
-  );
-}
-
-type Message = { tone: 'right' } | { tone: 'wrong'; text: string };
-
-function Game({ state }: { state: DailyState }) {
-  const keys = state.keys!;
-  const moves = useMemo(() => dailyMoves(keys), [keys]);
-  const [plays, setPlays] = useState(() => loadPlays(state.day).slice(0, moves.length));
-  const [message, setMessage] = useState<Message | null>(null);
-  const finish = useFinishDaily();
-  const qc = useQueryClient();
-  const recordAttempt = useProgressStore((s) => s.recordAttempt);
-  const sent = useRef(false);
-  const now = useNow();
-  const elapsed = now - Date.parse(state.startedAt!);
-
-  const solved = plays.filter((p, i) => p.tries.at(-1) === moves[i]?.answer).length;
-  const complete = solved >= moves.length;
-  const move = moves[Math.min(solved, moves.length - 1)]!;
-  const play = plays[solved] ?? { tries: [], hint: false };
-  const tally = dailyTally(moves, plays);
-  const penaltyMs = dailyPenaltyMs(tally.mistakes, tally.hints);
-
-  const update = (next: DailyPlay[]) => {
-    setPlays(next);
-    savePlays(state.day, next);
-  };
-
-  const submit = () => {
-    sent.current = true;
-    finish.mutate(
-      { day: state.day, plays },
-      {
-        onSuccess: (s) => {
-          clearPlays(state.day);
-          qc.setQueryData(['daily'], s);
-          if (s.result) {
-            recordAttempt({
-              itemId: `daily-${state.day}`,
-              objective: 'O6',
-              correct: s.result.mistakes === 0 && s.result.hints === 0,
-              firstAttempt: true,
-              hintsUsed: s.result.hints,
-            });
-          }
-        },
-      },
-    );
-  };
-
-  useEffect(() => {
-    if (complete && !sent.current) submit();
-  });
-
-  const attempt = (value: string | number) => {
-    if (complete) return;
-    const right = value === move.answer;
-    if (!right && play.tries.includes(value)) {
-      setMessage({ tone: 'wrong', text: `You already tried that. ${dailyMistake(move, value)}` });
-      return;
-    }
-    const next = [...plays.slice(0, solved), { ...play, tries: [...play.tries, value] }];
-    update(next);
-    setMessage(right ? { tone: 'right' } : { tone: 'wrong', text: dailyMistake(move, value) });
-  };
-
-  const takeHint = () => {
-    if (complete || play.hint) return;
-    update([...plays.slice(0, solved), { ...play, hint: true }]);
-  };
-
-  const wrong = message?.tone === 'wrong' ? message : null;
-  const nextIndex = move.kind === 'place' ? move.keyIndex : move.keyIndex + 1;
-  const shownIndex = Math.min(nextIndex, keys.length - 1);
-
-  return (
-    <Card>
-      <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-        <p className="text-label font-bold">
-          Key {shownIndex + 1} of {keys.length}
-        </p>
-        <div className="flex flex-wrap items-center gap-2">
-          <p
-            className="bg-highlight text-on-highlight rounded-pill text-label flex items-center gap-1.5 px-3 py-1 font-bold"
-            aria-label={`Time ${formatTime(elapsed)}`}
-          >
-            <Clock className="h-4 w-4" aria-hidden />
-            {formatTime(elapsed)}
-          </p>
-          {penaltyMs > 0 && (
-            <p
-              className="bg-danger text-ink rounded-pill text-label px-3 py-1 font-bold"
-              aria-label={`Penalties ${formatTime(penaltyMs)}`}
-            >
-              +{formatTime(penaltyMs)}
-            </p>
-          )}
-        </div>
-      </div>
-
-      {complete ? (
-        <div className="py-8 text-center">
-          {finish.isError ? (
-            <>
-              <p className="text-danger-text font-bold" role="alert">
-                Couldn't save your score.
-              </p>
-              <Button className="mt-3" onClick={submit}>
-                Try again
-              </Button>
-            </>
-          ) : (
-            <p className="text-ink-muted">Saving your score…</p>
-          )}
-        </div>
-      ) : (
-        <>
-          <h2 className="text-heading">Insert {keys[shownIndex]}</h2>
-          <p className="text-small mt-1">
-            Drag the next number onto its leaf. If a node gets too many keys, drag the key that
-            moves up into the node above.
-          </p>
-          <p className="text-small text-ink-muted mt-1 mb-4">
-            Order {DAILY_ORDER}: at most {DAILY_ORDER - 1} keys in a node.
-          </p>
-
-          <DailyBoard key={solved} move={move} keys={keys} hint={play.hint} onAttempt={attempt} />
-
-          <div className="mt-4 flex flex-wrap items-start gap-3">
-            {play.hint ? (
-              <div
-                className="bg-highlight text-on-highlight text-small flex-1 rounded-lg p-4"
-                role="note"
-                aria-label="Hint"
-              >
-                <p className="flex items-center gap-1.5 font-bold">
-                  <Lightbulb className="h-4 w-4" aria-hidden />
-                  Hint for this step
-                </p>
-                <p className="mt-1">{dailyHint(move)}</p>
-              </div>
-            ) : (
-              <Button variant="outline" size="sm" onClick={takeHint}>
-                <Lightbulb className="h-4 w-4" aria-hidden />
-                Hint (+{DAILY_HINT_PENALTY_MS / 1000}s)
-              </Button>
-            )}
-          </div>
-        </>
-      )}
-
-      <div
-        aria-live="polite"
-        className={cn(
-          'text-small mt-5 rounded-lg border-2 border-dashed p-4',
-          wrong ? 'border-danger' : message ? 'border-leaf' : 'border-ink/50 text-ink-muted',
-        )}
-      >
-        {wrong ? (
-          <>
-            <strong>Not quite (+{DAILY_WRONG_PENALTY_MS / 1000}s). </strong>
-            {wrong.text} Try again.
-          </>
-        ) : message ? (
-          <strong>Correct!</strong>
-        ) : (
-          `A wrong move adds ${DAILY_WRONG_PENALTY_MS / 1000}s and you try again. A hint adds ${DAILY_HINT_PENALTY_MS / 1000}s.`
-        )}
-      </div>
-    </Card>
-  );
-}
-
-function Results({ state }: { state: DailyState }) {
-  const result = state.result!;
-  const finalTree = useMemo(
-    () => buildTree(createTree(DAILY_ORDER), state.keys ?? []),
-    [state.keys],
-  );
-  const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? '' : 's'}`;
-  return (
-    <>
-      <Card tone="accent">
-        <div className="flex flex-wrap items-center gap-6">
-          <div>
-            <p className="text-label font-bold">Your score today</p>
-            <p className="font-display text-display-xl">
-              {formatScore(result.score)}
-              <span className="text-heading"> / {DAILY_MAX_SCORE}</span>
-            </p>
-          </div>
-          <dl className="text-label grid grid-cols-[auto_auto] gap-x-4 gap-y-1">
-            <dt>Clock</dt>
-            <dd className="font-bold">{formatTime(result.timeMs)}</dd>
-            <dt>{plural(result.mistakes, 'wrong move')}</dt>
-            <dd className="font-bold">+{formatTime(result.mistakes * DAILY_WRONG_PENALTY_MS)}</dd>
-            <dt>{plural(result.hints, 'hint')}</dt>
-            <dd className="font-bold">+{formatTime(result.hints * DAILY_HINT_PENALTY_MS)}</dd>
-            <dt className="font-bold">Final time</dt>
-            <dd className="font-bold">{formatTime(result.finalMs)}</dd>
-          </dl>
-          <p className="text-small w-full">
-            <Countdown resetsAt={state.resetsAt} />
-          </p>
-        </div>
-      </Card>
-
-      <Card>
-        <CardTitle>Today's finished tree</CardTitle>
-        <p className="text-small text-ink-muted">Keys in order: {state.keys?.join(', ')}</p>
-        <div className="mt-3 rounded-lg bg-sky-200">
-          <BTreeView tree={finalTree} scene label="The finished tree for today" />
-        </div>
-      </Card>
-
-      <Leaderboard entries={state.leaderboard ?? []} />
     </>
   );
 }
 
-const PODIUM = [
-  { place: 2, height: 'h-20', tone: 'bg-cloud' },
-  { place: 1, height: 'h-28', tone: 'bg-highlight' },
-  { place: 3, height: 'h-14', tone: 'bg-paper-back' },
-] as const;
+const ROUND_BLURB: Record<DailyRoundKey, string> = {
+  path: 'Follow the search from the root to three keys, one branch at a time.',
+  valid: 'Four trees. Decide whether each one is a valid B-tree.',
+  build: 'Insert 8 keys into an order-3 B-tree, splitting full nodes as you go.',
+};
 
-export function Leaderboard({ entries }: { entries: DailyEntry[] }) {
-  const rest = entries.slice(3);
+function Intro({ state }: { state: DailyState }) {
   return (
     <Card>
       <CardTitle className="flex items-center gap-2">
-        <Trophy className="h-5 w-5" aria-hidden />
-        Today's leaderboard
+        <CalendarDays className="h-5 w-5" aria-hidden />
+        Today's trio
       </CardTitle>
-      <p className="text-small text-ink-muted">
+      <ol className="space-y-2">
+        {DAILY_ROUNDS.map((r) => (
+          <li key={r.id} className="rounded-md bg-sky-100 px-3 py-2">
+            <p className="font-bold">
+              Round {r.id} · {r.label}{' '}
+              <span className="text-small text-ink-muted font-normal">
+                (up to {DAILY_MAX_SCORE} points)
+              </span>
+            </p>
+            <p className="text-small">{ROUND_BLURB[r.key]}</p>
+          </li>
+        ))}
+      </ol>
+      <ul className="text-small mt-4 list-disc space-y-1 pl-5">
+        <li>
+          Each round starts at {DAILY_MAX_SCORE} and loses points every second of its time:{' '}
+          {DAILY_ROUNDS.map((r) => `${r.label} ${r.pointsPerSecond}`).join(', ')} a second. Your
+          day's score is the average of the three.
+        </li>
+        <li>
+          A wrong answer adds {DAILY_WRONG_PENALTY_MS / 1000}s. Only Build it has hints, and each
+          adds {DAILY_HINT_PENALTY_MS / 1000}s.
+        </li>
+        <li>
+          Each round has its own clock, which pauses between rounds. It keeps running if you leave
+          the page during a round.
+        </li>
+        <li>
+          You get <strong>one go a day</strong> at each round.
+        </li>
+      </ul>
+      <div className="mt-5 flex flex-wrap items-center gap-4">
+        <StartButton round={1} />
+        <span className="text-small text-ink-muted">
+          <Countdown resetsAt={state.resetsAt} />
+        </span>
+      </div>
+    </Card>
+  );
+}
+
+function roundNote(round: number, result: DailyRoundResult): string {
+  const time = formatTime(result.timeMs);
+  if (round === 2) return `${result.moves - result.mistakes} of ${result.moves} right · ${time}`;
+  const parts = [time, plural(result.mistakes, 'mistake')];
+  if (result.hints) {
+    parts.push(
+      `${plural(result.hints, 'hint')} (+${formatTime(result.hints * DAILY_HINT_PENALTY_MS)})`,
+    );
+  }
+  return parts.join(' · ');
+}
+
+function PauseCard({ state, done }: { state: DailyState; done: number }) {
+  const result = state.rounds[done - 1]!.result!;
+  const label = DAILY_ROUNDS.find((r) => r.id === done)!.label;
+  return (
+    <>
+      <RoundStrip state={state} current={null} />
+      <Card className="text-center">
+        <p className="text-label font-bold">
+          Round {done} · {label} done
+        </p>
+        <p className="font-display text-display-xl">+{formatScore(result.score)}</p>
+        <p className="text-small">{roundNote(done, result)}</p>
+        <p className="text-small text-ink-muted mt-2">The clock is paused until you start.</p>
+        <div className="mt-4 flex flex-wrap justify-center">
+          <StartButton round={done + 1} />
+        </div>
+      </Card>
+    </>
+  );
+}
+
+function Results({ state }: { state: DailyState }) {
+  const entries = state.leaderboard ?? [];
+  const myRank = entries.findIndex((e) => e.isMe) + 1;
+  const buildKeys = state.content.build?.keys;
+  const finalTree = useMemo(() => buildTree(createTree(DAILY_ORDER), buildKeys ?? []), [buildKeys]);
+  return (
+    <>
+      <RoundStrip state={state} current={null} />
+      <Card tone="accent">
+        <p className="text-label font-bold">Your score today</p>
+        <p className="font-display text-display-xl">{formatScore(state.total ?? 0)}</p>
+        <p className="font-bold">
+          {entries.length > 1
+            ? `You came ${ordinal(myRank)} of ${entries.length} today`
+            : 'You are the first of your friends to finish today'}
+        </p>
+        <ul className="mt-4 grid gap-3 sm:grid-cols-3">
+          {DAILY_ROUNDS.map((r) => {
+            const result = state.rounds[r.id - 1]!.result!;
+            return (
+              <li key={r.id} className="bg-paper text-ink rounded-md p-3">
+                <p className="text-small font-bold">
+                  {r.id} · {r.label}
+                </p>
+                <p className="font-display text-heading">{formatScore(result.score)}</p>
+                <p className="text-small">{roundNote(r.id, result)}</p>
+              </li>
+            );
+          })}
+        </ul>
+        <p className="text-small mt-3">
+          <Countdown resetsAt={state.resetsAt} />
+        </p>
+      </Card>
+
+      <Card>
+        <CardTitle>Today's built tree</CardTitle>
+        <p className="text-small text-ink-muted">Keys in order: {buildKeys?.join(', ')}</p>
+        <div className="mt-3 rounded-lg bg-sky-200">
+          <BTreeView tree={finalTree} scene label="The finished tree from Build it" />
+        </div>
+      </Card>
+
+      <Leaderboard entries={entries} />
+    </>
+  );
+}
+
+const TABS = [
+  { key: 'total', label: 'Total' },
+  { key: 'path', label: 'Path' },
+  { key: 'valid', label: 'Valid' },
+  { key: 'build', label: 'Build' },
+] as const;
+
+type TabKey = LeaderboardTab;
+
+const CHIPS = [
+  { key: 'path', label: 'Path' },
+  { key: 'valid', label: 'Valid' },
+  { key: 'build', label: 'Build' },
+] as const;
+
+const PODIUM = [
+  { place: 2, medal: 'bg-bunting-blue text-on-highlight', lift: 'mt-8', score: 'text-display-l' },
+  { place: 1, medal: 'bg-sun text-on-highlight', lift: '', score: 'text-display-xl' },
+  { place: 3, medal: 'bg-coral text-on-highlight', lift: 'mt-12', score: 'text-display-l' },
+] as const;
+
+const AVATAR_TONES = [
+  'bg-blossom text-on-highlight',
+  'bg-bunting-blue text-on-highlight',
+  'bg-leaf-light text-on-highlight',
+  'bg-sun text-on-highlight',
+  'bg-coral text-on-highlight',
+];
+
+function avatarTone(e: DailyEntry): string {
+  if (e.isMe) return 'bg-leaf text-on-leaf';
+  const hash = [...e.userId].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7);
+  return AVATAR_TONES[hash % AVATAR_TONES.length]!;
+}
+
+function Chips({ entry, tab, light }: { entry: DailyEntry; tab: TabKey; light: boolean }) {
+  return (
+    <span className="flex flex-wrap justify-center gap-1">
+      {CHIPS.map((c) => (
+        <span
+          key={c.key}
+          className={cn(
+            'text-small rounded-sm px-2 py-0.5 font-bold',
+            tab === c.key
+              ? 'bg-leaf text-on-leaf'
+              : light
+                ? 'bg-node-fill text-ink'
+                : 'text-ink bg-sky-200',
+          )}
+        >
+          {c.label} {formatScore(entry[c.key])}
+        </span>
+      ))}
+    </span>
+  );
+}
+
+export function Leaderboard({ entries }: { entries: DailyEntry[] }) {
+  const [tab, setTab] = useState<TabKey>('total');
+  const sorted = rankBy(entries, tab);
+  const rest = sorted.slice(3);
+  const tabLabel = TABS.find((t) => t.key === tab)!.label;
+  return (
+    <section aria-labelledby="leaderboard-title">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h2 id="leaderboard-title" className="font-display text-display-l flex items-center gap-2">
+          <Trophy className="h-6 w-6" aria-hidden />
+          Today's leaderboard
+        </h2>
+        <div role="tablist" aria-label="Sort the leaderboard" className="flex flex-wrap gap-2">
+          {TABS.map((t) => (
+            <button
+              key={t.key}
+              type="button"
+              role="tab"
+              aria-selected={tab === t.key}
+              onClick={() => setTab(t.key)}
+              className={cn(
+                'shadow-paper-stack-sm text-label min-h-11 rounded-md px-4 font-bold',
+                tab === t.key ? 'bg-highlight text-on-highlight' : 'bg-paper',
+              )}
+            >
+              {t.label}
+            </button>
+          ))}
+        </div>
+      </div>
+      <p className="text-small text-ink-muted mt-1">
         Only you and your friends appear here. It starts fresh every day.
       </p>
 
-      <ol aria-label="Podium" className="mt-6 flex items-end justify-center gap-3">
-        {PODIUM.map(({ place, height, tone }) => {
-          const e = entries[place - 1];
+      <ol
+        aria-label={`Podium by ${tabLabel}`}
+        className="mt-8 grid grid-cols-3 items-start gap-2 sm:gap-4"
+      >
+        {PODIUM.map(({ place, medal, lift, score }) => {
+          const e = sorted[place - 1];
           return (
             <li
               key={place}
               className={cn(
-                'flex w-28 flex-col items-center',
+                'relative flex flex-col items-center rounded-lg px-2 pt-8 pb-4 text-center sm:px-4',
+                e?.isMe ? 'bg-highlight text-on-highlight' : 'bg-paper',
+                'shadow-paper-stack',
+                lift,
+                place === 1 && 'pt-10 pb-6',
                 place === 1 && 'order-2',
                 place === 2 && 'order-1',
                 place === 3 && 'order-3',
               )}
               aria-label={
                 e
-                  ? `${ordinal(place)}: ${e.displayName}, ${formatScore(e.score)} points`
+                  ? `${ordinal(place)}: ${e.displayName}, ${formatScore(e[tab])} points`
                   : `${ordinal(place)}: nobody yet`
               }
             >
-              {e ? (
-                <>
-                  <Avatar name={e.displayName} size="lg" />
-                  <p className="text-label mt-1 w-full truncate text-center font-bold">
-                    {e.displayName}
-                    {e.isMe && ' (you)'}
-                  </p>
-                  <p className="text-small">
-                    {formatScore(e.score)} · {formatTime(e.finalMs)}
-                  </p>
-                </>
-              ) : (
-                <p className="text-small text-ink-muted mb-1">Nobody yet</p>
-              )}
-              <div
+              <span
                 aria-hidden
                 className={cn(
-                  'shadow-paper-stack-sm font-display text-display-l mt-2 grid w-full place-items-start justify-center rounded-t-md pt-2',
-                  height,
-                  tone,
-                  e?.isMe && 'ring-yarn ring-4',
+                  'font-display rounded-pill shadow-lift text-heading absolute -top-5 left-1/2 grid h-10 w-10 -translate-x-1/2 place-items-center',
+                  medal,
                 )}
               >
                 {place}
-              </div>
+              </span>
+              {e ? (
+                <>
+                  <Avatar name={e.displayName} size="lg" tone={avatarTone(e)} />
+                  <p className="text-label mt-2 w-full truncate font-bold">
+                    {e.displayName}
+                    {e.isMe && ' (you)'}
+                  </p>
+                  <p className={cn('font-display', score)}>{formatScore(e[tab])}</p>
+                  <div className="mt-2 hidden sm:block">
+                    <Chips entry={e} tab={tab} light={e.isMe} />
+                  </div>
+                </>
+              ) : (
+                <p className="text-small text-ink-muted mt-2">Nobody yet</p>
+              )}
             </li>
           );
         })}
       </ol>
 
       {rest.length > 0 && (
-        <ol aria-label="Everyone else" className="mt-6 space-y-2" start={4}>
-          {rest.map((e) => (
+        <ol aria-label="Everyone else" className="mt-6 space-y-3" start={4}>
+          {rest.map((e, i) => (
             <li
               key={e.userId}
               className={cn(
-                'flex items-center gap-3 rounded-md px-3 py-2',
-                e.isMe ? 'bg-highlight text-on-highlight' : 'bg-sky-100',
+                'shadow-paper-stack-sm flex flex-wrap items-center gap-3 rounded-lg px-4 py-3',
+                e.isMe ? 'bg-highlight text-on-highlight' : 'bg-paper',
               )}
             >
-              <span className="font-display w-8 text-right">{e.rank}</span>
-              <Avatar name={e.displayName} />
+              <span className="font-display text-heading w-12">{ordinal(i + 4)}</span>
+              <Avatar name={e.displayName} tone={avatarTone(e)} />
               <span className="min-w-0 flex-1 truncate font-bold">
                 {e.displayName}
                 {e.isMe && ' (you)'}
               </span>
-              <span className="text-small">{formatTime(e.finalMs)}</span>
-              <span className="font-bold">{formatScore(e.score)}</span>
+              <Chips entry={e} tab={tab} light={e.isMe} />
+              <span className="font-display text-heading w-20 text-right">
+                {formatScore(e[tab])}
+              </span>
             </li>
           ))}
         </ol>
@@ -495,10 +443,6 @@ export function Leaderboard({ entries }: { entries: DailyEntry[] }) {
           to compare scores.
         </p>
       )}
-    </Card>
+    </section>
   );
-}
-
-function ordinal(n: number): string {
-  return n === 1 ? '1st' : n === 2 ? '2nd' : n === 3 ? '3rd' : `${n}th`;
 }

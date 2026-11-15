@@ -70,3 +70,7 @@ export function validate(tree: BTree): ValidationResult {
   if (tree.root) walk(tree.root, 0, -Infinity, Infinity, true);
   return { valid: violations.length === 0, violations };
 }
+
+export function isValidBTree(tree: BTree, order: number = tree.order): boolean {
+  return validate({ ...tree, order }).valid;
+}

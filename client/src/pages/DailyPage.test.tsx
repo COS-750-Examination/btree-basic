@@ -1,35 +1,66 @@
-import type { DailyEntry, DailyState } from '@btree/shared';
+import { DAILY_BROKEN, DAILY_VALID, pathRound, validRound, type BTreeNode } from '@btree/engine';
+import type { DailyEntry, DailyRoundResult, DailyState } from '@btree/shared';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { api } from '../api/client';
+import { nodeLabel } from '../lib/dailyHints';
 import { DailyPage } from './DailyPage';
 
 const signedIn = { user: { id: 'me', displayName: 'Me', email: 'me@x.za', theme: null } };
+const now = () => new Date().toISOString();
 
-const base: DailyState = {
-  day: '2026-11-15',
-  resetsAt: '2099-01-01T00:00:00.000Z',
-  startedAt: null,
-  keys: null,
-  result: null,
-  leaderboard: null,
-};
+function trio(over: Partial<DailyState> = {}): DailyState {
+  return {
+    day: '2026-11-15',
+    resetsAt: '2099-01-01T00:00:00.000Z',
+    rounds: [1, 2, 3].map((round) => ({ round, startedAt: null, result: null })),
+    content: { path: null, valid: null, build: null },
+    total: null,
+    leaderboard: null,
+    ...over,
+  };
+}
 
-const entry = (rank: number, displayName: string, isMe = false): DailyEntry => ({
-  rank,
-  userId: `u${rank}`,
-  displayName,
-  score: 100 - rank * 5.25,
-  finalMs: 60_000 + rank * 1000,
-  isMe,
+const result = (score: number, extra: Partial<DailyRoundResult> = {}): DailyRoundResult => ({
+  score,
+  timeMs: 30_000,
+  penaltyMs: 0,
+  finalMs: 30_000,
+  mistakes: 0,
+  hints: 0,
+  moves: 4,
+  ...extra,
 });
 
-function mockGet(session: unknown, daily: DailyState) {
+const pathContent = { keys: [40, 20, 60, 10, 30, 50, 70, 25, 55, 65], seed: 7 };
+const validContent = {
+  keySets: [
+    [12, 45, 7, 33, 81, 60],
+    [5, 18, 27, 90, 64, 41],
+    [3, 70, 52, 16, 38, 95],
+    [22, 8, 77, 49, 61, 30],
+  ],
+  seed: 9,
+};
+
+const entry = (
+  name: string,
+  scores: { total: number; path: number; valid: number; build: number },
+  isMe = false,
+): DailyEntry => ({ userId: name, displayName: name, isMe, ...scores });
+
+function mockGet(daily: DailyState, session: unknown = signedIn) {
   vi.spyOn(api, 'get').mockImplementation(((path: string) =>
     Promise.resolve(path === '/auth/session' ? session : daily)) as never);
+}
+
+function mockPost(reply: (path: string) => DailyState) {
+  return vi
+    .spyOn(api, 'post')
+    .mockImplementation(((path: string) => Promise.resolve(reply(path))) as never);
 }
 
 function show() {
@@ -50,7 +81,7 @@ afterEach(() => {
 
 describe('DailyPage', () => {
   it('asks guests to sign in', async () => {
-    mockGet({ user: null }, base);
+    mockGet(trio(), { user: null });
     show();
     expect(await screen.findByRole('link', { name: 'Sign in' })).toHaveAttribute(
       'href',
@@ -58,60 +89,164 @@ describe('DailyPage', () => {
     );
   });
 
-  it('starts with the first key in the root and sends every try to be scored', async () => {
-    mockGet(signedIn, base);
-    const started = { ...base, startedAt: new Date().toISOString(), keys: [20, 8, 12] };
-    const finished = {
-      ...started,
-      result: {
-        score: 87.4,
-        timeMs: 10_000,
-        penaltyMs: 40_000,
-        finalMs: 50_000,
-        mistakes: 1,
-        hints: 1,
-        moves: 4,
-      },
-      leaderboard: [entry(1, 'Me', true)],
+  it('introduces the three rounds and starts round 1', async () => {
+    mockGet(trio());
+    const post = mockPost(() => trio());
+    show();
+    expect(await screen.findByText(/Round 1 · Find the path/)).toBeInTheDocument();
+    expect(screen.getByText(/Round 2 · Valid or not\?/)).toBeInTheDocument();
+    expect(screen.getByText(/Round 3 · Build it/)).toBeInTheDocument();
+    expect(screen.getAllByText('(up to 100 points)')).toHaveLength(3);
+    await userEvent.click(screen.getByRole('button', { name: 'Start round 1' }));
+    expect(post).toHaveBeenCalledWith('/daily/rounds/1/start', {}, expect.anything());
+  });
+
+  it('plays Find the path one branch at a time and keeps you in place after a wrong branch', async () => {
+    const started = trio({
+      rounds: [
+        { round: 1, startedAt: now(), result: null },
+        { round: 2, startedAt: null, result: null },
+        { round: 3, startedAt: null, result: null },
+      ],
+      content: { path: pathContent, valid: null, build: null },
+    });
+    mockGet(started);
+    const after = trio({
+      rounds: [
+        { round: 1, startedAt: now(), result: result(88.5, { mistakes: 1 }) },
+        { round: 2, startedAt: null, result: null },
+        { round: 3, startedAt: null, result: null },
+      ],
+    });
+    const post = mockPost(() => after);
+    const { tree, moves, searches } = pathRound(pathContent.keys, pathContent.seed);
+    const nodes = new Map<string, BTreeNode>();
+    const walk = (n: BTreeNode) => {
+      nodes.set(n.id, n);
+      n.children.forEach(walk);
     };
-    const post = vi
-      .spyOn(api, 'post')
-      .mockImplementation(((path: string) =>
-        Promise.resolve(path === '/daily/start' ? started : finished)) as never);
+    walk(tree.root!);
     show();
 
-    await userEvent.click(await screen.findByRole('button', { name: 'Start' }));
-    expect(await screen.findByRole('heading', { name: 'Insert 8' })).toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: /next key/i })).not.toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: /new root/i })).not.toBeInTheDocument();
-    expect(document.querySelector('circle[stroke-dasharray]')).toBeNull();
-    expect(screen.getByLabelText('20, used')).toBeInTheDocument();
-    await userEvent.click(screen.getByRole('button', { name: 'Next number, 8' }));
-    await userEvent.click(screen.getByRole('button', { name: 'Node with keys 20' }));
+    expect(
+      await screen.findByRole('heading', { name: `Find ${searches[0]!.target}` }),
+    ).toBeInTheDocument();
+    expect(screen.getByText(/Search 1 of 3 · tap one branch at a time/)).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /hint/i })).not.toBeInTheDocument();
 
-    expect(await screen.findByRole('heading', { name: 'Insert 12' })).toBeInTheDocument();
-    await userEvent.click(screen.getByRole('button', { name: /Hint \(\+30s\)/ }));
+    const first = moves[0]!;
+    const wrongChild = nodes.get(first.at)!.children.find((c) => c.id !== first.answer)!;
+    await userEvent.click(screen.getByRole('button', { name: nodeLabel(wrongChild.keys) }));
+    expect(screen.getByRole('status')).toHaveTextContent(
+      /Not quite \(\+10s\)\. .*branch\. Try again\./,
+    );
+    expect(screen.getByLabelText('Penalties 0:10')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: nodeLabel(wrongChild.keys) })).toBeInTheDocument();
+
+    for (const m of moves) {
+      const button = await screen.findByRole(
+        'button',
+        { name: nodeLabel(nodes.get(m.answer)!.keys) },
+        { timeout: 2000 },
+      );
+      await userEvent.click(button);
+    }
+
+    expect(await screen.findByText('+88.50', {}, { timeout: 2500 })).toBeInTheDocument();
+    expect(post).toHaveBeenCalledWith(
+      '/daily/rounds/1/finish',
+      {
+        day: '2026-11-15',
+        plays: moves.map((m, i) => ({
+          tries: i === 0 ? [wrongChild.id, m.answer] : [m.answer],
+          hint: false,
+        })),
+      },
+      expect.anything(),
+    );
+    expect(screen.getByRole('button', { name: 'Start round 2' })).toBeInTheDocument();
+  });
+
+  it('plays Valid or not? with one answer per tree', async () => {
+    const started = trio({
+      rounds: [
+        { round: 1, startedAt: now(), result: result(90) },
+        { round: 2, startedAt: now(), result: null },
+        { round: 3, startedAt: null, result: null },
+      ],
+      content: { path: pathContent, valid: validContent, build: null },
+    });
+    mockGet(started);
+    const post = mockPost(() => started);
+    const items = validRound(validContent.keySets, validContent.seed);
+    show();
+
+    for (const [i, item] of items.entries()) {
+      expect(
+        await screen.findByText(`Tree ${i + 1} of 4 · order 3`, {}, { timeout: 2000 }),
+      ).toBeInTheDocument();
+      const wrong = i === 0;
+      const saysValid = (item.answer === DAILY_VALID) !== wrong;
+      await userEvent.click(
+        screen.getByRole('button', { name: saysValid ? 'Valid B-tree' : "Something's broken" }),
+      );
+      expect(screen.getByRole('button', { name: 'Valid B-tree' })).toBeDisabled();
+      expect(screen.getByRole('status')).toHaveTextContent(item.reason);
+      if (wrong) {
+        expect(screen.getByRole('status')).toHaveTextContent(/Not quite \(\+10s\)/);
+        await userEvent.click(screen.getByRole('button', { name: 'Next tree' }));
+      }
+    }
+
+    await vi.waitFor(() => expect(post).toHaveBeenCalled(), { timeout: 2000 });
+    expect(post).toHaveBeenCalledWith(
+      '/daily/rounds/2/finish',
+      {
+        day: '2026-11-15',
+        plays: items.map((item, i) => ({
+          tries: [
+            i === 0 ? (item.answer === DAILY_VALID ? DAILY_BROKEN : DAILY_VALID) : item.answer,
+          ],
+          hint: false,
+        })),
+      },
+      expect.anything(),
+    );
+  });
+
+  it('keeps Build it as it was: first key in the root, hints, split button', async () => {
+    const started = trio({
+      rounds: [
+        { round: 1, startedAt: now(), result: result(90) },
+        { round: 2, startedAt: now(), result: result(80) },
+        { round: 3, startedAt: now(), result: null },
+      ],
+      content: { path: pathContent, valid: validContent, build: { keys: [20, 8, 12] } },
+    });
+    mockGet(started);
+    const post = mockPost(() => started);
+    show();
+
+    expect(await screen.findByRole('heading', { name: 'Insert 8' })).toBeInTheDocument();
+    expect(screen.getByText('Day total 56.67')).toBeInTheDocument();
+    expect(screen.getByText('Order 3: at most 2 keys in a node')).toBeInTheDocument();
+    expect(screen.queryByText(/Key \d of \d/)).not.toBeInTheDocument();
+    await userEvent.click(screen.getByRole('button', { name: 'Node with keys 20' }));
+    await userEvent.click(await screen.findByRole('button', { name: /Hint \(\+30s\)/ }));
     expect(screen.getByRole('note', { name: 'Hint' })).toHaveTextContent(
       'There is only one node, so 12 goes there.',
     );
     await userEvent.click(screen.getByRole('button', { name: 'Node with keys 8, 20' }));
-
-    expect(
-      await screen.findByRole('button', { name: 'Node with keys 8, 12, 20' }),
-    ).toBeInTheDocument();
-    expect(screen.queryByRole('note', { name: 'Hint' })).not.toBeInTheDocument();
-    await userEvent.click(screen.getByRole('button', { name: 'Key 8' }));
+    expect(document.querySelector('rect[fill="var(--danger)"]')).toBeNull();
+    await userEvent.click(await screen.findByRole('button', { name: 'Key 8' }));
     await userEvent.click(screen.getByRole('button', { name: 'Split and move up' }));
-    expect(screen.getByText(/That's not the middle key/)).toBeInTheDocument();
-    expect(screen.getByLabelText('Penalties 0:40')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Split and move up' })).toBeDisabled();
+    expect(screen.getByText(/That's not the middle key\. Try again\./)).toBeInTheDocument();
     await userEvent.click(screen.getByRole('button', { name: 'Key 12' }));
     await userEvent.click(screen.getByRole('button', { name: 'Split and move up' }));
 
-    expect(await screen.findByText('Your score today')).toBeInTheDocument();
-    expect(screen.getByText('87.40')).toBeInTheDocument();
+    await vi.waitFor(() => expect(post).toHaveBeenCalled());
     expect(post).toHaveBeenCalledWith(
-      '/daily/finish',
+      '/daily/rounds/3/finish',
       {
         day: '2026-11-15',
         plays: [
@@ -124,74 +259,65 @@ describe('DailyPage', () => {
     );
   });
 
-  it('never marks a full node red unless a hint is taken', async () => {
-    const started = { ...base, startedAt: new Date().toISOString(), keys: [20, 8, 12, 28] };
-    mockGet(signedIn, started);
+  it('shows the round strip and a pause card between rounds', async () => {
+    mockGet(
+      trio({
+        rounds: [
+          { round: 1, startedAt: now(), result: result(82.1) },
+          { round: 2, startedAt: null, result: null },
+          { round: 3, startedAt: null, result: null },
+        ],
+      }),
+    );
     show();
-
-    await userEvent.click(await screen.findByRole('button', { name: 'Node with keys 20' }));
-    await userEvent.click(await screen.findByRole('button', { name: 'Node with keys 8, 20' }));
-    await screen.findByRole('button', { name: 'Node with keys 8, 12, 20' });
-    expect(screen.getByRole('heading', { name: 'Insert 28' })).toBeInTheDocument();
-    expect(document.querySelector('rect[fill="var(--danger)"]')).toBeNull();
-    expect(screen.queryByText(/has too many keys|too full/i)).not.toBeInTheDocument();
-
-    await userEvent.click(screen.getByRole('button', { name: 'Next number, 28' }));
-    await userEvent.click(screen.getByRole('button', { name: 'Node with keys 8, 12, 20' }));
-    expect(screen.getByText(/Fix it before adding the next number/)).toBeInTheDocument();
-    expect(document.querySelector('rect[fill="var(--danger)"]')).toBeNull();
-
-    await userEvent.click(screen.getByRole('button', { name: /Hint/ }));
-    expect(document.querySelector('rect[fill="var(--danger)"]')).not.toBeNull();
+    const strip = await screen.findByRole('list', { name: "Today's rounds" });
+    expect(within(strip).getByText('82.10')).toBeInTheDocument();
+    expect(within(strip).getAllByText('Up to 100 points')).toHaveLength(2);
+    expect(screen.getByText('+82.10')).toBeInTheDocument();
+    expect(screen.getByText('The clock is paused until you start.')).toBeInTheDocument();
   });
 
-  it('does not charge twice for the same wrong move', async () => {
-    const started = { ...base, startedAt: new Date().toISOString(), keys: [20, 8, 12] };
-    mockGet(signedIn, started);
+  it('shows the total, your place, each round, and a leaderboard you can sort by round', async () => {
+    const people = [
+      entry('Ayanda', { total: 90, path: 70, valid: 100, build: 100 }),
+      entry('Me', { total: 85, path: 95, valid: 80, build: 80 }, true),
+      entry('Lerato', { total: 80, path: 90, valid: 70, build: 80 }),
+      entry('Thabo', { total: 70, path: 60, valid: 75, build: 75 }),
+      entry('Zanele', { total: 60, path: 99, valid: 40, build: 41 }),
+    ];
+    mockGet(
+      trio({
+        rounds: [
+          { round: 1, startedAt: now(), result: result(95, { mistakes: 1 }) },
+          { round: 2, startedAt: now(), result: result(80, { mistakes: 1 }) },
+          { round: 3, startedAt: now(), result: result(80, { hints: 1, penaltyMs: 30_000 }) },
+        ],
+        content: { path: pathContent, valid: validContent, build: { keys: [20, 8, 12] } },
+        total: 85,
+        leaderboard: people,
+      }),
+    );
     show();
 
-    await userEvent.click(await screen.findByRole('button', { name: 'Key 20' }));
-    await userEvent.click(screen.getByRole('button', { name: 'Split and move up' }));
-    expect(screen.getByText(/No node has too many keys/)).toBeInTheDocument();
-    expect(screen.getByLabelText('Penalties 0:10')).toBeInTheDocument();
+    expect(await screen.findByText('You came 2nd of 5 today')).toBeInTheDocument();
+    expect(screen.queryByText(/\/ 100/)).not.toBeInTheDocument();
+    expect(screen.getByText('3 of 4 right · 0:30')).toBeInTheDocument();
+    expect(screen.getByText(/1 hint \(\+0:30\)/)).toBeInTheDocument();
 
-    await userEvent.click(screen.getByRole('button', { name: 'Key 20' }));
-    await userEvent.click(screen.getByRole('button', { name: 'Split and move up' }));
-    expect(screen.getByText(/You already tried that/)).toBeInTheDocument();
-    expect(screen.getByLabelText('Penalties 0:10')).toBeInTheDocument();
-  });
+    const podium = () => screen.getByRole('list', { name: /Podium/ });
+    expect(within(podium()).getByRole('listitem', { name: /1st: Ayanda/ })).toBeInTheDocument();
+    const rest = () =>
+      within(screen.getByRole('list', { name: 'Everyone else' })).getAllByRole('listitem');
+    expect(rest()[0]).toHaveTextContent(/^4.*Thabo.*Path 60\.00.*Valid 75\.00.*Build 75\.00/);
 
-  it('puts the top three on a podium and lists everyone else from 4th', async () => {
-    const leaderboard = ['Ayanda', 'Me', 'Lerato', 'Thabo', 'Zanele'].map((n, i) =>
-      entry(i + 1, n, n === 'Me'),
-    );
-    mockGet(signedIn, {
-      ...base,
-      startedAt: new Date().toISOString(),
-      keys: [20, 8, 12],
-      result: {
-        score: 876,
-        timeMs: 62_000,
-        penaltyMs: 0,
-        finalMs: 62_000,
-        mistakes: 0,
-        hints: 0,
-        moves: 1,
-      },
-      leaderboard,
-    });
-    show();
-
-    const podium = await screen.findByRole('list', { name: 'Podium' });
-    expect(within(podium).getByRole('listitem', { name: /1st: Ayanda/ })).toBeInTheDocument();
-    expect(within(podium).getByRole('listitem', { name: /2nd: Me/ })).toBeInTheDocument();
-    expect(within(podium).getByRole('listitem', { name: /3rd: Lerato/ })).toBeInTheDocument();
-    const rest = within(screen.getByRole('list', { name: 'Everyone else' })).getAllByRole(
-      'listitem',
-    );
-    expect(rest.map((li) => li.textContent)).toEqual([
-      expect.stringMatching(/^4.*Thabo/),
-      expect.stringMatching(/^5.*Zanele/),
+    await userEvent.click(screen.getByRole('tab', { name: 'Path' }));
+    expect(
+      within(podium()).getByRole('listitem', { name: /1st: Zanele, 99\.00/ }),
+    ).toBeInTheDocument();
+    expect(within(podium()).getByRole('listitem', { name: /2nd: Me, 95\.00/ })).toBeInTheDocument();
+    expect(rest().map((li) => li.textContent)).toEqual([
+      expect.stringMatching(/^4.*Ayanda/),
+      expect.stringMatching(/^5.*Thabo/),
     ]);
   });
 });

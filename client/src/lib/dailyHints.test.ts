@@ -1,6 +1,6 @@
 import { DAILY_NEXT, dailyMoves } from '@btree/engine';
 import { describe, expect, it } from 'vitest';
-import { dailyHint, dailyMistake } from './dailyHints';
+import { branchReason, dailyHint, dailyMistake, nodeLabel } from './dailyHints';
 
 const moves = dailyMoves([20, 8, 12, 28, 30, 5, 3]);
 const place = (key: number) => moves.find((m) => m.kind === 'place' && m.key === key)!;
@@ -40,5 +40,20 @@ describe('dailyMistake', () => {
     expect(dailyMistake(split!, '28@n1')).toBe(
       'Right key, but it moves into the node just above it.',
     );
+  });
+});
+
+describe('branchReason', () => {
+  const node = { id: 'n1', keys: [30, 60], children: [] };
+
+  it('explains the left, middle and right branches', () => {
+    expect(branchReason(node, 10)).toBe('10 is smaller than 30, so it goes down the left branch');
+    expect(branchReason(node, 57)).toBe('57 is between 30 and 60, so it takes the middle branch');
+    expect(branchReason(node, 70)).toBe('70 is bigger than 60, so it goes down the right branch');
+  });
+
+  it('names nodes for screen readers', () => {
+    expect(nodeLabel([30, 60])).toBe('Node holding 30 and 60');
+    expect(nodeLabel([5])).toBe('Node holding 5');
   });
 });

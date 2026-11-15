@@ -203,20 +203,36 @@ model Cheer {
 }
 
 model DailyRun {
-  id         String    @id @default(cuid())
+  id         String       @id @default(cuid())
   userId     String
   day        String
   keys       Int[]
-  startedAt  DateTime  @default(now())
+  pathKeys   Int[]
+  validKeys  Int[]
+  seed       Int
+  startedAt  DateTime     @default(now())
   finishedAt DateTime?
   score      Float?
+  user       User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  rounds     DailyRound[]
+
+  @@unique([userId, day])
+  @@index([day])
+}
+
+model DailyRound {
+  id         String    @id @default(cuid())
+  runId      String
+  round      Int
+  startedAt  DateTime  @default(now())
+  finishedAt DateTime?
   moves      Int?
   mistakes   Int?
   hints      Int?
   timeMs     Int?
   penaltyMs  Int?
-  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  score      Float?
+  run        DailyRun  @relation(fields: [runId], references: [id], onDelete: Cascade)
 
-  @@unique([userId, day])
-  @@index([day])
+  @@unique([runId, round])
 }

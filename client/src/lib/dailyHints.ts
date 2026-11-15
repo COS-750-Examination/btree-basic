@@ -48,3 +48,18 @@ export function dailyMistake(move: DailyMove, tried: string | number): string {
   const inFull = findNode(move.tree.root, (n) => n.id === move.nodeId)?.keys.includes(t?.key ?? -1);
   return inFull ? "That's not the middle key." : "That key's node isn't too full.";
 }
+
+export function branchReason(node: BTreeNode, target: number): string {
+  const ks = node.keys;
+  const i = childIndexFor(node, target);
+  if (i === 0) return `${target} is smaller than ${ks[0]}, so it goes down the left branch`;
+  if (i === ks.length) {
+    return `${target} is bigger than ${ks.at(-1)}, so it goes down the right branch`;
+  }
+  return `${target} is between ${ks[i - 1]} and ${ks[i]}, so it takes the middle branch`;
+}
+
+export function nodeLabel(keys: number[]): string {
+  if (keys.length <= 1) return `Node holding ${keys[0] ?? 'nothing'}`;
+  return `Node holding ${keys.slice(0, -1).join(', ')} and ${keys.at(-1)}`;
+}
