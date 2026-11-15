@@ -93,7 +93,9 @@ describe.skipIf(!hasDb)('daily routes (database)', () => {
     const done = await play(s);
     expect(done.result).toMatchObject({ mistakes: 0, hints: 0, penaltyMs: 0 });
     expect(done.result!.timeMs).toBeGreaterThanOrEqual(60_000);
-    expect(done.result!.score).toBe(1000 - Math.round(done.result!.timeMs / 500));
+    const expected = Math.round((100 - (0.3 * done.result!.timeMs) / 1000) * 100) / 100;
+    expect(done.result!.score).toBe(expected);
+    expect(done.result!.score).toBeLessThanOrEqual(82);
 
     await s.agent.post('/api/daily/finish').send({ day: done.day, plays: [] }).expect(409);
     const restart = DailyState.parse((await s.agent.post('/api/daily/start').expect(200)).body);
@@ -153,5 +155,15 @@ describe.skipIf(!hasDb)('daily routes (database)', () => {
     await play(b);
     const body = DailyState.parse((await a.agent.post('/api/daily/start').expect(200)).body);
     expect(body.leaderboard).toBeNull();
+  });
+});
+
+describe('dailyScore', () => {
+  it('is out of 100 with two decimals and drops 0.3 points a second', async () => {
+    const { dailyScore } = await import('@btree/shared');
+    expect(dailyScore(0)).toBe(100);
+    expect(dailyScore(60_000)).toBe(82);
+    expect(dailyScore(41_900)).toBe(87.43);
+    expect(dailyScore(1_000_000)).toBe(0);
   });
 });

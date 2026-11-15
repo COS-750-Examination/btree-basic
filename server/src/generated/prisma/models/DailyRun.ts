@@ -286,7 +286,7 @@ export type DailyRunWhereInput = {
   keys?: Prisma.IntNullableListFilter<"DailyRun">
   startedAt?: Prisma.DateTimeFilter<"DailyRun"> | Date | string
   finishedAt?: Prisma.DateTimeNullableFilter<"DailyRun"> | Date | string | null
-  score?: Prisma.IntNullableFilter<"DailyRun"> | number | null
+  score?: Prisma.FloatNullableFilter<"DailyRun"> | number | null
   moves?: Prisma.IntNullableFilter<"DailyRun"> | number | null
   mistakes?: Prisma.IntNullableFilter<"DailyRun"> | number | null
   hints?: Prisma.IntNullableFilter<"DailyRun"> | number | null
@@ -322,7 +322,7 @@ export type DailyRunWhereUniqueInput = Prisma.AtLeast<{
   keys?: Prisma.IntNullableListFilter<"DailyRun">
   startedAt?: Prisma.DateTimeFilter<"DailyRun"> | Date | string
   finishedAt?: Prisma.DateTimeNullableFilter<"DailyRun"> | Date | string | null
-  score?: Prisma.IntNullableFilter<"DailyRun"> | number | null
+  score?: Prisma.FloatNullableFilter<"DailyRun"> | number | null
   moves?: Prisma.IntNullableFilter<"DailyRun"> | number | null
   mistakes?: Prisma.IntNullableFilter<"DailyRun"> | number | null
   hints?: Prisma.IntNullableFilter<"DailyRun"> | number | null
@@ -361,7 +361,7 @@ export type DailyRunScalarWhereWithAggregatesInput = {
   keys?: Prisma.IntNullableListFilter<"DailyRun">
   startedAt?: Prisma.DateTimeWithAggregatesFilter<"DailyRun"> | Date | string
   finishedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"DailyRun"> | Date | string | null
-  score?: Prisma.IntNullableWithAggregatesFilter<"DailyRun"> | number | null
+  score?: Prisma.FloatNullableWithAggregatesFilter<"DailyRun"> | number | null
   moves?: Prisma.IntNullableWithAggregatesFilter<"DailyRun"> | number | null
   mistakes?: Prisma.IntNullableWithAggregatesFilter<"DailyRun"> | number | null
   hints?: Prisma.IntNullableWithAggregatesFilter<"DailyRun"> | number | null
@@ -405,7 +405,7 @@ export type DailyRunUpdateInput = {
   keys?: Prisma.DailyRunUpdatekeysInput | number[]
   startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   finishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  score?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   moves?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   mistakes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   hints?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -421,7 +421,7 @@ export type DailyRunUncheckedUpdateInput = {
   keys?: Prisma.DailyRunUpdatekeysInput | number[]
   startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   finishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  score?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   moves?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   mistakes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   hints?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -450,7 +450,7 @@ export type DailyRunUpdateManyMutationInput = {
   keys?: Prisma.DailyRunUpdatekeysInput | number[]
   startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   finishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  score?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   moves?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   mistakes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   hints?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -465,7 +465,7 @@ export type DailyRunUncheckedUpdateManyInput = {
   keys?: Prisma.DailyRunUpdatekeysInput | number[]
   startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   finishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  score?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   moves?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   mistakes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   hints?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -674,7 +674,7 @@ export type DailyRunScalarWhereInput = {
   keys?: Prisma.IntNullableListFilter<"DailyRun">
   startedAt?: Prisma.DateTimeFilter<"DailyRun"> | Date | string
   finishedAt?: Prisma.DateTimeNullableFilter<"DailyRun"> | Date | string | null
-  score?: Prisma.IntNullableFilter<"DailyRun"> | number | null
+  score?: Prisma.FloatNullableFilter<"DailyRun"> | number | null
   moves?: Prisma.IntNullableFilter<"DailyRun"> | number | null
   mistakes?: Prisma.IntNullableFilter<"DailyRun"> | number | null
   hints?: Prisma.IntNullableFilter<"DailyRun"> | number | null
@@ -702,7 +702,7 @@ export type DailyRunUpdateWithoutUserInput = {
   keys?: Prisma.DailyRunUpdatekeysInput | number[]
   startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   finishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  score?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   moves?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   mistakes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   hints?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -716,7 +716,7 @@ export type DailyRunUncheckedUpdateWithoutUserInput = {
   keys?: Prisma.DailyRunUpdatekeysInput | number[]
   startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   finishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  score?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   moves?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   mistakes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   hints?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -730,7 +730,7 @@ export type DailyRunUncheckedUpdateManyWithoutUserInput = {
   keys?: Prisma.DailyRunUpdatekeysInput | number[]
   startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   finishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  score?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   moves?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   mistakes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   hints?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1262,7 +1262,7 @@ export interface DailyRunFieldRefs {
   readonly keys: Prisma.FieldRef<"DailyRun", 'Int[]'>
   readonly startedAt: Prisma.FieldRef<"DailyRun", 'DateTime'>
   readonly finishedAt: Prisma.FieldRef<"DailyRun", 'DateTime'>
-  readonly score: Prisma.FieldRef<"DailyRun", 'Int'>
+  readonly score: Prisma.FieldRef<"DailyRun", 'Float'>
   readonly moves: Prisma.FieldRef<"DailyRun", 'Int'>
   readonly mistakes: Prisma.FieldRef<"DailyRun", 'Int'>
   readonly hints: Prisma.FieldRef<"DailyRun", 'Int'>

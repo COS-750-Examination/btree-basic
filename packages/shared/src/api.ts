@@ -274,7 +274,7 @@ export const DailyFinishBody = z.object({
 export type DailyFinishBody = z.infer<typeof DailyFinishBody>;
 
 export const DailyResult = z.object({
-  score: z.number().int(),
+  score: z.number().min(0).max(100),
   timeMs: z.number().int(),
   penaltyMs: z.number().int(),
   finalMs: z.number().int(),
@@ -288,7 +288,7 @@ export const DailyEntry = z.object({
   rank: z.number().int(),
   userId: z.string(),
   displayName: z.string(),
-  score: z.number().int(),
+  score: z.number().min(0).max(100),
   finalMs: z.number().int(),
   isMe: z.boolean(),
 });

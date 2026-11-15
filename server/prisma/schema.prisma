@@ -209,7 +209,7 @@ model DailyRun {
   keys       Int[]
   startedAt  DateTime  @default(now())
   finishedAt DateTime?
-  score      Int?
+  score      Float?
   moves      Int?
   mistakes   Int?
   hints      Int?

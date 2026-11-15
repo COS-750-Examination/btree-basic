@@ -25,7 +25,6 @@ export { PSEUDOCODE, type Pseudocode } from './pseudocode';
 export {
   DAILY_ORDER,
   DAILY_KEY_COUNT,
-  DAILY_ROOT,
   DAILY_NEXT,
   dailyMoves,
   dailyTally,

@@ -189,7 +189,7 @@ export type DecorationId = (typeof DECORATIONS)[number]['id'];
 export const THEMES = ['day', 'dusk'] as const;
 export type Theme = (typeof THEMES)[number];
 
-export const DAILY_MAX_SCORE = 1000;
-export const DAILY_POINTS_PER_SECOND = 2;
+export const DAILY_MAX_SCORE = 100;
+export const DAILY_POINTS_PER_SECOND = 0.3;
 export const DAILY_WRONG_PENALTY_MS = 10_000;
 export const DAILY_HINT_PENALTY_MS = 30_000;

@@ -22,7 +22,7 @@ const entry = (rank: number, displayName: string, isMe = false): DailyEntry => (
   rank,
   userId: `u${rank}`,
   displayName,
-  score: 1000 - rank * 50,
+  score: 100 - rank * 5.25,
   finalMs: 60_000 + rank * 1000,
   isMe,
 });
@@ -58,19 +58,19 @@ describe('DailyPage', () => {
     );
   });
 
-  it('builds the tree from the first key and sends every try to be scored', async () => {
+  it('starts with the first key in the root and sends every try to be scored', async () => {
     mockGet(signedIn, base);
     const started = { ...base, startedAt: new Date().toISOString(), keys: [20, 8, 12] };
     const finished = {
       ...started,
       result: {
-        score: 900,
+        score: 87.4,
         timeMs: 10_000,
         penaltyMs: 40_000,
         finalMs: 50_000,
         mistakes: 1,
         hints: 1,
-        moves: 7,
+        moves: 4,
       },
       leaderboard: [entry(1, 'Me', true)],
     };
@@ -81,13 +81,13 @@ describe('DailyPage', () => {
     show();
 
     await userEvent.click(await screen.findByRole('button', { name: 'Start' }));
-    expect(await screen.findByRole('heading', { name: 'Insert 20' })).toBeInTheDocument();
-    await userEvent.click(screen.getByRole('button', { name: 'Drop 20 here to start the tree' }));
-    await userEvent.click(await screen.findByRole('button', { name: 'Next key' }));
-
     expect(await screen.findByRole('heading', { name: 'Insert 8' })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /next key/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /new root/i })).not.toBeInTheDocument();
+    expect(document.querySelector('circle[stroke-dasharray]')).toBeNull();
+    expect(screen.getByLabelText('20, used')).toBeInTheDocument();
+    await userEvent.click(screen.getByRole('button', { name: 'Next number, 8' }));
     await userEvent.click(screen.getByRole('button', { name: 'Node with keys 20' }));
-    await userEvent.click(await screen.findByRole('button', { name: 'Next key' }));
 
     expect(await screen.findByRole('heading', { name: 'Insert 12' })).toBeInTheDocument();
     await userEvent.click(screen.getByRole('button', { name: /Hint \(\+30s\)/ }));
@@ -96,28 +96,28 @@ describe('DailyPage', () => {
     );
     await userEvent.click(screen.getByRole('button', { name: 'Node with keys 8, 20' }));
 
-    expect(await screen.findByRole('heading', { name: 'Insert 12' })).toBeInTheDocument();
+    expect(
+      await screen.findByRole('button', { name: 'Node with keys 8, 12, 20' }),
+    ).toBeInTheDocument();
     expect(screen.queryByRole('note', { name: 'Hint' })).not.toBeInTheDocument();
-    await userEvent.click(screen.getByRole('button', { name: 'Next key' }));
-    expect(screen.getByText(/A node has too many keys/)).toBeInTheDocument();
+    await userEvent.click(screen.getByRole('button', { name: 'Key 8' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Split and move up' }));
+    expect(screen.getByText(/That's not the middle key/)).toBeInTheDocument();
     expect(screen.getByLabelText('Penalties 0:40')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Split and move up' })).toBeDisabled();
     await userEvent.click(screen.getByRole('button', { name: 'Key 12' }));
-    await userEvent.click(screen.getByRole('button', { name: 'New root above the tree' }));
-    await userEvent.click(await screen.findByRole('button', { name: 'Next key' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Split and move up' }));
 
     expect(await screen.findByText('Your score today')).toBeInTheDocument();
+    expect(screen.getByText('87.40')).toBeInTheDocument();
     expect(post).toHaveBeenCalledWith(
       '/daily/finish',
       {
         day: '2026-11-15',
         plays: [
-          { tries: ['root'], hint: false },
-          { tries: ['next'], hint: false },
           { tries: ['n1'], hint: false },
-          { tries: ['next'], hint: false },
           { tries: ['n1'], hint: true },
-          { tries: ['next', 12], hint: false },
-          { tries: ['next'], hint: false },
+          { tries: [8, 12], hint: false },
         ],
       },
       expect.anything(),
@@ -125,18 +125,21 @@ describe('DailyPage', () => {
   });
 
   it('never marks a full node red unless a hint is taken', async () => {
-    const started = { ...base, startedAt: new Date().toISOString(), keys: [20, 8, 12] };
+    const started = { ...base, startedAt: new Date().toISOString(), keys: [20, 8, 12, 28] };
     mockGet(signedIn, started);
     show();
 
-    await userEvent.click(await screen.findByRole('button', { name: /Drop 20/ }));
-    await userEvent.click(await screen.findByRole('button', { name: 'Next key' }));
     await userEvent.click(await screen.findByRole('button', { name: 'Node with keys 20' }));
-    await userEvent.click(await screen.findByRole('button', { name: 'Next key' }));
     await userEvent.click(await screen.findByRole('button', { name: 'Node with keys 8, 20' }));
-    await screen.findByRole('button', { name: 'Next key' });
+    await screen.findByRole('button', { name: 'Node with keys 8, 12, 20' });
+    expect(screen.getByRole('heading', { name: 'Insert 28' })).toBeInTheDocument();
     expect(document.querySelector('rect[fill="var(--danger)"]')).toBeNull();
-    expect(screen.queryByText(/too full/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/has too many keys|too full/i)).not.toBeInTheDocument();
+
+    await userEvent.click(screen.getByRole('button', { name: 'Next number, 28' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Node with keys 8, 12, 20' }));
+    expect(screen.getByText(/Fix it before adding the next number/)).toBeInTheDocument();
+    expect(document.querySelector('rect[fill="var(--danger)"]')).toBeNull();
 
     await userEvent.click(screen.getByRole('button', { name: /Hint/ }));
     expect(document.querySelector('rect[fill="var(--danger)"]')).not.toBeNull();
@@ -147,14 +150,13 @@ describe('DailyPage', () => {
     mockGet(signedIn, started);
     show();
 
-    await userEvent.click(await screen.findByRole('button', { name: /Drop 20/ }));
     await userEvent.click(await screen.findByRole('button', { name: 'Key 20' }));
-    await userEvent.click(screen.getByRole('button', { name: 'New root above the tree' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Split and move up' }));
     expect(screen.getByText(/No node has too many keys/)).toBeInTheDocument();
     expect(screen.getByLabelText('Penalties 0:10')).toBeInTheDocument();
 
     await userEvent.click(screen.getByRole('button', { name: 'Key 20' }));
-    await userEvent.click(screen.getByRole('button', { name: 'New root above the tree' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Split and move up' }));
     expect(screen.getByText(/You already tried that/)).toBeInTheDocument();
     expect(screen.getByLabelText('Penalties 0:10')).toBeInTheDocument();
   });

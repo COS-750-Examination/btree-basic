@@ -19,13 +19,8 @@ function rootStep(root: BTreeNode, key: number): string {
 }
 
 export function dailyHint(move: DailyMove): string {
-  if (move.kind === 'check') {
-    return move.answer === DAILY_NEXT
-      ? 'No node is too full. Tap Next key.'
-      : 'This node has too many keys. Drag its middle key up.';
-  }
-  const root = move.tree.root;
-  if (!root) return `Drop ${move.key} on the dashed spot.`;
+  if (move.kind === 'check') return 'This node has too many keys. Drag its middle key up.';
+  const root = move.tree.root!;
   if (isLeaf(root)) return `There is only one node, so ${move.key} goes there.`;
   return `At the root, ${rootStep(root, move.key)}. Keep going down to a leaf.`;
 }
@@ -38,13 +33,14 @@ function parseTry(tried: string | number): { key: number; elsewhere: boolean } |
 
 export function dailyMistake(move: DailyMove, tried: string | number): string {
   if (move.kind === 'place') {
+    if (typeof tried === 'number' || parseTry(tried)) return 'No node has too many keys.';
     const node = findNode(move.tree.root, (n) => n.id === tried);
     return node && !isLeaf(node)
       ? 'New keys only go into a leaf.'
       : `Not this leaf. Compare ${move.key} with the keys from the root down.`;
   }
-  if (move.answer === DAILY_NEXT) return 'No node has too many keys.';
-  if (tried === DAILY_NEXT) return 'A node has too many keys. Fix it first.';
+  if (tried === DAILY_NEXT)
+    return 'A node has too many keys. Fix it before adding the next number.';
   const t = parseTry(tried);
   if (t?.elsewhere && t.key === move.answer) {
     return 'Right key, but it moves into the node just above it.';

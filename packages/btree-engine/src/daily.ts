@@ -5,7 +5,6 @@ import type { BTree, BTreeNode } from './types';
 export const DAILY_ORDER = 3;
 export const DAILY_KEY_COUNT = 8;
 
-export const DAILY_ROOT = 'root';
 export const DAILY_NEXT = 'next';
 
 export interface DailyPlaceMove {
@@ -21,8 +20,8 @@ export interface DailyCheckMove {
   key: number;
   keyIndex: number;
   tree: BTree;
-  nodeId: string | null;
-  answer: number | typeof DAILY_NEXT;
+  nodeId: string;
+  answer: number;
 }
 
 export type DailyMove = DailyPlaceMove | DailyCheckMove;
@@ -37,13 +36,9 @@ export function dailyMoves(keys: number[], order = DAILY_ORDER): DailyMove[] {
   const moves: DailyMove[] = [];
   let tree = createTree(order);
   keys.forEach((key, keyIndex) => {
-    moves.push({
-      kind: 'place',
-      key,
-      keyIndex,
-      tree,
-      answer: tree.root ? targetLeaf(tree.root, key).id : DAILY_ROOT,
-    });
+    if (tree.root) {
+      moves.push({ kind: 'place', key, keyIndex, tree, answer: targetLeaf(tree.root, key).id });
+    }
     const trace = insert(tree, key);
     for (const step of trace.steps) {
       if (step.kind !== 'overflow') continue;
@@ -56,14 +51,6 @@ export function dailyMoves(keys: number[], order = DAILY_ORDER): DailyMove[] {
         answer: Number(step.params.median),
       });
     }
-    moves.push({
-      kind: 'check',
-      key,
-      keyIndex,
-      tree: trace.result,
-      nodeId: null,
-      answer: DAILY_NEXT,
-    });
     tree = trace.result;
   });
   return moves;

@@ -27,6 +27,8 @@ import { Avatar, Button, ButtonLink, Card, CardTitle, PageHeader, cn } from '../
 import { dailyHint, dailyMistake } from '../lib/dailyHints';
 import { useProgressStore } from '../stores/progressStore';
 
+const formatScore = (score: number) => score.toFixed(2);
+
 function formatTime(ms: number): string {
   const total = Math.max(0, Math.floor(ms / 1000));
   return `${Math.floor(total / 60)}:${String(total % 60).padStart(2, '0')}`;
@@ -138,21 +140,22 @@ function Intro({ state }: { state: DailyState }) {
       </CardTitle>
       <ul className="list-disc space-y-1 pl-5">
         <li>
-          You get {DAILY_KEY_COUNT} keys to insert, one at a time, into an empty order-
-          {DAILY_ORDER} B-tree.
+          You get {DAILY_KEY_COUNT} keys to insert, one at a time, into an order-{DAILY_ORDER}{' '}
+          B-tree. The first one starts in the root.
         </li>
-        <li>Drag each key onto the leaf it belongs in (or tap the leaf).</li>
+        <li>Drag the numbers, in order, onto the leaf each one belongs in.</li>
         <li>
-          Then fix any node with too many keys by dragging the key that moves up into the node above
-          it. If nothing needs fixing, tap Next key.
+          If a node ends up with too many keys, drag the key that moves up into the node above it,
+          or tap that key and press <strong>Split and move up</strong>.
         </li>
+        <li>You can also tap a number or key, then tap where it goes.</li>
         <li>
           A wrong move adds {DAILY_WRONG_PENALTY_MS / 1000}s to your time and you try again. Stuck?
           Each step has a hint, but it adds {DAILY_HINT_PENALTY_MS / 1000}s.
         </li>
         <li>
-          Your score is {DAILY_MAX_SCORE} minus {DAILY_POINTS_PER_SECOND} points for every second of
-          your final time (clock plus penalties).
+          Your score is out of {DAILY_MAX_SCORE}: you lose {DAILY_POINTS_PER_SECOND} points for
+          every second of your final time (clock plus penalties).
         </li>
         <li>
           You get <strong>one go a day</strong>. The clock starts when you press Start and keeps
@@ -246,12 +249,14 @@ function Game({ state }: { state: DailyState }) {
   };
 
   const wrong = message?.tone === 'wrong' ? message : null;
+  const nextIndex = move.kind === 'place' ? move.keyIndex : move.keyIndex + 1;
+  const shownIndex = Math.min(nextIndex, keys.length - 1);
 
   return (
     <Card>
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <p className="text-label font-bold">
-          Key {Math.min(move.keyIndex + 1, keys.length)} of {keys.length}
+          Key {shownIndex + 1} of {keys.length}
         </p>
         <div className="flex flex-wrap items-center gap-2">
           <p
@@ -272,23 +277,6 @@ function Game({ state }: { state: DailyState }) {
         </div>
       </div>
 
-      <ol aria-label="Keys to insert" className="mb-4 flex flex-wrap gap-2">
-        {keys.map((k, i) => (
-          <li
-            key={k}
-            aria-current={i === move.keyIndex && !complete ? 'step' : undefined}
-            className={cn(
-              'font-display rounded-pill grid h-10 w-10 place-items-center border-4',
-              (i < move.keyIndex || complete) && 'border-branch/40 text-ink-muted bg-transparent',
-              i === move.keyIndex && !complete && 'border-yarn bg-node-fill',
-              i > move.keyIndex && 'border-branch bg-node-fill',
-            )}
-          >
-            {k}
-          </li>
-        ))}
-      </ol>
-
       {complete ? (
         <div className="py-8 text-center">
           {finish.isError ? (
@@ -306,19 +294,18 @@ function Game({ state }: { state: DailyState }) {
         </div>
       ) : (
         <>
-          <h2 className="text-heading">Insert {move.key}</h2>
+          <h2 className="text-heading">Insert {keys[shownIndex]}</h2>
           <p className="text-small mt-1">
-            {move.kind === 'place'
-              ? `Put ${move.key} where it belongs.`
-              : 'If a node has too many keys, drag the key that moves up into the node above. If not, tap Next key.'}
+            Drag the next number onto its leaf. If a node gets too many keys, drag the key that
+            moves up into the node above.
           </p>
-          <p className="text-small text-ink-muted mt-1">
+          <p className="text-small text-ink-muted mt-1 mb-4">
             Order {DAILY_ORDER}: at most {DAILY_ORDER - 1} keys in a node.
           </p>
 
-          <DailyBoard key={solved} move={move} hint={play.hint} onAttempt={attempt} />
+          <DailyBoard key={solved} move={move} keys={keys} hint={play.hint} onAttempt={attempt} />
 
-          <div className="flex flex-wrap items-start gap-3">
+          <div className="mt-4 flex flex-wrap items-start gap-3">
             {play.hint ? (
               <div
                 className="bg-highlight text-on-highlight text-small flex-1 rounded-lg p-4"
@@ -376,7 +363,10 @@ function Results({ state }: { state: DailyState }) {
         <div className="flex flex-wrap items-center gap-6">
           <div>
             <p className="text-label font-bold">Your score today</p>
-            <p className="font-display text-display-xl">{result.score}</p>
+            <p className="font-display text-display-xl">
+              {formatScore(result.score)}
+              <span className="text-heading"> / {DAILY_MAX_SCORE}</span>
+            </p>
           </div>
           <dl className="text-label grid grid-cols-[auto_auto] gap-x-4 gap-y-1">
             <dt>Clock</dt>
@@ -439,7 +429,7 @@ export function Leaderboard({ entries }: { entries: DailyEntry[] }) {
               )}
               aria-label={
                 e
-                  ? `${ordinal(place)}: ${e.displayName}, ${e.score} points`
+                  ? `${ordinal(place)}: ${e.displayName}, ${formatScore(e.score)} points`
                   : `${ordinal(place)}: nobody yet`
               }
             >
@@ -451,7 +441,7 @@ export function Leaderboard({ entries }: { entries: DailyEntry[] }) {
                     {e.isMe && ' (you)'}
                   </p>
                   <p className="text-small">
-                    {e.score} · {formatTime(e.finalMs)}
+                    {formatScore(e.score)} · {formatTime(e.finalMs)}
                   </p>
                 </>
               ) : (
@@ -490,7 +480,7 @@ export function Leaderboard({ entries }: { entries: DailyEntry[] }) {
                 {e.isMe && ' (you)'}
               </span>
               <span className="text-small">{formatTime(e.finalMs)}</span>
-              <span className="font-bold">{e.score}</span>
+              <span className="font-bold">{formatScore(e.score)}</span>
             </li>
           ))}
         </ol>
