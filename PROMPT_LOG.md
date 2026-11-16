@@ -16,7 +16,7 @@ This log records the generative AI prompts used during development of B-Tree Bas
 
 ### Request
 
-> Please plan, and then implement, the initial scaffold of the front end and back end for our COS750 group project, a pre-lecture B-tree tutor for COS212 students.
+> Look at my attached `plan.md` and then the initial scaffold of the front end and back end for our COS750 group project, a pre-lecture B-tree tutor for COS212 students.
 >
 > Use the attached Instructional Design document and Software Engineering document as the authoritative specification for learners, objectives, screens, assessment strategy, functional and non-functional requirements, and system architecture. Use the team's Figma file (COS750_GroupProject) as the visual reference for the intended front end, and use it to inform the choice of frameworks, libraries and plug-ins.
 >
