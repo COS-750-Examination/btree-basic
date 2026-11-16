@@ -27,7 +27,12 @@ import {
 } from '../components/ui';
 import { masteryHint } from '../lib/mastery';
 import { miniLessonPath } from '../lib/miniLessons';
-import { useLocalReadiness, useProgressStore } from '../stores/progressStore';
+import {
+  moduleStatus,
+  nextModule,
+  useLocalReadiness,
+  useProgressStore,
+} from '../stores/progressStore';
 
 /** Where to revisit when an objective is not yet mastered. */
 const REVISIT: Record<ObjectiveId, { to: string; label: string; module: number }> = {
@@ -57,7 +62,15 @@ export function ReadyPage() {
   const r = server.data ?? local;
   const pct = Math.round(r.overall * 100);
   const stage = GROWTH_STAGES.find((s) => s.id === r.stage)?.label;
-  const toRevisit = r.objectives.filter((o) => o.status !== 'mastered');
+  const progress = useProgressStore();
+  const upNext = nextModule(progress);
+  const notMastered = r.objectives.filter((o) => o.status !== 'mastered');
+  // Only suggest revisiting what the student has reached. Objectives taught in later modules
+  // aren't "weak" yet, just not started, and their modules may still be locked.
+  const toRevisit = notMastered.filter(
+    (o) => moduleStatus(REVISIT[o.objective].module, progress) !== 'locked',
+  );
+  const comingUp = notMastered.length - toRevisit.length;
   const summary = r.ready
     ? 'You are ready. Bring your questions to the lecture and go deeper there.'
     : pct >= 50
@@ -159,7 +172,11 @@ export function ReadyPage() {
           <Card>
             <CardTitle>Revisit before the lecture</CardTitle>
             {toRevisit.length === 0 ? (
-              <p className="text-small">Everything is mastered. 🎉</p>
+              <p className="text-small">
+                {comingUp === 0
+                  ? 'Everything is mastered. 🎉'
+                  : 'Nothing to revisit yet. Keep going with the modules.'}
+              </p>
             ) : (
               <ul className="text-label space-y-2 font-bold">
                 {toRevisit.slice(0, 4).map((o) => (
@@ -172,13 +189,25 @@ export function ReadyPage() {
                 ))}
               </ul>
             )}
-            {toRevisit[0] && (
-              <ButtonLink
-                to={`/lessons/${REVISIT[toRevisit[0].objective].module}`}
-                className="no-print mt-4"
-              >
-                Start module {REVISIT[toRevisit[0].objective].module}
+            {comingUp > 0 && (
+              <p className="text-ink-muted text-small mt-3">
+                {comingUp === 1 ? '1 more objective is' : `${comingUp} more objectives are`} taught
+                in modules you haven&apos;t reached yet.
+              </p>
+            )}
+            {upNext ? (
+              <ButtonLink to={`/lessons/${upNext.id}`} className="no-print mt-4">
+                Continue to module {upNext.id}
               </ButtonLink>
+            ) : (
+              toRevisit[0] && (
+                <ButtonLink
+                  to={`/lessons/${REVISIT[toRevisit[0].objective].module}`}
+                  className="no-print mt-4"
+                >
+                  Revisit module {REVISIT[toRevisit[0].objective].module}
+                </ButtonLink>
+              )
             )}
           </Card>
           <LectureQuestions />

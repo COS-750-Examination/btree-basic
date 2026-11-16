@@ -329,6 +329,10 @@ export function moduleStatus(
   return next?.id === moduleId ? 'current' : 'available';
 }
 
+/** The next module in course order (skipping an unneeded recap), or undefined once all are done. */
+export const nextModule = (s: Pick<ProgressState, 'modules' | 'needsRecap'>) =>
+  MODULES.find((m) => moduleStatus(m.id, s) === 'current');
+
 export function useLocalReadiness() {
   const s = useProgressStore();
   return readiness(s.attempts, modulesDone(s), s.leaves);

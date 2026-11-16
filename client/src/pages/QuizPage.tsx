@@ -21,7 +21,7 @@ import {
 } from '../components/ui';
 import { quizFor, quizzes } from '../lib/content';
 import { miniLessonPath } from '../lib/miniLessons';
-import { moduleStatus, useProgressStore } from '../stores/progressStore';
+import { moduleStatus, nextModule, useProgressStore } from '../stores/progressStore';
 
 /** Where "Practise with new keys" leads after a low score, per module. */
 const PRACTICE_FOR: Record<number, string> = {
@@ -53,6 +53,7 @@ export function QuizPage() {
 }
 
 function Quiz({ quiz }: { quiz: QuizFile }) {
+  const store = useProgressStore();
   const [index, setIndex] = useState(0);
   const [firstTryCorrect, setFirstTryCorrect] = useState(0);
   const [finished, setFinished] = useState(false);
@@ -68,6 +69,8 @@ function Quiz({ quiz }: { quiz: QuizFile }) {
   if (finished) {
     const score = firstTryCorrect / quiz.items.length;
     const needsHelp = score < REMEDIATION_THRESHOLD;
+    // Always point onwards in course order, so a student is never sent to a module that's still locked.
+    const upNext = nextModule(store);
     return (
       <Card className="pop mx-auto max-w-xl text-center">
         <h1 className="text-display-l">
@@ -87,11 +90,27 @@ function Quiz({ quiz }: { quiz: QuizFile }) {
                 </ButtonLink>
               )}
             </div>
+            {upNext && (
+              <p className="text-small">
+                Or{' '}
+                <Link to={`/lessons/${upNext.id}`} className="font-bold underline">
+                  carry on to module {upNext.id}: {upNext.title}
+                </Link>
+                .
+              </p>
+            )}
           </div>
         ) : (
-          <ButtonLink to="/ready" className="mt-5">
-            See how ready you are
-          </ButtonLink>
+          <div className="mt-5 flex flex-wrap justify-center gap-3">
+            {upNext && (
+              <ButtonLink to={`/lessons/${upNext.id}`}>
+                Continue to module {upNext.id}: {upNext.title}
+              </ButtonLink>
+            )}
+            <ButtonLink to="/ready" variant={upNext ? 'outline' : 'primary'}>
+              See how ready you are
+            </ButtonLink>
+          </div>
         )}
       </Card>
     );
