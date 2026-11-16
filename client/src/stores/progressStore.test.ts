@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { api } from '../api/client';
 import { queryClient } from '../api/queryClient';
-import { placedDecorations, useProgressStore } from './progressStore';
+import { moduleStatus, nextModule, placedDecorations, useProgressStore } from './progressStore';
 
 const correct = { itemId: 'm5-q2', objective: 'O3' as const, firstAttempt: true, hintsUsed: 0 };
 
@@ -249,5 +249,32 @@ describe('progress store badge refresh', () => {
     useProgressStore.getState().completeModule(1);
     await flush();
     expect(refreshedBadges(invalidate)).toBe(false);
+  });
+});
+
+describe('module order', () => {
+  const done = (...ids: number[]) =>
+    Object.fromEntries(ids.map((id) => [id, { part: 1, completed: true }]));
+
+  it('goes from module 1 to module 3 when the warm-up showed no recap is needed', () => {
+    const s = { modules: done(1), needsRecap: false };
+    expect(nextModule(s)?.id).toBe(3);
+    expect(moduleStatus(4, s)).toBe('locked');
+  });
+
+  it('goes from module 1 to module 3 before the warm-up is taken', () => {
+    expect(nextModule({ modules: done(1), needsRecap: null })?.id).toBe(3);
+  });
+
+  it('goes from module 1 to the recap when the warm-up asked for it', () => {
+    const s = { modules: done(1), needsRecap: true };
+    expect(nextModule(s)?.id).toBe(2);
+    expect(moduleStatus(3, s)).toBe('locked');
+  });
+
+  it('has nothing next once every required module is done', () => {
+    expect(nextModule({ modules: done(1, 3, 4, 5, 6, 7, 8, 9, 10), needsRecap: false })).toBe(
+      undefined,
+    );
   });
 });
